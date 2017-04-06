@@ -12,6 +12,7 @@ public class GlobalButton extends DrawbleObject
 	public Color borderColor = new Color(255,255,255);
 	public Color textColor = new Color(0,0,0);
 	public Color OnButtonMouseBgColor = new Color(180,180,180);
+	public Color ColorDali = new Color(0,255,0);
 	
 	public String Text = "";
 	
@@ -25,8 +26,12 @@ public class GlobalButton extends DrawbleObject
 	@Override
 	public void draw(Graphics g)
 	{
-		if(mouseAction == 0)g.setColor(bgColor);
-		else g.setColor(OnButtonMouseBgColor);
+	    switch (mouseAction)
+	    {
+	    case 0: g.setColor(bgColor); break;
+	    case 1: g.setColor(OnButtonMouseBgColor); break;
+	    case 2: g.setColor(ColorDali); break;
+	    }
 		g.fillRect((int)posX, (int)posY, (int)width, (int)height);
 		g.setColor(borderColor);
 		g.drawRect((int)posX, (int)posY, (int)width, (int)height);
@@ -76,5 +81,19 @@ public class GlobalButton extends DrawbleObject
 	{
 		mouseAction = 0;
 		super.onMouseMove(event);
+	}
+	
+	@Override
+	public void onMousePress(MouseEvent event)
+	{
+		mouseAction = 2;
+	    super.onMousePress(event);
+	}
+	
+	@Override
+	public void onMouseRelease(MouseEvent event)
+	{
+		mouseAction = 0;
+		super.onMouseRelease(event);
 	}
 }
