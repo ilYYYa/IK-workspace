@@ -17,6 +17,7 @@ public class DoubleBuffer extends JPanel
 	{
 		listeners = new Listeners(this);
 		this.addMouseListener(listeners);
+		this.addMouseMotionListener(listeners);
 		this.addKeyListener(listeners);
 	}
 	

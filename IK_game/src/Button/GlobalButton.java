@@ -14,6 +14,8 @@ public class GlobalButton extends DrawbleObject
 	public Color OnButtonMouseBgColor = new Color(180,180,180);
 	
 	public String Text = "";
+	
+	public int mouseAction = 0;
 
 	public GlobalButton(double x, double y, double w, double h)
 	{
@@ -23,7 +25,8 @@ public class GlobalButton extends DrawbleObject
 	@Override
 	public void draw(Graphics g)
 	{
-		g.setColor(bgColor);
+		if(mouseAction == 0)g.setColor(bgColor);
+		else g.setColor(OnButtonMouseBgColor);
 		g.fillRect((int)posX, (int)posY, (int)width, (int)height);
 		g.setColor(borderColor);
 		g.drawRect((int)posX, (int)posY, (int)width, (int)height);
@@ -64,7 +67,14 @@ public class GlobalButton extends DrawbleObject
 	@Override
 	public void onMouseMove(MouseEvent event)
 	{
-		//Need kaifolom's function!!!
+		mouseAction = 1;
+		super.onMouseMove(event);
+	}
+	
+	@Override
+	public void onMouseMoveNotOnYou(MouseEvent event)
+	{
+		mouseAction = 0;
 		super.onMouseMove(event);
 	}
 }

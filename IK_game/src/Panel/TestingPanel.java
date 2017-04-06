@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.MouseEvent;
 
+import Button.TestingButton;
+
 public class TestingPanel extends GlobalPanel
 {
 	int rr = 255;
@@ -11,6 +13,7 @@ public class TestingPanel extends GlobalPanel
 	public TestingPanel(int x, int y, int w, int h)
 	{
 		super(x, y, w, h);
+		this.addObjectForDraw(new TestingButton(10,10,w-20,50));
 	}
 
 	@Override
