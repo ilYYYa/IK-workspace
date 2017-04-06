@@ -1,5 +1,7 @@
 package Scene;
 
+import java.awt.event.KeyEvent;
+
 import Panel.TestingPanel;
 import Panel.TestingPanel_0;
 

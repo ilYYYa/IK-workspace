@@ -20,6 +20,7 @@ public class MainWindow extends JFrame
 		this.setUndecorated(true);
 		
 		buff = new DoubleBuffer(this);
+		this.addKeyListener(buff.listeners);
 		
 		this.add(buff);
 		

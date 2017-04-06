@@ -32,6 +32,7 @@ public class GlobalButton extends DrawbleObject
 	    case 1: g.setColor(OnButtonMouseBgColor); break;
 	    case 2: g.setColor(ColorDali); break;
 	    }
+	    
 		g.fillRect((int)posX, (int)posY, (int)width, (int)height);
 		g.setColor(borderColor);
 		g.drawRect((int)posX, (int)posY, (int)width, (int)height);

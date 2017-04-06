@@ -12,7 +12,6 @@ import Window.DoubleBuffer;
 public class Scene_Load extends GlobalScene
 {
 	private loader l = new loader();
-	private int timer = 0;
 	
 	public Scene_Load(double w, double h)
 	{
@@ -30,9 +29,7 @@ public class Scene_Load extends GlobalScene
 		if(l.progress == 2) g.drawString("Loading Languages", 10, 40);
 		if(l.progress == 3)
 		{
-			g.drawString("Loading Done", 10, 40);
-			timer++;
-			if(timer >= 100) DoubleBuffer.setScene(new Scene_Menu(width, height));
+			DoubleBuffer.setScene(new Scene_Menu(width, height));
 		}
 	}
 }

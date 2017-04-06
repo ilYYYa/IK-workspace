@@ -8,5 +8,4 @@ public class Button_menu_settings extends GlobalButton
 		super(x, y, w, h);
 		this.setText("Settings");
 	}
-
 }
