@@ -89,10 +89,12 @@ public class GlobalScene extends DrawbleObject
 		for(int i = panels.size() - 1; i >= 0; i--)
 		{
 			if(CheckingPointCrossingSomeObject(panels.get(i), event.getX(), event.getY()))
+			{			
+				panels.get(i).onMouseMove(event);
+			}
+			else
 			{
-				panels.get(i).onMouseRelease(event);
-				
-				break;
+				panels.get(i).onMouseMoveNotOnYou(event);
 			}
 		}
 	}

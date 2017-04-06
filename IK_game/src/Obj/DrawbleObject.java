@@ -32,6 +32,7 @@ public abstract class DrawbleObject
 	public void onMouseRelease(MouseEvent event){}
 
 	public void onMouseMove(MouseEvent event){}
+	public void onMouseMoveNotOnYou(MouseEvent event){}
 	
 	public void onKeyPress(KeyEvent event){}
 	public void onKeyRelease(KeyEvent event){}

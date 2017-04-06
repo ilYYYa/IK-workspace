@@ -93,9 +93,11 @@ public class GlobalPanel extends DrawbleObject
 		{
 			if(CheckingPointCrossingSomeObject(objectsForDraw.get(i), event.getX(), event.getY()))
 			{
-				objectsForDraw.get(i).onMouseRelease(event);
-				
-				break;
+				objectsForDraw.get(i).onMouseMove(event);
+			}
+			else
+			{
+				objectsForDraw.get(i).onMouseMoveNotOnYou(event);
 			}
 		}
 	}
