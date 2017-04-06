@@ -13,15 +13,18 @@ public class DoubleBuffer extends JPanel
 {
 	public static GlobalScene Scene;
 	public static Listeners listeners;
+	public static MainWindow window;
 	
-	public DoubleBuffer()
+	public DoubleBuffer(MainWindow w)
 	{
+		window = w;
+		
 		listeners = new Listeners(this);
 		this.addMouseListener(listeners);
 		this.addMouseMotionListener(listeners);
 		this.addKeyListener(listeners);
 		
-		Scene = new Scene_Logo(this.getWidth(), this.getHeight());
+		Scene = new Scene_Logo(window.getWidth(), window.getHeight());
 	}
 	
 	public static void setScene(GlobalScene scene)

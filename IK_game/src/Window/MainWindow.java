@@ -10,7 +10,7 @@ import Scene.TestingScene;
 
 public class MainWindow extends JFrame
 {
-	DoubleBuffer buff = new DoubleBuffer();
+	DoubleBuffer buff;
 	
 	public MainWindow()
 	{
@@ -18,6 +18,8 @@ public class MainWindow extends JFrame
 		this.setTitle("Title");
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setUndecorated(true);
+		
+		buff = new DoubleBuffer(this);
 		
 		this.add(buff);
 		
