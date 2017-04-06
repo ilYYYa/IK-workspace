@@ -23,8 +23,6 @@ public class MainWindow extends JFrame
 		
 		this.setVisible(true);
 		
-		buff.setScene(new TestingScene(this.getWidth(), this.getHeight()));
-		
 		while(true)
 		{
 			repaint();
