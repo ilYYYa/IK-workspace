@@ -32,7 +32,6 @@ public class TextureLoader
 				return textures.get(i);
 			}
 		}
-		
 		return null;
 	}
 }

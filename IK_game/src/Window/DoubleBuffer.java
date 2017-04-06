@@ -7,10 +7,11 @@ import java.awt.event.MouseEvent;
 import javax.swing.JPanel;
 
 import Scene.GlobalScene;
+import Scene.Scene_Logo;
 
 public class DoubleBuffer extends JPanel
 {
-	public static GlobalScene Scene = null;
+	public static GlobalScene Scene;
 	public static Listeners listeners;
 	
 	public DoubleBuffer()
@@ -19,6 +20,8 @@ public class DoubleBuffer extends JPanel
 		this.addMouseListener(listeners);
 		this.addMouseMotionListener(listeners);
 		this.addKeyListener(listeners);
+		
+		Scene = new Scene_Logo(this.getWidth(), this.getHeight());
 	}
 	
 	public static void setScene(GlobalScene scene)
