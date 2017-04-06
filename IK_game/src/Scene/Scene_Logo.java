@@ -34,7 +34,6 @@ public class Scene_Logo extends GlobalScene
 	@Override
 	public void onKeyPress(KeyEvent event)
 	{
-		System.out.println("text");
 		if(event.getKeyCode() == 32 || event.getKeyCode() == 10) DoubleBuffer.setScene(new Scene_Load(width, height));
 		super.onKeyPress(event);
 	}
