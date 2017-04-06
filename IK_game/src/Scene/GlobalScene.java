@@ -14,12 +14,21 @@ public class GlobalScene extends DrawbleObject
 	
 	public GlobalScene(double w, double h)
 	{
+		super(null, null);
 		width = w; height = h;
 	}
 	
 	public void addPanel(GlobalPanel panel)
 	{
-		panels.add(panel);
+		if(!existsPanel(panel)) panels.add(panel);
+	}
+	public void removePanel(GlobalPanel panel)
+	{
+		if(existsPanel(panel)) panels.remove(panel);
+	}
+	public boolean existsPanel(GlobalPanel panel)
+	{
+		return panels.contains(panel);
 	}
 	
 	@Override

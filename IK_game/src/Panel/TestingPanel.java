@@ -5,15 +5,16 @@ import java.awt.Graphics;
 import java.awt.event.MouseEvent;
 
 import Button.TestingButton;
+import Scene.GlobalScene;
 
 public class TestingPanel extends GlobalPanel
 {
 	int rr = 255;
 	
-	public TestingPanel(int x, int y, int w, int h)
+	public TestingPanel(int x, int y, int w, int h, GlobalScene scene_parent)
 	{
-		super(x, y, w, h);
-		this.addObjectForDraw(new TestingButton(10,10,w-20,50));
+		super(x, y, w, h, scene_parent);
+		this.addObjectForDraw(new TestingButton(10,10,w-20,50,scene_parent,this));
 	}
 
 	@Override

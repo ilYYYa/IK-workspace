@@ -4,6 +4,9 @@ import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
+import Panel.GlobalPanel;
+import Scene.GlobalScene;
+
 public abstract class DrawbleObject
 {
 	public double posX = 0;
@@ -12,6 +15,14 @@ public abstract class DrawbleObject
 	public double localPosY = 0;
 	public double width = 0;
 	public double height = 0;
+	
+	public GlobalScene scene_parent = null;
+	public GlobalPanel panel_parent = null;
+	
+	public DrawbleObject(GlobalScene sp, GlobalPanel pp)
+	{
+		scene_parent = sp; panel_parent = pp;
+	}
 	
 	public abstract void draw(Graphics g);
 	

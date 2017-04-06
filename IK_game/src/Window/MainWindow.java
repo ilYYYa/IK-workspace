@@ -1,12 +1,12 @@
 package Window;
 
-import java.awt.Color;
-import java.awt.Graphics;
 import java.awt.Toolkit;
+import java.io.IOException;
 
 import javax.swing.JFrame;
 
-import Scene.TestingScene;
+import Resources.SettingLoader;
+import Resources.Settings;
 
 public class MainWindow extends JFrame
 {
@@ -14,10 +14,27 @@ public class MainWindow extends JFrame
 	
 	public MainWindow()
 	{
-		this.setBounds(0, 0, (int)Toolkit.getDefaultToolkit().getScreenSize().getWidth(), (int)Toolkit.getDefaultToolkit().getScreenSize().getHeight());
+		try
+		{
+			SettingLoader.initLoad();
+		}
+		catch (IOException e1)
+		{
+			SettingLoader.initSave();
+		}
+		
+		if(Settings.fullScreen)
+		{
+			this.setBounds(0, 0, (int)Toolkit.getDefaultToolkit().getScreenSize().getWidth(), (int)Toolkit.getDefaultToolkit().getScreenSize().getHeight());
+			this.setUndecorated(true);
+		}
+		else
+		{
+			this.setBounds(100, 100, Settings.widthScreen, Settings.heightScreen);
+		}
+		
 		this.setTitle("Title");
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.setUndecorated(true);
 		
 		buff = new DoubleBuffer(this);
 		this.addKeyListener(buff.listeners);

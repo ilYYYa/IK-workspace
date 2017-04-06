@@ -5,6 +5,8 @@ import java.awt.Graphics;
 import java.awt.event.MouseEvent;
 
 import Obj.DrawbleObject;
+import Panel.GlobalPanel;
+import Scene.GlobalScene;
 
 public class GlobalButton extends DrawbleObject
 {
@@ -18,8 +20,9 @@ public class GlobalButton extends DrawbleObject
 	
 	public int mouseAction = 0;
 
-	public GlobalButton(double x, double y, double w, double h)
+	public GlobalButton(double x, double y, double w, double h, GlobalScene scene_parent, GlobalPanel panel_parent)
 	{
+		super(scene_parent, panel_parent);
 		localPosX = x; localPosY = y; width = w; height = h;
 	}
 	

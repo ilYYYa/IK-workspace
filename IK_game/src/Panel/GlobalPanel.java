@@ -6,6 +6,7 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
 import Obj.DrawbleObject;
+import Scene.GlobalScene;
 
 public class GlobalPanel extends DrawbleObject
 {
@@ -16,8 +17,9 @@ public class GlobalPanel extends DrawbleObject
 		objectsForDraw.add(obj);
 	}
 	
-	public GlobalPanel(double x, double y, double w, double h)
+	public GlobalPanel(double x, double y, double w, double h, GlobalScene scene_parent)
 	{
+		super(scene_parent, null);
 		posX = x;
 		posY = y;
 		width = w;
