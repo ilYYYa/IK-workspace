@@ -39,8 +39,7 @@ public class GlobalPanel extends DrawbleObject
 	{
 		for(int i = objectsForDraw.size() - 1; i >= 0; i--)
 		{
-			if(objectsForDraw.get(i).posX <= event.getX() && objectsForDraw.get(i).posX + objectsForDraw.get(i).width >= event.getX() &&
-					objectsForDraw.get(i).posY <= event.getY() && objectsForDraw.get(i).posY + objectsForDraw.get(i).height >= event.getY())
+			if(CheckingPointCrossingThisObject(event.getX(), event.getY()))
 			{
 				objectsForDraw.get(i).onMouseClick(event);
 				
@@ -57,8 +56,7 @@ public class GlobalPanel extends DrawbleObject
 	{
 		for(int i = objectsForDraw.size() - 1; i >= 0; i--)
 		{
-			if(objectsForDraw.get(i).posX <= event.getX() && objectsForDraw.get(i).posX + objectsForDraw.get(i).width >= event.getX() &&
-					objectsForDraw.get(i).posY <= event.getY() && objectsForDraw.get(i).posY + objectsForDraw.get(i).height >= event.getY())
+			if(CheckingPointCrossingThisObject(event.getX(), event.getY()))
 			{
 				objectsForDraw.get(i).onMousePress(event);
 				
@@ -75,8 +73,7 @@ public class GlobalPanel extends DrawbleObject
 	{
 		for(int i = objectsForDraw.size() - 1; i >= 0; i--)
 		{
-			if(objectsForDraw.get(i).posX <= event.getX() && objectsForDraw.get(i).posX + objectsForDraw.get(i).width >= event.getX() &&
-					objectsForDraw.get(i).posY <= event.getY() && objectsForDraw.get(i).posY + objectsForDraw.get(i).height >= event.getY())
+			if(CheckingPointCrossingThisObject(event.getX(), event.getY()))
 			{
 				objectsForDraw.get(i).onMouseRelease(event);
 				
@@ -94,8 +91,7 @@ public class GlobalPanel extends DrawbleObject
 	{
 		for(int i = objectsForDraw.size() - 1; i >= 0; i--)
 		{
-			if(objectsForDraw.get(i).posX <= event.getX() && objectsForDraw.get(i).posX + objectsForDraw.get(i).width >= event.getX() &&
-					objectsForDraw.get(i).posY <= event.getY() && objectsForDraw.get(i).posY + objectsForDraw.get(i).height >= event.getY())
+			if(CheckingPointCrossingThisObject(event.getX(), event.getY()))
 			{
 				objectsForDraw.get(i).onMouseRelease(event);
 				
