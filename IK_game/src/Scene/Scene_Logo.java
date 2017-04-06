@@ -2,6 +2,8 @@ package Scene;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
 
 import Window.DoubleBuffer;
 
@@ -27,5 +29,12 @@ public class Scene_Logo extends GlobalScene
 		{
 			DoubleBuffer.setScene(new Scene_Load(width, height));
 		}
+	}
+	
+	@Override
+	public void onMousePress(MouseEvent event)
+	{
+		DoubleBuffer.setScene(new Scene_Load(width, height));
+		super.onMousePress(event);
 	}
 }
