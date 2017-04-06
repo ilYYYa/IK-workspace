@@ -15,6 +15,18 @@ public abstract class DrawbleObject
 	
 	public abstract void draw(Graphics g);
 	
+	public boolean CheckingPointCrossingThisObject(double pointX, double pointY)
+	{
+		if(posX <= pointX && posX + width >= pointX && posY <= pointY && posY + height >= pointY)
+		{
+			return true;
+		}
+		else 
+		{
+			return false;
+		}
+	}
+	
 	public void onMouseClick(MouseEvent event){}
 	public void onMousePress(MouseEvent event){}
 	public void onMouseRelease(MouseEvent event){}
