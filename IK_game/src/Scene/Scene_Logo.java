@@ -2,6 +2,7 @@ package Scene;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
 import Window.DoubleBuffer;
@@ -31,9 +32,10 @@ public class Scene_Logo extends GlobalScene
 	}
 	
 	@Override
-	public void onMousePress(MouseEvent event)
+	public void onKeyPress(KeyEvent event)
 	{
-		DoubleBuffer.setScene(new Scene_Load(width, height));
-		super.onMousePress(event);
+		System.out.println("text");
+		if(event.getKeyCode() == 32 || event.getKeyCode() == 10) DoubleBuffer.setScene(new Scene_Load(width, height));
+		super.onKeyPress(event);
 	}
 }
