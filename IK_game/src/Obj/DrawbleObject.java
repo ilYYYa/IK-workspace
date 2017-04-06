@@ -15,9 +15,9 @@ public abstract class DrawbleObject
 	
 	public abstract void draw(Graphics g);
 	
-	public boolean CheckingPointCrossingThisObject(double pointX, double pointY)
+	public boolean CheckingPointCrossingSomeObject(DrawbleObject obj, double pointX, double pointY)
 	{
-		if(posX <= pointX && posX + width >= pointX && posY <= pointY && posY + height >= pointY)
+		if(obj.posX <= pointX && obj.posX + obj.width >= pointX && obj.posY <= pointY && obj.posY + obj.height >= pointY)
 		{
 			return true;
 		}

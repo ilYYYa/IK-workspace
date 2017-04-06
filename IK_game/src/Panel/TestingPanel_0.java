@@ -23,10 +23,10 @@ public class TestingPanel_0 extends GlobalPanel
 	}
 	
 	@Override
-	public void onMouseClick(MouseEvent event)
+	public void onMousePress(MouseEvent event)
 	{
 		bb = 100;
-		super.onMouseClick(event);
+		super.onMousePress(event);
 	}
 
 }

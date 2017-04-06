@@ -39,7 +39,7 @@ public class GlobalPanel extends DrawbleObject
 	{
 		for(int i = objectsForDraw.size() - 1; i >= 0; i--)
 		{
-			if(CheckingPointCrossingThisObject(event.getX(), event.getY()))
+			if(CheckingPointCrossingSomeObject(objectsForDraw.get(i), event.getX(), event.getY()))
 			{
 				objectsForDraw.get(i).onMouseClick(event);
 				
@@ -56,7 +56,7 @@ public class GlobalPanel extends DrawbleObject
 	{
 		for(int i = objectsForDraw.size() - 1; i >= 0; i--)
 		{
-			if(CheckingPointCrossingThisObject(event.getX(), event.getY()))
+			if(CheckingPointCrossingSomeObject(objectsForDraw.get(i), event.getX(), event.getY()))
 			{
 				objectsForDraw.get(i).onMousePress(event);
 				
@@ -73,7 +73,7 @@ public class GlobalPanel extends DrawbleObject
 	{
 		for(int i = objectsForDraw.size() - 1; i >= 0; i--)
 		{
-			if(CheckingPointCrossingThisObject(event.getX(), event.getY()))
+			if(CheckingPointCrossingSomeObject(objectsForDraw.get(i), event.getX(), event.getY()))
 			{
 				objectsForDraw.get(i).onMouseRelease(event);
 				
@@ -91,7 +91,7 @@ public class GlobalPanel extends DrawbleObject
 	{
 		for(int i = objectsForDraw.size() - 1; i >= 0; i--)
 		{
-			if(CheckingPointCrossingThisObject(event.getX(), event.getY()))
+			if(CheckingPointCrossingSomeObject(objectsForDraw.get(i), event.getX(), event.getY()))
 			{
 				objectsForDraw.get(i).onMouseRelease(event);
 				
