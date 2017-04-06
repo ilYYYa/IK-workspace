@@ -14,9 +14,9 @@ public class TextureLoader
 	
 	public static void initLoad() throws IOException
 	{
-		File f = new File("Resources\\Files");
+		File f = new File("Resources\\Files\\Textures");
 		File[] files = f.listFiles();
-		for(int i = 0; i < files.length; i++)
+		for(int i = 0; files!=null && i < files.length; i++)
 		{
 			fileNames.add(files[i].getName());
 			textures.add(ImageIO.read(files[i]));
