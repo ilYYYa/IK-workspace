@@ -10,108 +10,15 @@ import Scene.GlobalScene;
 
 public class GlobalPanel extends DrawbleObject
 {
-	public ArrayList<DrawbleObject> objectsForDraw = new ArrayList<DrawbleObject>();
-	
-	public void addObjectForDraw(DrawbleObject obj)
-	{
-		objectsForDraw.add(obj);
-	}
-	
 	public GlobalPanel(double x, double y, double w, double h, GlobalScene scene_parent)
 	{
-		super(scene_parent, null);
+		super(scene_parent);
 		posX = x;
 		posY = y;
 		width = w;
 		height = h;
 	}
-	
-	public void draw(Graphics g)
-	{
-		for(int i = 0; i < objectsForDraw.size(); i++)
-		{
-			objectsForDraw.get(i).posX = this.posX + objectsForDraw.get(i).localPosX;
-			objectsForDraw.get(i).posY = this.posY + objectsForDraw.get(i).localPosY;
-			objectsForDraw.get(i).draw(g);
-		}
-	}
 
-	@Override
-	public void onMouseClick(MouseEvent event)
-	{
-		for(int i = objectsForDraw.size() - 1; i >= 0; i--)
-		{
-			if(CheckingPointCrossingSomeObject(objectsForDraw.get(i), event.getX(), event.getY()))
-			{
-				objectsForDraw.get(i).onMouseClick(event);
-				
-				DrawbleObject obj = objectsForDraw.get(i);
-				objectsForDraw.remove(i);
-				objectsForDraw.add(obj);
-				
-				break;
-			}
-		}
-	}
-	@Override
-	public void onMousePress(MouseEvent event)
-	{
-		for(int i = objectsForDraw.size() - 1; i >= 0; i--)
-		{
-			if(CheckingPointCrossingSomeObject(objectsForDraw.get(i), event.getX(), event.getY()))
-			{
-				objectsForDraw.get(i).onMousePress(event);
-				
-				DrawbleObject obj = objectsForDraw.get(i);
-				objectsForDraw.remove(i);
-				objectsForDraw.add(obj);
-				
-				break;
-			}
-		}
-	}
-	@Override
-	public void onMouseRelease(MouseEvent event)
-	{
-		for(int i = objectsForDraw.size() - 1; i >= 0; i--)
-		{
-			if(CheckingPointCrossingSomeObject(objectsForDraw.get(i), event.getX(), event.getY()))
-			{
-				objectsForDraw.get(i).onMouseRelease(event);
-				
-				DrawbleObject obj = objectsForDraw.get(i);
-				objectsForDraw.remove(i);
-				objectsForDraw.add(obj);
-				
-				break;
-			}
-		}
-	}
-	
-	@Override
-	public void onMouseMove(MouseEvent event)
-	{
-		for(int i = objectsForDraw.size() - 1; i >= 0; i--)
-		{
-			if(CheckingPointCrossingSomeObject(objectsForDraw.get(i), event.getX(), event.getY()))
-			{
-				objectsForDraw.get(i).onMouseMove(event);
-			}
-			else
-			{
-				objectsForDraw.get(i).onMouseMoveNotOnYou(event);
-			}
-		}
-	}
-
-	@Override
-	public void onKeyPress(KeyEvent event)
-	{
-		if(objectsForDraw.size() > 0) objectsForDraw.get(objectsForDraw.size() - 1).onKeyPress(event);
-	}
-	@Override
-	public void onKeyRelease(KeyEvent event)
-	{
-		if(objectsForDraw.size() > 0) objectsForDraw.get(objectsForDraw.size() - 1).onKeyRelease(event);
-	}
+	public void logic(){}
+	public void draw(Graphics g){}
 }

@@ -2,15 +2,16 @@ package Button;
 
 import java.awt.event.MouseEvent;
 
+import Obj.DrawbleObject;
 import Panel.GlobalPanel;
 import Scene.GlobalScene;
 
 public class Button_menu_exit extends GlobalButton
 {
 
-	public Button_menu_exit(double x, double y, double w, double h, GlobalScene scene_parent, GlobalPanel panel_parent)
+	public Button_menu_exit(double x, double y, double w, double h, DrawbleObject parent)
 	{
-		super(x, y, w, h, scene_parent, panel_parent);
+		super(x, y, w, h, parent);
 		this.setText("Exit");
 	}
 

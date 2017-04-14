@@ -42,6 +42,7 @@ public class Game
 	{
 		while(gameRunning)
 		{
+			theDoubleBuffer.logic();
 			if(theMainWindow != null) theMainWindow.repaint();
 			
 			try {Thread.sleep(16);} // 16 --> 1000/60 --> 60fps

@@ -3,17 +3,17 @@ package Scene;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
 
+import Game.Game;
 import Window.DoubleBuffer;
 
 public class Scene_Logo extends GlobalScene
 {
 	private int timer = 0;
 	
-	public Scene_Logo(double w, double h)
+	public Scene_Logo()
 	{
-		super(w, h);
+		super();
 	}
 
 	@Override
@@ -21,20 +21,25 @@ public class Scene_Logo extends GlobalScene
 	{
 		int c = (int)((double)timer/180d*255d);
 		g.setColor(new Color(c,c,c));
-		g.fillRect(0, 0, (int)width, (int)height);
+		g.fillRect(0, 0, (int)realWidth(), (int)realHeight());
 		g.setColor(new Color(255-c,255-c,255-c));
 		g.drawString("LOGO MFK!!! (missed) | " + timer, 100, 100);
+	}
+
+	@Override
+	public void logic()
+	{
 		timer++;
 		if(timer >= 180)
 		{
-			DoubleBuffer.setScene(new Scene_Load(width, height));
+			Game.theGame.theDoubleBuffer.setScene(new Scene_Load());
 		}
 	}
 	
 	@Override
 	public void onKeyPress(KeyEvent event)
 	{
-		if(event.getKeyCode() == 32 || event.getKeyCode() == 10) DoubleBuffer.setScene(new Scene_Load(width, height));
+		if(event.getKeyCode() == 32 || event.getKeyCode() == 10) Game.theGame.theDoubleBuffer.setScene(new Scene_Load());
 		super.onKeyPress(event);
 	}
 }

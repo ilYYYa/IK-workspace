@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.io.IOException;
 
+import Game.Game;
 import Resources.LanguageLoader;
 import Resources.SoundLoader;
 import Resources.TextureLoader;
@@ -12,10 +13,11 @@ import Window.DoubleBuffer;
 public class Scene_Load extends GlobalScene
 {
 	private loader l = new loader();
+	private String progress = "";
 	
-	public Scene_Load(double w, double h)
+	public Scene_Load()
 	{
-		super(w, h);
+		super();
 		l.start();
 	}
 
@@ -24,12 +26,18 @@ public class Scene_Load extends GlobalScene
 	{
 		g.setColor(Color.BLACK);
 		g.drawString("Loading resources", 10, 20);
-		if(l.progress == 0) g.drawString("Loading Textures", 10, 40);
-		if(l.progress == 1) g.drawString("Loading Sounds", 10, 40);
-		if(l.progress == 2) g.drawString("Loading Languages", 10, 40);
+		g.drawString(progress, 10, 40);
+	}
+
+	@Override
+	public void logic()
+	{
+		if(l.progress == 0) progress = "Loading Textures";
+		if(l.progress == 1) progress = "Loading Sounds";
+		if(l.progress == 2) progress = "Loading Languages";
 		if(l.progress == 3)
 		{
-			DoubleBuffer.setScene(new Scene_Menu(width, height));
+			Game.theGame.theDoubleBuffer.setScene(new Scene_Menu());
 		}
 	}
 }

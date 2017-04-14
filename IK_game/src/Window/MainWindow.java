@@ -1,5 +1,6 @@
 package Window;
 
+import java.awt.Graphics;
 import java.awt.Toolkit;
 
 import javax.swing.JFrame;

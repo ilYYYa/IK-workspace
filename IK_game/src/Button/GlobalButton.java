@@ -5,8 +5,6 @@ import java.awt.Graphics;
 import java.awt.event.MouseEvent;
 
 import Obj.DrawbleObject;
-import Panel.GlobalPanel;
-import Scene.GlobalScene;
 
 public class GlobalButton extends DrawbleObject
 {
@@ -20,10 +18,13 @@ public class GlobalButton extends DrawbleObject
 	
 	public int mouseAction = 0;
 
-	public GlobalButton(double x, double y, double w, double h, GlobalScene scene_parent, GlobalPanel panel_parent)
+	public GlobalButton(double x, double y, double w, double h, DrawbleObject parent)
 	{
-		super(scene_parent, panel_parent);
-		localPosX = x; localPosY = y; width = w; height = h;
+		super(parent);
+		posX = x;
+		posY = y;
+		width = w;
+		height = h;
 	}
 	
 	@Override
@@ -31,16 +32,16 @@ public class GlobalButton extends DrawbleObject
 	{
 	    switch (mouseAction)
 	    {
-	    case 0: g.setColor(bgColor); break;
-	    case 1: g.setColor(OnButtonMouseBgColor); break;
-	    case 2: g.setColor(ColorDali); break;
+		    case 0: g.setColor(bgColor); break;
+		    case 1: g.setColor(OnButtonMouseBgColor); break;
+		    case 2: g.setColor(ColorDali); break;
 	    }
 	    
-		g.fillRect((int)posX, (int)posY, (int)width, (int)height);
+		g.fillRect((int)posXOnScreen(), (int)posYOnScreen(), (int)realWidth(), (int)realHeight());
 		g.setColor(borderColor);
-		g.drawRect((int)posX, (int)posY, (int)width, (int)height);
+		g.drawRect((int)posXOnScreen(), (int)posYOnScreen(), (int)realWidth(), (int)realHeight());
 		g.setColor(textColor);
-		g.drawString(Text, (int)posX + 5, (int)posY + (int)height/2);
+		g.drawString(Text, (int)posXOnScreen() + 5, (int)posYOnScreen() + (int)realHeight()/2);
 	}
 	
 	public GlobalButton setText(String text)
@@ -84,7 +85,7 @@ public class GlobalButton extends DrawbleObject
 	public void onMouseMoveNotOnYou(MouseEvent event)
 	{
 		mouseAction = 0;
-		super.onMouseMove(event);
+		super.onMouseMoveNotOnYou(event);
 	}
 	
 	@Override
@@ -100,4 +101,7 @@ public class GlobalButton extends DrawbleObject
 		mouseAction = 0;
 		super.onMouseRelease(event);
 	}
+
+	@Override
+	public void logic(){}
 }
