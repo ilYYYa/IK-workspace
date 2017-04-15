@@ -45,18 +45,18 @@ public class DoubleBuffer extends JPanel
 	private void logicObjectsIn(DrawbleObject obj)
 	{
 		obj.logic();
-		for(int i = 0; i < obj.childs.size(); i++)
+		for(int i = 0; i < obj.childs.length; i++)
 		{
-			logicObjectsIn(obj.childs.get(i));
+			logicObjectsIn(obj.childs[i]);
 		}
 	}
 	
 	private void drawObjectsIn(DrawbleObject obj, Graphics g)
 	{
 		obj.draw(g);
-		for(int i = 0; i < obj.childs.size(); i++)
+		for(int i = 0; i < obj.childs.length; i++)
 		{
-			drawObjectsIn(obj.childs.get(i), g);
+			drawObjectsIn(obj.childs[i], g);
 		}
 	}
 	

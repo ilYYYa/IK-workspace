@@ -10,9 +10,9 @@ import Scene.GlobalScene;
 
 public class GlobalPanel extends DrawbleObject
 {
-	public GlobalPanel(double x, double y, double w, double h, GlobalScene scene_parent)
+	public GlobalPanel(double x, double y, double w, double h, DrawbleObject parent)
 	{
-		super(scene_parent);
+		super(parent);
 		posX = x;
 		posY = y;
 		width = w;

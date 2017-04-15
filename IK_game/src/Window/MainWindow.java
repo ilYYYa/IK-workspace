@@ -1,5 +1,6 @@
 package Window;
 
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Toolkit;
 
@@ -21,6 +22,8 @@ public class MainWindow extends JFrame
 		{
 			this.setBounds(100, 100, Settings.widthScreen, Settings.heightScreen);
 		}
+		
+		this.setMinimumSize(new Dimension(400, 400));
 		
 		this.setTitle(GameInfo.getGameFullestName());
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
