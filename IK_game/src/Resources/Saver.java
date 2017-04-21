@@ -503,14 +503,14 @@ public class Saver
 			if(out != null)
 			{
 				//Saving game info as string
-				out.writeUTF("123 test 1.0");
+				out.writeUTF(GameInfo.getGameFullestName());
 				//Saving game name as string
-				out.writeUTF("123");
+				out.writeUTF(GameInfo.NameOfTheGame);
 				//Saving game stage of development as string
-				out.writeUTF("test");
+				out.writeUTF(GameInfo.StageOfDevelopment);
 				//Saving game versions as int
-				out.writeInt(1);
-				out.writeInt(0);
+				out.writeInt(GameInfo.GlobalVersion);
+				out.writeInt(GameInfo.LocalVersion);
 				//Saving system time as Mills
 				out.writeLong(System.currentTimeMillis());
 
