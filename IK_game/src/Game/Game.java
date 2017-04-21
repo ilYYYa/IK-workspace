@@ -14,6 +14,8 @@ public class Game
 	
 	public boolean gameRunning = false;
 	
+	public long lastSaved = System.currentTimeMillis()/1000;
+	
 	public Game()
 	{
 		theGame = this;
@@ -46,7 +48,7 @@ public class Game
 			theDoubleBuffer.logic();
 			if(theMainWindow != null) theMainWindow.repaint();
 			
-			if(System.currentTimeMillis()/1000 % 10 == 0) this.SaveSettings();
+			if(System.currentTimeMillis()/1000 % 10 == 0 && lastSaved != System.currentTimeMillis()) this.SaveSettings();
 			
 			try {Thread.sleep(16);} // 16 --> 1000/60 --> 60fps
 			catch (InterruptedException e){}
@@ -81,6 +83,7 @@ public class Game
 	
 	public void SaveSettings()
 	{
+		lastSaved = System.currentTimeMillis()/1000;
 		gameSettingSaver.initSave();
 	}
 }
