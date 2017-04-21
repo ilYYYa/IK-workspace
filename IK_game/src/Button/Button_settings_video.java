@@ -1,13 +1,6 @@
 package Button;
 
-import java.awt.event.MouseEvent;
-
 import Obj.DrawbleObject;
-import Panel.GlobalPanel;
-import Panel.Panel_settings_video;
-import Resources.SettingLoader;
-import Resources.Settings;
-import Scene.GlobalScene;
 
 public class Button_settings_video extends GlobalButton
 {

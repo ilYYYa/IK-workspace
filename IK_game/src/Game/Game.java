@@ -1,13 +1,14 @@
 package Game;
-import java.io.IOException;
-
-import Resources.SettingLoader;
+import Resources.Saver;
 import Window.DoubleBuffer;
 import Window.MainWindow;
 
 public class Game
 {
 	public static Game theGame;
+	
+	public Saver gameSettingSaver;
+	
 	public MainWindow theMainWindow;
 	public DoubleBuffer theDoubleBuffer;
 	
@@ -17,7 +18,7 @@ public class Game
 	{
 		theGame = this;
 		
-		InitializeSettings();
+		createSaver();
 		
 		createWnindow();
 		createDoubleBuffer();
@@ -45,6 +46,8 @@ public class Game
 			theDoubleBuffer.logic();
 			if(theMainWindow != null) theMainWindow.repaint();
 			
+			if(System.currentTimeMillis()/1000 % 10 == 0) this.SaveSettings();
+			
 			try {Thread.sleep(16);} // 16 --> 1000/60 --> 60fps
 			catch (InterruptedException e){}
 		}
@@ -71,20 +74,13 @@ public class Game
 		theMainWindow.setVisible(v);
 	}
 	
-	public void InitializeSettings()
+	public void createSaver()
 	{
-		try
-		{
-			SettingLoader.initLoad();
-		}
-		catch (IOException e1)
-		{
-			SettingLoader.initSave();
-		}
+		gameSettingSaver = new Saver("gameSettings.save");
 	}
 	
 	public void SaveSettings()
 	{
-		SettingLoader.initSave();
+		gameSettingSaver.initSave();
 	}
 }
