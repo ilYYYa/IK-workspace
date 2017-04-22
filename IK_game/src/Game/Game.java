@@ -21,6 +21,7 @@ public class Game
 		theGame = this;
 		
 		createSaver();
+		createDefaultSettings();
 		
 		createWnindow();
 		createDoubleBuffer();
@@ -81,9 +82,49 @@ public class Game
 		gameSettingSaver = new Saver("gameSettings.save");
 	}
 	
+	public void createDefaultSettings()
+	{
+		if(!gameSettingSaver.existBoolean("FullScreen")) gameSettingSaver.addBoolean(true, "FullScreen");
+		
+		if(!gameSettingSaver.existDouble("SoundScale")) gameSettingSaver.addDouble(1.0, "SoundScale");
+		if(!gameSettingSaver.existDouble("MusicScale")) gameSettingSaver.addDouble(1.0, "MusicScale");
+		if(!gameSettingSaver.existDouble("MasterSoundScale")) gameSettingSaver.addDouble(1.0, "MasterSoundScale");
+
+		if(!gameSettingSaver.existString("DifficultyLevel")) gameSettingSaver.addString("Normal", "DifficultyLevel");
+
+		if(!gameSettingSaver.existInt("Key_NorthMotion")) gameSettingSaver.addInt(87, "Key_NorthMotion"); //Default W key
+		if(!gameSettingSaver.existInt("Key_SouthMotion")) gameSettingSaver.addInt(83, "Key_SouthMotion"); //Default S key
+		if(!gameSettingSaver.existInt("Key_WestMotion")) gameSettingSaver.addInt(65, "Key_WestMotion"); //Default A key
+		if(!gameSettingSaver.existInt("Key_EastMotion")) gameSettingSaver.addInt(68, "Key_EastMotion"); //Default D key
+		if(!gameSettingSaver.existInt("Key_Run")) gameSettingSaver.addInt(16, "Key_Run"); //Default Shift key
+	}
+	
 	public void SaveSettings()
 	{
 		lastSaved = System.currentTimeMillis()/1000;
 		gameSettingSaver.initSave();
 	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

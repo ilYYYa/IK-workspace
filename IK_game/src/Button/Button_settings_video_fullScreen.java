@@ -11,7 +11,6 @@ public class Button_settings_video_fullScreen extends GlobalButton
 	public Button_settings_video_fullScreen(double x, double y, double w, double h, DrawbleObject parent)
 	{
 		super(x, y, w, h, parent);
-		if(!Game.theGame.gameSettingSaver.existBoolean("FullScreen")) Game.theGame.gameSettingSaver.addBoolean(true, "FullScreen");
 		this.setText("FullScreen: " + Game.theGame.gameSettingSaver.getBoolean("FullScreen"));
 	}
 	
