@@ -1,6 +1,7 @@
 package entity;
 
 import Game.Game;
+import Resources.Saver;
 import entity.Entity.damageSource;
 import world.World;
 
@@ -54,4 +55,36 @@ public class LivingEntity extends Entity
 		this.attack(damageType, value);
 		super.attackFromLivingEntity(e, damageType, value);
 	}
+
+	@Override
+	public void writeToSaver(Saver saver, int i)
+	{
+		super.writeToSaver(saver, i);
+		saver.addDouble(HP, "EntityHP"+i);
+		saver.addDouble(MP, "EntityMP"+i);
+		saver.addDouble(Armor, "EntityArmor"+i);
+		saver.addDouble(MagicalResistance, "EntityMagicalResistance"+i);
+		saver.addDouble(HPRegeneration, "EntityHPRegeneration"+i);
+		saver.addDouble(MPRegeneration, "EntityMPRegeneration"+i);
+		saver.addInt(Level, "EntityLevel"+i);
+		saver.addInt(latestAttacker.uid, "EntityLatestAttackerUid"+i);
+	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

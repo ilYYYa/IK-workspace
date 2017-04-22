@@ -1,5 +1,6 @@
 package world;
 
+import Resources.Saver;
 import block.Block;
 
 public class Chunk
@@ -84,4 +85,45 @@ public class Chunk
 	{
 		return Block.getBlockByBlockId(getBlockId(x, y, lvl));
 	}
+	
+	public void writeToSaver(Saver saver, int ci)
+	{
+		saver.addInt(chunkPosX, ci + "ChunkPosX");
+		saver.addInt(chunkPosY, ci + "ChunkPosY");
+		for(int i = 0; i < backBlocksId.length; i++) saver.addIntsArray(backBlocksId[i], ci + "backBlocksId" + i);
+		for(int i = 0; i < middleBlocksId.length; i++) saver.addIntsArray(middleBlocksId[i], ci + "middleBlocksId" + i);
+		for(int i = 0; i < highBlocksId.length; i++) saver.addIntsArray(highBlocksId[i], ci + "highBlocksId" + i);
+		for(int i = 0; i < backBlocksMeta.length; i++) saver.addIntsArray(backBlocksMeta[i], ci + "backBlocksMeta" + i);
+		for(int i = 0; i < middleBlocksMeta.length; i++) saver.addIntsArray(middleBlocksMeta[i], ci + "middleBlocksMeta" + i);
+		for(int i = 0; i < highBlocksMeta.length; i++) saver.addIntsArray(highBlocksMeta[i], ci + "highBlocksMeta" + i);
+	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

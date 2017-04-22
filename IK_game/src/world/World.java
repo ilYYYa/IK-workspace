@@ -1,5 +1,6 @@
 package world;
 
+import Resources.Saver;
 import block.Block;
 import entity.Entity;
 
@@ -7,6 +8,12 @@ public class World
 {
 	private Entity[] entities = new Entity[0];
 	private Chunk[][] chunks = new Chunk[0][0];
+	private String worldname = "";
+	
+	public World(String worldname)
+	{
+		this.worldname = worldname;
+	}
 	
 	public Chunk[][] getChunks()
 	{
@@ -176,6 +183,30 @@ public class World
 		{
 			entities[i].onEntityUpdate();
 		}
+	}
+	
+	public Saver getWorldSaver()
+	{
+		Saver saver = new Saver("worlds/" + this.worldname + ".world");
+		
+		saver.addInt(chunks.length, "ChunkSize");
+		for(int ix = 0; ix < chunks.length; ix++)
+		{
+			for(int iy = 0; iy < chunks[ix].length; iy++)
+			{
+				saver.addInt(ix, "ChunkAX" + ix * chunks.length + iy);
+				saver.addInt(iy, "ChunkAY" + ix * chunks.length + iy);
+				chunks[ix][iy].writeToSaver(saver, ix * chunks.length + iy);
+			}
+		}
+		
+		saver.addInt(entities.length, "EntitiesSize");
+		for(int i = 0; i < entities.length; i++)
+		{
+			entities[i].writeToSaver(saver, i);
+		}
+		
+		return saver;
 	}
 }
 

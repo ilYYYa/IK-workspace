@@ -1,5 +1,6 @@
 package entity;
 
+import Resources.Saver;
 import world.BlockPos;
 import world.World;
 
@@ -83,13 +84,28 @@ public class Entity
     
     public void onEntityUpdate()
     {
-    	
+    	lifeTime++;
     }
     
     public static enum damageSource
     {
     	PHYSICAL, MAGICAL, PURE
     }
+
+	public void writeToSaver(Saver saver, int i)
+	{
+		saver.addString(unlocalizedName, "EntityUnlocalizedName" + i);
+		saver.addInt(id, "EntityId" + i);
+		saver.addInt(uid, "EntityUid" + i);
+		saver.addDouble(posX, "EntityPosX"+i);
+		saver.addDouble(posY, "EntityPosY"+i);
+		saver.addDouble(motionX, "EntityMotionX"+i);
+		saver.addDouble(motionY, "EntityMotionY"+i);
+		saver.addDouble(width, "EntityWidth"+i);
+		saver.addDouble(height, "EntityHeight"+i);
+		saver.addBoolean(isDead, "EntityIsDead"+i);
+		saver.addLong(lifeTime, "EntityLifeTime"+i);
+	}
 }
 
 
