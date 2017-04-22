@@ -3,6 +3,7 @@ package world;
 import Resources.Saver;
 import block.Block;
 import entity.Entity;
+import entity.PlayingPlayerEntity;
 
 public class World
 {
@@ -207,6 +208,11 @@ public class World
 		}
 		
 		return saver;
+	}
+
+	public PlayingPlayerEntity getPlayingPlayerEntity()
+	{
+		return null;
 	}
 }
 

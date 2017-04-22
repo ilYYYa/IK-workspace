@@ -1,5 +1,8 @@
 package block;
 
+import java.awt.Graphics;
+
+import Resources.TextureLoader;
 import entity.Entity;
 import entity.PlayerEntity;
 import world.BlockPos;
@@ -124,4 +127,36 @@ public class Block
 	{
 		return this.lighting;
 	}
+
+	public void drawAtScreen(Graphics g, int x, int y, int width, int height, int metadata)
+	{
+		g.drawImage(TextureLoader.getTextureByName(this.getTextureNameByMetaData(metadata)), x, y, width, height, null);
+	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
