@@ -18,6 +18,8 @@ public class Block
 	private double blockSlowMotion = 0.0;
 	
 	private int lighting = 0;
+	
+	private boolean summaring = true;
 
 	public Block(int blockId, String blockUnlocalizedName)
 	{
@@ -45,6 +47,16 @@ public class Block
 		return block.BlockUnlocalizedName;
 	}
 	
+	public boolean isBlockSummaring()
+	{
+		return summaring;
+	}
+	
+	public void setBlockSummaring(boolean value)
+	{
+		summaring = value;
+	}
+	
 	public Block setSoundEntityWallkingOnBlockName(String name)
 	{
 		soundEntityWallkingOnBlockName = name;
@@ -67,34 +79,44 @@ public class Block
 		return textureName;
 	}
 	
-	public String getTextureNameByMetaData(int metadata)
+	public String getTextureNameByMetaData(World world, BlockPos pos)
 	{
 		return getTextureName();
 	}
 	
 	public void onBlockClicked(World world, BlockPos pos, PlayerEntity player)
 	{
-		
+		if(this.isBlockSummaring()) this.setBlockMetaForThisBlock(world, pos);
 	}
 	
 	public void onBlockPlaced(World world, BlockPos pos)
 	{
-		
+		if(this.isBlockSummaring()) this.setBlockMetaForThisBlock(world, pos);
 	}
 	
 	public void onNeighborBlocksChanged(World world, BlockPos pos)
 	{
-		
+		if(this.isBlockSummaring()) this.setBlockMetaForThisBlock(world, pos);
 	}
 	
 	public void onEntityWallkingOnBlock(World world, BlockPos pos, Entity entity)
 	{
-		
+		if(this.isBlockSummaring()) this.setBlockMetaForThisBlock(world, pos);
 	}
 	
 	public void onBlockDestroyed(World world, BlockPos pos)
 	{
-		
+		world.setBlock(pos, Blocks.AIR);
+	}
+	
+	public void setBlockMetaForThisBlock(World world, BlockPos pos)
+	{
+		int buff = 0;
+		if(world.getBlock(pos.north())!=null && world.getBlock(pos.north()).isBlockSummaring() && world.getBlock(pos.north()) != this) buff += 1;
+		if(world.getBlock(pos.south())!=null && world.getBlock(pos.south()).isBlockSummaring() && world.getBlock(pos.south()) != this) buff += 2;
+		if(world.getBlock(pos.west())!=null && world.getBlock(pos.west()).isBlockSummaring() && world.getBlock(pos.west()) != this) buff += 4;
+		if(world.getBlock(pos.east())!=null && world.getBlock(pos.east()).isBlockSummaring() && world.getBlock(pos.east()) != this) buff += 8;
+		world.setBlockMeta(pos, buff);
 	}
 
 	/** 0.0 - Passable block, 1.0 - not*/
@@ -128,9 +150,14 @@ public class Block
 		return this.lighting;
 	}
 
-	public void drawAtScreen(Graphics g, int x, int y, int width, int height, int metadata)
+	public void drawAtScreen(Graphics g, int x, int y, int width, int height, World world, BlockPos pos)
 	{
-		g.drawImage(TextureLoader.getTextureByName(this.getTextureNameByMetaData(metadata)), x, y, width, height, null);
+		g.drawImage(TextureLoader.getTextureByName(this.getTextureNameByMetaData(world, pos)), x, y, width, height, null);
+	}
+	
+	public String toString()
+	{
+		return "GlobalBlock";
 	}
 }
 

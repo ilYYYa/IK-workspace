@@ -60,4 +60,9 @@ public class BlockPos
 	}
 	
 	public static enum blockPosLevel {BACK, MIDDLE, HIGH}
+
+	public String toString()
+	{
+		return "BlockPos{x:" + this.posX + "; y:"+this.posY + "; Level: " + this.level +"; metadata:" + this.metaData + "}";
+	}
 }

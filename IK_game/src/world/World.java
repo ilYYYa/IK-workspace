@@ -91,10 +91,18 @@ public class World
 		int cy = blockPosToChunkArrayPos(y);
 		if(cy == -1)
 		{
-			System.err.println("at World.class at setBlock(int x, int y, BlockPos.blockPosLevel lvl, Block block)\n\tcy == -1");
-			return;
+			extendsChunkArray(chunks.length + 2);
+			cy = blockPosToChunkArrayPos(y);
 		}
+
 		chunks[cx][cy].setBlock(x, y, lvl, block);
+		
+		BlockPos buff = new BlockPos(x,y,lvl);		
+		block.onBlockPlaced(this, buff);
+		if(this.getBlock(buff.north()) != null)this.getBlock(buff.north()).onNeighborBlocksChanged(this, buff.north());
+		if(this.getBlock(buff.south()) != null)this.getBlock(buff.south()).onNeighborBlocksChanged(this, buff.south());
+		if(this.getBlock(buff.west()) != null)this.getBlock(buff.west()).onNeighborBlocksChanged(this, buff.west());
+		if(this.getBlock(buff.east()) != null)this.getBlock(buff.east()).onNeighborBlocksChanged(this, buff.east());
 	}
 	
 	public int getBlockMeta(int x, int y, BlockPos.blockPosLevel lvl)
@@ -104,7 +112,7 @@ public class World
 		int cy = blockPosToChunkArrayPos(y);
 		if(cy == -1) return 0;
 		
-		return chunks[x][y].getBlockMeta(x, y, lvl);
+		return chunks[cx][cy].getBlockMeta(x, y, lvl);
 	}
 	
 	public int getBlockMeta(BlockPos pos)
@@ -118,8 +126,8 @@ public class World
 		if(cx == -1) return null;
 		int cy = blockPosToChunkArrayPos(y);
 		if(cy == -1) return null;
-		
-		return chunks[x][y].getBlock(x, y, lvl);
+
+		return chunks[cx][cy].getBlock(x, y, lvl);
 	}
 	
 	public Block getBlock(BlockPos pos)
