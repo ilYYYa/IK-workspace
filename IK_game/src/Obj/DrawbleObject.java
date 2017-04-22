@@ -147,6 +147,13 @@ public abstract class DrawbleObject
 		}
 	}
 	
+	public boolean focusOnMe()
+	{
+		if(parent == null) return true;
+		if(parent.childs.length > 0 && parent.childs[parent.childs.length - 1] == this) return true;
+		return false;
+	}
+	
 	private MouseEvent getNewMouseEvent(MouseEvent e, int x, int y)
 	{
 		return new MouseEvent(e.getComponent(), e.getID(), e.getWhen(), e.getModifiers(), x, y, e.getClickCount(), e.isPopupTrigger(), e.getButton());
@@ -166,6 +173,18 @@ public abstract class DrawbleObject
 				
 				break;
 			}
+			else
+			{
+				buff.onMouseClickNotOnYou();
+			}
+		}
+	}
+	public void onMouseClickNotOnYou()
+	{
+		for(int i = childs.length - 1; i >= 0; i--)
+		{
+			DrawbleObject buff = childs[i];
+			buff.onMouseClickNotOnYou();
 		}
 	}
 	public void onMousePress(MouseEvent event)
@@ -182,6 +201,18 @@ public abstract class DrawbleObject
 				
 				break;
 			}
+			else
+			{
+				buff.onMousePressNotOnYou();
+			}
+		}
+	}
+	public void onMousePressNotOnYou()
+	{
+		for(int i = childs.length - 1; i >= 0; i--)
+		{
+			DrawbleObject buff = childs[i];
+			buff.onMousePressNotOnYou();
 		}
 	}
 	public void onMouseRelease(MouseEvent event)
@@ -198,6 +229,18 @@ public abstract class DrawbleObject
 				
 				break;
 			}
+			else
+			{
+				buff.onMouseReleaseNotOnYou();
+			}
+		}
+	}
+	public void onMouseReleaseNotOnYou()
+	{
+		for(int i = childs.length - 1; i >= 0; i--)
+		{
+			DrawbleObject buff = childs[i];
+			buff.onMouseReleaseNotOnYou();
 		}
 	}
 
