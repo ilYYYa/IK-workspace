@@ -14,6 +14,7 @@ public class Panel_playground extends GlobalPanel
 		super(x, y, w, h, parent);
 		
 		worldRenderer = new Panel_worldrenderer(0, 0, 1, 1, this);
+		
 		worldRenderer.setWorld(world);
 
 		for(int ix = -48; ix < 48; ix++)
@@ -37,6 +38,16 @@ public class Panel_playground extends GlobalPanel
 			world.setBlock(0, iy, BlockPos.blockPosLevel.BACK, Blocks.DIRT);
 			world.setBlock(1, iy, BlockPos.blockPosLevel.BACK, Blocks.DIRT);
 		}
+		
+		world.setBlock(-1, -1, BlockPos.blockPosLevel.BACK, Blocks.STONE);
+		world.setBlock(0, -1, BlockPos.blockPosLevel.BACK, Blocks.STONE);
+		world.setBlock(1, -1, BlockPos.blockPosLevel.BACK, Blocks.STONE);
+		world.setBlock(-1, 0, BlockPos.blockPosLevel.BACK, Blocks.STONE);
+		world.setBlock(0, 0, BlockPos.blockPosLevel.BACK, Blocks.STONE);
+		world.setBlock(1, 0, BlockPos.blockPosLevel.BACK, Blocks.STONE);
+		world.setBlock(-1, 1, BlockPos.blockPosLevel.BACK, Blocks.STONE);
+		world.setBlock(0, 1, BlockPos.blockPosLevel.BACK, Blocks.STONE);
+		world.setBlock(1, 1, BlockPos.blockPosLevel.BACK, Blocks.STONE);
 		
 		this.addChild(worldRenderer);
 	}

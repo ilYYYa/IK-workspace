@@ -144,8 +144,10 @@ public class Panel_worldrenderer extends GlobalPanel
 	public void onMousePress(MouseEvent e)
 	{
 		if(e.getButton() == e.BUTTON1) mPress = 1;
+		if(e.getButton() == e.BUTTON2) mPress = 2;
 		if(e.getButton() == e.BUTTON3) mPress = 3;
 		if(mPress == 1) world.setBlock((int)(mouseOnBlockX < 0 ? mouseOnBlockX - 1 : mouseOnBlockX), (int)(mouseOnBlockY < 0 ? mouseOnBlockY - 1 : mouseOnBlockY), BlockPos.blockPosLevel.BACK, Blocks.DIRT);
+		if(mPress == 2) world.setBlock((int)(mouseOnBlockX < 0 ? mouseOnBlockX - 1 : mouseOnBlockX), (int)(mouseOnBlockY < 0 ? mouseOnBlockY - 1 : mouseOnBlockY), BlockPos.blockPosLevel.BACK, Blocks.STONE);
 		if(mPress == 3) world.setBlock((int)(mouseOnBlockX < 0 ? mouseOnBlockX - 1 : mouseOnBlockX), (int)(mouseOnBlockY < 0 ? mouseOnBlockY - 1 : mouseOnBlockY), BlockPos.blockPosLevel.BACK, Blocks.GRASS);
 	}
 	
@@ -161,6 +163,7 @@ public class Panel_worldrenderer extends GlobalPanel
 		mouseX = e.getX();
 		mouseY = e.getY();
 		if(mPress == 1) world.setBlock((int)(mouseOnBlockX < 0 ? mouseOnBlockX - 1 : mouseOnBlockX), (int)(mouseOnBlockY < 0 ? mouseOnBlockY - 1 : mouseOnBlockY), BlockPos.blockPosLevel.BACK, Blocks.DIRT);
+		if(mPress == 2) world.setBlock((int)(mouseOnBlockX < 0 ? mouseOnBlockX - 1 : mouseOnBlockX), (int)(mouseOnBlockY < 0 ? mouseOnBlockY - 1 : mouseOnBlockY), BlockPos.blockPosLevel.BACK, Blocks.STONE);
 		if(mPress == 3) world.setBlock((int)(mouseOnBlockX < 0 ? mouseOnBlockX - 1 : mouseOnBlockX), (int)(mouseOnBlockY < 0 ? mouseOnBlockY - 1 : mouseOnBlockY), BlockPos.blockPosLevel.BACK, Blocks.GRASS);
 	}
 	
