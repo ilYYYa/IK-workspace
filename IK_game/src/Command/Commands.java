@@ -7,6 +7,10 @@ public class Commands
 				new Command_setblock(),
 				new Command_fill(),
 				new Command_saveworld(),
-				new Command_saveworld2()
+				new Command_saveworld2(),
+				new Command_loadWorld(),
+				new Command_goToMainMenu(),
+				new Command_exit(),
+				new Command_quit()
 		};
 }

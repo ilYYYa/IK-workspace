@@ -1,5 +1,6 @@
 package Game;
 import Resources.Saver;
+import Scene.GlobalScene;
 import Window.DoubleBuffer;
 import Window.MainWindow;
 import block.Block_Air;
@@ -111,6 +112,11 @@ public class Game
 	{
 		lastSaved = System.currentTimeMillis()/1000;
 		gameSettingSaver.initSave();
+	}
+
+	public void setScene(GlobalScene scene)
+	{
+		this.theDoubleBuffer.setScene(scene);
 	}
 }
 

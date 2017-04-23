@@ -16,6 +16,10 @@ public abstract class GCommand
 	{
 		return commandName;
 	}
+	public void setCommandName(String name)
+	{
+		commandName = name;
+	}
 	
 	public void setTypes(CType[] types)
 	{
