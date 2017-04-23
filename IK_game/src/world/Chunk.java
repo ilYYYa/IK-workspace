@@ -97,6 +97,18 @@ public class Chunk
 		for(int i = 0; i < middleBlocksMeta.length; i++) saver.addIntsArray(middleBlocksMeta[i], ci + "middleBlocksMeta" + i);
 		for(int i = 0; i < highBlocksMeta.length; i++) saver.addIntsArray(highBlocksMeta[i], ci + "highBlocksMeta" + i);
 	}
+	
+	public void readFromSaver(Saver saver, int ci)
+	{
+		chunkPosX = saver.getInt(ci + "ChunkPosX");
+		chunkPosY = saver.getInt(ci + "ChunkPosY");
+		for(int i = 0; i < backBlocksId.length; i++) backBlocksId[i] = saver.IntegerArrayToIntArray(saver.getIntsArray(ci + "backBlocksId" + i));
+		for(int i = 0; i < middleBlocksId.length; i++) middleBlocksId[i] = saver.IntegerArrayToIntArray(saver.getIntsArray(ci + "middleBlocksId" + i));
+		for(int i = 0; i < highBlocksId.length; i++) highBlocksId[i] = saver.IntegerArrayToIntArray(saver.getIntsArray(ci + "highBlocksId" + i));
+		for(int i = 0; i < backBlocksMeta.length; i++) backBlocksMeta[i] = saver.IntegerArrayToIntArray(saver.getIntsArray(ci + "backBlocksMeta" + i));
+		for(int i = 0; i < middleBlocksMeta.length; i++) middleBlocksMeta[i] = saver.IntegerArrayToIntArray(saver.getIntsArray(ci + "middleBlocksMeta" + i));
+		for(int i = 0; i < highBlocksMeta.length; i++) highBlocksMeta[i] = saver.IntegerArrayToIntArray(saver.getIntsArray(ci + "highBlocksMeta" + i));
+	}
 }
 
 

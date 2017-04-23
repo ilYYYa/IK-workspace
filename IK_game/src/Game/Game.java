@@ -2,6 +2,9 @@ package Game;
 import Resources.Saver;
 import Window.DoubleBuffer;
 import Window.MainWindow;
+import block.Block_Air;
+import block.Blocks;
+import world.World;
 
 public class Game
 {
@@ -12,9 +15,13 @@ public class Game
 	public MainWindow theMainWindow;
 	public DoubleBuffer theDoubleBuffer;
 	
+	public World currentOpenedWorld = null;
+	
 	public boolean gameRunning = false;
 	
 	public long lastSaved = System.currentTimeMillis()/1000;
+	
+	public static Block_Air air = (Block_Air) Blocks.AIR;
 	
 	public Game()
 	{

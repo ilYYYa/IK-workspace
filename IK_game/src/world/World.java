@@ -202,6 +202,8 @@ public class World
 	{
 		Saver saver = new Saver("worlds/" + this.worldname + ".world");
 		
+		saver.addString(this.worldname, "WorldName");
+		
 		saver.addInt(chunks.length, "ChunkSize");
 		for(int ix = 0; ix < chunks.length; ix++)
 		{
@@ -220,6 +222,30 @@ public class World
 		}
 		
 		return saver;
+	}
+	
+	public void readWorldFromSaver(Saver saver)
+	{
+		int len = saver.getInt("ChunkSize");
+		
+		this.setWorldName(saver.getString("WorldName"));
+		
+		chunks = new Chunk[len][len];
+		for(int ix = 0; ix < len; ix++)
+		{
+			for(int iy = 0; iy < len; iy++)
+			{
+				chunks[ix][iy] = new Chunk(saver.getInt("ChunkAX" + ix * chunks.length + iy), saver.getInt("ChunkAY" + ix * chunks.length + iy));
+				chunks[ix][iy].readFromSaver(saver, ix * chunks.length + iy);
+			}
+		}
+		
+		len = saver.getInt("EntitiesSize");
+		entities = new Entity[len];
+		for(int i = 0; i < len; i++)
+		{
+			//reading entities...
+		}
 	}
 
 	public PlayingPlayerEntity getPlayingPlayerEntity()

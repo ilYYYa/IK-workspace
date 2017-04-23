@@ -14,6 +14,7 @@ import Game.GameInfo;
 public class Saver
 {
 	public String filePath = "";
+	public File file = null;
 	public boolean isSaving = false;
 	public boolean isLoading = false;
 
@@ -27,6 +28,10 @@ public class Saver
 	public Saver(String filePath)
 	{
 		this.filePath = filePath;
+	}
+	public Saver(File f)
+	{
+		this.file = f;
 	}
 	
 	///////////////////////////////////////////////////////////////////////////////
@@ -242,9 +247,15 @@ public class Saver
 	public String[] getBytesArrayKeysArray() { return bytesArrayKeys; }
 	public boolean existBytesArray(String key) { return this.getIndexByKey(key, bytesArrayKeys) != -1; }
 	
-	private Byte[] byteArrayToByteArray(byte[] arr)
+	public static Byte[] byteArrayToByteArray(byte[] arr)
 	{
 		Byte[] ret = new Byte[arr.length];
+		for(int i = 0; i < ret.length; i++) ret[i] = arr[i];
+		return ret;
+	}
+	public static byte[] ByteArrayTobyteArray(Byte[] arr)
+	{
+		byte[] ret = new byte[arr.length];
 		for(int i = 0; i < ret.length; i++) ret[i] = arr[i];
 		return ret;
 	}
@@ -267,9 +278,15 @@ public class Saver
 	public String[] getIntsArrayKeysArray() { return intsArrayKeys; }
 	public boolean existIntsArray(String key) { return this.getIndexByKey(key, intsArrayKeys) != -1; }
 	
-	private Integer[] intArrayToIntegerArray(int[] arr)
+	public static Integer[] intArrayToIntegerArray(int[] arr)
 	{
 		Integer[] ret = new Integer[arr.length];
+		for(int i = 0; i < ret.length; i++) ret[i] = arr[i];
+		return ret;
+	}
+	public static int[] IntegerArrayToIntArray(Integer[] arr)
+	{
+		int[] ret = new int[arr.length];
 		for(int i = 0; i < ret.length; i++) ret[i] = arr[i];
 		return ret;
 	}
@@ -299,9 +316,12 @@ public class Saver
 	public void initLoad()
 	{
 		isLoading = true;
+		File f = null;
 		
-		File f = new File(this.filePath);
-		if(f.exists())
+		if(file == null) f = new File(this.filePath);
+		else f = file;
+		
+		if(f!=null && f.exists())
 		{
 			DataInputStream in = null;
 			try
@@ -471,7 +491,11 @@ public class Saver
 	{
 		isSaving = true;
 		
-		File f = new File(this.filePath);
+		File f = null;
+		
+		if(file == null) f = new File(this.filePath);
+		else f = file;
+		
 		if(!f.exists())
 		{
 			try

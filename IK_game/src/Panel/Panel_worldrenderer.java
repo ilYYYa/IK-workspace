@@ -22,26 +22,31 @@ public class Panel_worldrenderer extends GlobalPanel
 	public double cameraPosX = 0;
 	public double cameraPosY = 0;
 	public double cameraSpeed = 0.25;
-	
+
+	public final int blocksAtScreenByWidthCONST = 35;
 	public int blocksAtScreenByWidth = 35;
 	public int blocksAtScreenByHeight() { return (int)((this.realHeight()/(this.realWidth()/blocksAtScreenByWidth))+1); }
 	
-	private PlayingPlayerEntity player = null;
+	public PlayingPlayerEntity player = null;
 	
-	private boolean KeyUpPress = false;
-	private boolean KeyDownPress = false;
-	private boolean KeyLeftPress = false;
-	private boolean KeyRightPress = false;
-	private boolean KeyRunPress = false;
+	public boolean KeyUpPress = false;
+	public boolean KeyDownPress = false;
+	public boolean KeyLeftPress = false;
+	public boolean KeyRightPress = false;
+	public boolean KeyRunPress = false;
 	
-	private int mouseX = 0;
-	private int mouseY = 0;
-	private double mouseOnBlockX = 0;
-	private double mouseOnBlockY = 0;
+	public int mouseX = 0;
+	public int mouseY = 0;
+	public double mouseOnBlockX = 0;
+	public double mouseOnBlockY = 0;
+	
+	public Panel_techinfo info;
 
 	public Panel_worldrenderer(double x, double y, double w, double h, DrawbleObject parent)
 	{
 		super(x, y, w, h, parent);
+		
+		info = new Panel_techinfo(0,0,1,1,this);
 	}
 	
 	@Override
@@ -52,13 +57,7 @@ public class Panel_worldrenderer extends GlobalPanel
 		if(player == null)
 			player = world.getPlayingPlayerEntity();
 		
-		if(player != null)
-		{
-			cameraPosX = player.posX;
-			cameraPosY = player.posY;
-		}
-		
-		if(player == null)
+		if(player == null || player.getPlayerGamemode() == 1)
 		{
 			if(KeyUpPress) cameraPosY -= cameraSpeed;
 			if(KeyDownPress) cameraPosY += cameraSpeed;
@@ -67,6 +66,14 @@ public class Panel_worldrenderer extends GlobalPanel
 			
 			if(KeyRunPress) cameraSpeed = 0.5;
 			else cameraSpeed = 0.25;
+		}
+		else
+		{
+			cameraPosX = player.posX;
+			cameraPosY = player.posY;
+			
+			if(this.blocksAtScreenByWidth < blocksAtScreenByWidthCONST) this.blocksAtScreenByWidth++;
+			if(this.blocksAtScreenByWidth > blocksAtScreenByWidthCONST) this.blocksAtScreenByWidth--;
 		}
 		
 		mouseOnBlockX = cameraPosX + (mouseX / (this.realWidth()/this.blocksAtScreenByWidth)) - blocksAtScreenByWidth/2;
@@ -80,31 +87,21 @@ public class Panel_worldrenderer extends GlobalPanel
 	{
 		if(world == null) return;
 		
+		drawBlocks(g, BlockPos.blockPosLevel.BACK);
+		drawBlocks(g, BlockPos.blockPosLevel.MIDDLE);
+		drawBlocks(g, BlockPos.blockPosLevel.HIGH);
+		
+		if(player == null || player.getPlayerGamemode() == 1) drawMousePosAndInfo(g);
+		
+		super.draw(g);
+	}
+	
+	public void drawMousePosAndInfo(Graphics g)
+	{
 		int screenX = 0;
 		int screenY = 0;
 		int screenW = 0;
 		int screenH = 0;
-		
-		for(int ix = -1; ix < blocksAtScreenByWidth+1; ix++)
-		{
-			for(int iy = -1; iy < blocksAtScreenByHeight()+1; iy++)
-			{
-				BlockPos pos = new BlockPos((int)cameraPosX + ix - blocksAtScreenByWidth/2, (int)cameraPosY + iy - blocksAtScreenByHeight()/2, BlockPos.blockPosLevel.BACK);
-				Block block = world.getBlock(pos);
-				
-				screenX = (int)(-(cameraPosX - (double)(int)cameraPosX) * (this.realWidth()/(double)this.blocksAtScreenByWidth)) + (int)(ix*(this.realWidth()/(double)blocksAtScreenByWidth)) - 1;
-				screenY = (int)(-(cameraPosY - (double)(int)cameraPosY) * (this.realHeight()/(double)this.blocksAtScreenByHeight())) + (int)(iy*(this.realHeight()/(double)blocksAtScreenByHeight())) - 1;
-				screenW = (int)(this.realWidth()/(double)blocksAtScreenByWidth) + 1;
-				screenH = (int)(this.realHeight()/(double)blocksAtScreenByHeight())+1;
-				
-				if(block != null) block.drawAtScreen(g, screenX, screenY, screenW, screenH, world, pos);
-				else
-				{
-					g.setColor(new Color((int)(Math.random() * 255D),(int)(Math.random() * 255D), (int)(Math.random() * 255D)));
-					g.fillRect(screenX, screenY, screenW, screenH);
-				}
-			}
-		}
 
 		screenX = (int)(-(cameraPosX - (double)(int)cameraPosX) * (this.realWidth()/(double)this.blocksAtScreenByWidth) + (getIntedMouseX() - ((int)cameraPosX - blocksAtScreenByWidth/2))*(this.realWidth()/(double)blocksAtScreenByWidth));
 		screenY = (int)(-(cameraPosY - (double)(int)cameraPosY) * (this.realHeight()/(double)this.blocksAtScreenByHeight()) + (getIntedMouseY() - ((int)cameraPosY - blocksAtScreenByHeight()/2))*(this.realHeight()/(double)blocksAtScreenByHeight()));
@@ -120,20 +117,42 @@ public class Panel_worldrenderer extends GlobalPanel
 		g.fillRect(mouseX - 49, mouseY - 24, 98, 18);
 		g.setColor(Color.black);
 		g.drawString("x: " + (int)(mouseOnBlockX < 0 ? mouseOnBlockX - 1 : mouseOnBlockX) + "; y: " + (int)(mouseOnBlockY < 0 ? mouseOnBlockY - 1 : mouseOnBlockY), mouseX - 45, mouseY - 10);
-
-		g.setColor(Color.white);
-		g.drawString("" + GameInfo.getGameFullestName(), (int)this.realPosX() + 5, (int)this.realPosY() + 15*1);
-		g.drawString("Mouse pos: " + this.mouseX + " : " + this.mouseY, (int)this.realPosX() + 5, (int)this.realPosY() + 15*2);
-		g.drawString("Mouse block pos: " + this.mouseOnBlockX + " : " + this.mouseOnBlockY, (int)this.realPosX() + 5, (int)this.realPosY() + 15*3);
-		g.drawString("Mouse block inted pos: " + this.getIntedMouseX() + " : " + this.getIntedMouseY(), (int)this.realPosX() + 5, (int)this.realPosY() + 15*4);
-		g.drawString("Camera pos: " + this.cameraPosX + " : " + this.cameraPosY, (int)this.realPosX() + 5, (int)this.realPosY() + 15*5);
-		g.drawString("Blocks per width: " + this.blocksAtScreenByWidth, (int)this.realPosX() + 5, (int)this.realPosY() + 15*6);
-		g.drawString("Blocks per height: " + this.blocksAtScreenByHeight(), (int)this.realPosX() + 5, (int)this.realPosY() + 15*7);
+	}
+	
+	public void drawBlocks(Graphics g, BlockPos.blockPosLevel lvl)
+	{
+		int screenX = 0;
+		int screenY = 0;
+		int screenW = 0;
+		int screenH = 0;
+		
+		for(int ix = -1; ix < blocksAtScreenByWidth+1; ix++)
+		{
+			for(int iy = -1; iy < blocksAtScreenByHeight()+1; iy++)
+			{
+				BlockPos pos = new BlockPos((int)cameraPosX + ix - blocksAtScreenByWidth/2, (int)cameraPosY + iy - blocksAtScreenByHeight()/2, lvl);
+				Block block = world.getBlock(pos);
+				
+				screenX = (int)(-(cameraPosX - (double)(int)cameraPosX) * (this.realWidth()/(double)this.blocksAtScreenByWidth)) + (int)(ix*(this.realWidth()/(double)blocksAtScreenByWidth)) - 1;
+				screenY = (int)(-(cameraPosY - (double)(int)cameraPosY) * (this.realHeight()/(double)this.blocksAtScreenByHeight())) + (int)(iy*(this.realHeight()/(double)blocksAtScreenByHeight())) - 1;
+				screenW = (int)(this.realWidth()/(double)blocksAtScreenByWidth) + 1;
+				screenH = (int)(this.realHeight()/(double)blocksAtScreenByHeight())+1;
+				
+				if(block != null) block.drawAtScreen(g, screenX, screenY, screenW, screenH, world, pos);
+				else
+				{
+					g.setColor(new Color((int)(Math.random() * 255D),(int)(Math.random() * 255D), (int)(Math.random() * 255D)));
+					g.fillRect(screenX, screenY, screenW, screenH);
+				}
+			}
+		}
 	}
 	
 	public void setWorld(World w)
 	{
 		world = w;
+		
+		Game.theGame.currentOpenedWorld = world;
 	}
 
 	public World getWorld()
@@ -141,12 +160,12 @@ public class Panel_worldrenderer extends GlobalPanel
 		return world;
 	}
 	
-	private int getIntedMouseX()
+	public int getIntedMouseX()
 	{
 		return (int)(mouseOnBlockX < 0 ? mouseOnBlockX - 1 : mouseOnBlockX);
 	}
 
-	private int getIntedMouseY()
+	public int getIntedMouseY()
 	{
 		return (int)(mouseOnBlockY < 0 ? mouseOnBlockY - 1 : mouseOnBlockY);
 	}
@@ -183,12 +202,15 @@ public class Panel_worldrenderer extends GlobalPanel
 	@Override
 	public void onMouseWheelMoved(MouseWheelEvent e)
 	{
-		if(this.blocksAtScreenByWidth + e.getWheelRotation() > 2)this.blocksAtScreenByWidth += e.getWheelRotation();
+		if((player == null || player.getPlayerGamemode() == 1) && this.blocksAtScreenByWidth + e.getWheelRotation() > 2)this.blocksAtScreenByWidth += e.getWheelRotation();
 	}
 	
 	@Override
 	public void onKeyPress(KeyEvent e)
 	{
+		if(e.getKeyCode() == 112 && !this.existChild(info)) this.addChild(info);
+		else if(e.getKeyCode() == 112 && this.existChild(info)) this.removeChild(info);
+		
 		if(e.getKeyCode() == Game.theGame.gameSettingSaver.getInt("Key_NorthMotion")) KeyUpPress = true;
 		if(e.getKeyCode() == Game.theGame.gameSettingSaver.getInt("Key_SouthMotion")) KeyDownPress = true;
 		if(e.getKeyCode() == Game.theGame.gameSettingSaver.getInt("Key_WestMotion")) KeyLeftPress = true;

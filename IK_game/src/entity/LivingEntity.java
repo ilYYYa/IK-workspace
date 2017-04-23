@@ -69,6 +69,20 @@ public class LivingEntity extends Entity
 		saver.addInt(Level, "EntityLevel"+i);
 		saver.addInt(latestAttacker.uid, "EntityLatestAttackerUid"+i);
 	}
+	
+	@Override
+	public void readFromSaver(Saver saver, int i)
+	{
+		super.readFromSaver(saver, i);
+		HP = saver.getDouble("EntityHP"+i);
+		MP = saver.getDouble("EntityMP"+i);
+		Armor = saver.getDouble("EntityArmor"+i);
+		MagicalResistance = saver.getDouble("EntityMagicalResistance"+i);
+		HPRegeneration = saver.getDouble("EntityHPRegeneration"+i);
+		MPRegeneration = saver.getDouble("EntityMPRegeneration"+i);
+		Level = saver.getInt("EntityLevel"+i);
+		//latestAttacker.uid = saver.getInt("EntityLatestAttackerUid"+i);
+	}
 }
 
 

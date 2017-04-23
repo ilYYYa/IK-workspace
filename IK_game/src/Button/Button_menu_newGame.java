@@ -4,7 +4,7 @@ import java.awt.event.MouseEvent;
 
 import Game.Game;
 import Obj.DrawbleObject;
-import Scene.Scene_Playground;
+import Scene.Scene_WorldLoader;
 
 public class Button_menu_newGame extends GlobalButton
 {
@@ -19,6 +19,6 @@ public class Button_menu_newGame extends GlobalButton
 	public void onMouseClick(MouseEvent e)
 	{
 		super.onMouseClick(e);
-		Game.theGame.theDoubleBuffer.setScene(new Scene_Playground());
+		Game.theGame.theDoubleBuffer.setScene(new Scene_WorldLoader(null));
 	}
 }

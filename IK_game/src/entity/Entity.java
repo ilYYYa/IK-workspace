@@ -106,6 +106,21 @@ public class Entity
 		saver.addBoolean(isDead, "EntityIsDead"+i);
 		saver.addLong(lifeTime, "EntityLifeTime"+i);
 	}
+
+	public void readFromSaver(Saver saver, int i)
+	{
+		unlocalizedName = saver.getString("EntityUnlocalizedName" + i);
+		id = saver.getInt("EntityId" + i);
+		uid = saver.getInt("EntityUid" + i);
+		posX = saver.getDouble("EntityPosX" + i);
+		posY = saver.getDouble("EntityPosY" + i);
+		motionX = saver.getDouble("EntityMotionX" + i);
+		motionY = saver.getDouble("EntityMotionY" + i);
+		width = saver.getDouble("EntityWidth" + i);
+		height = saver.getDouble("EntityHeight" + i);
+		isDead = saver.getBoolean("EntityIsDead" + i);
+		lifeTime = saver.getLong("EntityLifeTime" + i);
+	}
 }
 
 
