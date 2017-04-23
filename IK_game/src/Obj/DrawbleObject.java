@@ -3,6 +3,7 @@ package Obj;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseWheelEvent;
 import java.util.ArrayList;
 
 import Button.Button_back;
@@ -271,6 +272,12 @@ public abstract class DrawbleObject
 				buff.onMouseMoveNotOnYou(getNewMouseEvent(event, event.getX() - (int)buff.realPosX(), event.getY() - (int)buff.realPosY()));
 			}
 		}
+	}
+
+
+	public void onMouseWheelMoved(MouseWheelEvent event)
+	{
+		if(childs.length > 0) childs[childs.length - 1].onMouseWheelMoved(event);
 	}
 	
 	public void onKeyPress(KeyEvent event)

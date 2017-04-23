@@ -27,7 +27,6 @@ public class Saver
 	public Saver(String filePath)
 	{
 		this.filePath = filePath;
-		initLoad();
 	}
 	
 	///////////////////////////////////////////////////////////////////////////////
@@ -477,6 +476,8 @@ public class Saver
 		{
 			try
 			{
+				File d = new File(f.getParent());
+				d.mkdirs();
 				f.createNewFile();
 			}
 			catch (IOException e)

@@ -5,8 +5,10 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 
-public class Listeners implements KeyListener, MouseListener, MouseMotionListener
+public class Listeners implements KeyListener, MouseListener, MouseMotionListener, MouseWheelListener
 {
 	private DoubleBuffer buff;
 	
@@ -55,6 +57,12 @@ public class Listeners implements KeyListener, MouseListener, MouseMotionListene
 	public void mouseReleased(MouseEvent event)
 	{
 		buff.onMouseRelease(event);
+	}
+
+	@Override
+	public void mouseWheelMoved(MouseWheelEvent event)
+	{
+		buff.onMouseWheelMoved(event);
 	}
 
 	@Override

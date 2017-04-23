@@ -4,8 +4,10 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseWheelEvent;
 
 import Game.Game;
+import Game.GameInfo;
 import Obj.DrawbleObject;
 import block.Block;
 import block.Blocks;
@@ -69,6 +71,8 @@ public class Panel_worldrenderer extends GlobalPanel
 		
 		mouseOnBlockX = cameraPosX + (mouseX / (this.realWidth()/this.blocksAtScreenByWidth)) - blocksAtScreenByWidth/2;
 		mouseOnBlockY = cameraPosY + (mouseY / (this.realHeight()/this.blocksAtScreenByHeight())) - blocksAtScreenByHeight()/2;
+		
+		world.WorldTick();
 	}
 	
 	@Override
@@ -116,6 +120,15 @@ public class Panel_worldrenderer extends GlobalPanel
 		g.fillRect(mouseX - 49, mouseY - 24, 98, 18);
 		g.setColor(Color.black);
 		g.drawString("x: " + (int)(mouseOnBlockX < 0 ? mouseOnBlockX - 1 : mouseOnBlockX) + "; y: " + (int)(mouseOnBlockY < 0 ? mouseOnBlockY - 1 : mouseOnBlockY), mouseX - 45, mouseY - 10);
+
+		g.setColor(Color.white);
+		g.drawString("" + GameInfo.getGameFullestName(), (int)this.realPosX() + 5, (int)this.realPosY() + 15*1);
+		g.drawString("Mouse pos: " + this.mouseX + " : " + this.mouseY, (int)this.realPosX() + 5, (int)this.realPosY() + 15*2);
+		g.drawString("Mouse block pos: " + this.mouseOnBlockX + " : " + this.mouseOnBlockY, (int)this.realPosX() + 5, (int)this.realPosY() + 15*3);
+		g.drawString("Mouse block inted pos: " + this.getIntedMouseX() + " : " + this.getIntedMouseY(), (int)this.realPosX() + 5, (int)this.realPosY() + 15*4);
+		g.drawString("Camera pos: " + this.cameraPosX + " : " + this.cameraPosY, (int)this.realPosX() + 5, (int)this.realPosY() + 15*5);
+		g.drawString("Blocks per width: " + this.blocksAtScreenByWidth, (int)this.realPosX() + 5, (int)this.realPosY() + 15*6);
+		g.drawString("Blocks per height: " + this.blocksAtScreenByHeight(), (int)this.realPosX() + 5, (int)this.realPosY() + 15*7);
 	}
 	
 	public void setWorld(World w)
@@ -165,6 +178,12 @@ public class Panel_worldrenderer extends GlobalPanel
 		if(mPress == 1) world.setBlock((int)(mouseOnBlockX < 0 ? mouseOnBlockX - 1 : mouseOnBlockX), (int)(mouseOnBlockY < 0 ? mouseOnBlockY - 1 : mouseOnBlockY), BlockPos.blockPosLevel.BACK, Blocks.DIRT);
 		if(mPress == 2) world.setBlock((int)(mouseOnBlockX < 0 ? mouseOnBlockX - 1 : mouseOnBlockX), (int)(mouseOnBlockY < 0 ? mouseOnBlockY - 1 : mouseOnBlockY), BlockPos.blockPosLevel.BACK, Blocks.STONE);
 		if(mPress == 3) world.setBlock((int)(mouseOnBlockX < 0 ? mouseOnBlockX - 1 : mouseOnBlockX), (int)(mouseOnBlockY < 0 ? mouseOnBlockY - 1 : mouseOnBlockY), BlockPos.blockPosLevel.BACK, Blocks.GRASS);
+	}
+	
+	@Override
+	public void onMouseWheelMoved(MouseWheelEvent e)
+	{
+		if(this.blocksAtScreenByWidth + e.getWheelRotation() > 2)this.blocksAtScreenByWidth += e.getWheelRotation();
 	}
 	
 	@Override

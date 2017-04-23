@@ -4,6 +4,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseWheelEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -28,6 +29,7 @@ public class DoubleBuffer extends JPanel
 		listeners = new Listeners(this);
 		this.addMouseListener(listeners);
 		this.addMouseMotionListener(listeners);
+		this.addMouseWheelListener(listeners);
 		
 		Scene = new Scene_Logo();
 	}
@@ -91,5 +93,10 @@ public class DoubleBuffer extends JPanel
 	public void onKeyRelease(KeyEvent event)
 	{
 		if(Scene != null) Scene.onKeyRelease(event);
+	}
+
+	public void onMouseWheelMoved(MouseWheelEvent event)
+	{
+		if(Scene != null) Scene.onMouseWheelMoved(event);
 	}
 }

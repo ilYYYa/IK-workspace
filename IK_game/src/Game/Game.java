@@ -80,6 +80,7 @@ public class Game
 	public void createSaver()
 	{
 		gameSettingSaver = new Saver("gameSettings.save");
+		gameSettingSaver.initLoad();
 	}
 	
 	public void createDefaultSettings()

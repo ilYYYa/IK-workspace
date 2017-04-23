@@ -7,11 +7,11 @@ import Game.Game;
 import InputLine.GlobalInputLine;
 import Obj.DrawbleObject;
 import Scene.Scene_Menu;
-import TextField.GloblaTextField;
+import TextField.GlobalTextField;
 
 public class Panel_login extends GlobalPanel
 {
-	GloblaTextField text;
+	GlobalTextField text;
 	GlobalInputLine inline;
 	Button_OK okBtn;
 	
@@ -19,11 +19,12 @@ public class Panel_login extends GlobalPanel
 	{
 		super(x, y, w, h, parent);
 		
-		text = new GloblaTextField(0,0,1,0.2,this); text.setTextForDraw("Write your nickName:");
+		text = new GlobalTextField(0,0,1,0.2,this); text.setTextForDraw("Write your nickName:");
 		inline = new GlobalInputLine(0,0.2,1,0.2,this);
 		okBtn = new Button_OK(0,0.8,1,0.2,this);
 
 		if(Game.theGame.gameSettingSaver.existString("UserNickName")) inline.setText(Game.theGame.gameSettingSaver.getString("UserNickName"));
+		inline.setAcceptinSpace(false);
 		
 		this.addChild(text);
 		this.addChild(inline);
@@ -33,18 +34,21 @@ public class Panel_login extends GlobalPanel
 	@Override
 	public void onMouseClick(MouseEvent e)
 	{
-		if(okBtn.checkingPointCrossingThisObject(e.getX(), e.getY()) && inline.getText().length() > 2)
+		if(okBtn.checkingPointCrossingThisObject(e.getX(), e.getY()))
 		{
-			if(!Game.theGame.gameSettingSaver.existString("UserNickName")) Game.theGame.gameSettingSaver.addString(inline.getText(), "UserNickName");
-			else Game.theGame.gameSettingSaver.updateString(inline.getText(), "UserNickName");
-			
-			Game.theGame.SaveSettings();
-			
-			Game.theGame.theDoubleBuffer.setScene(new Scene_Menu());
-		}
-		else if(inline.getText().length() <= 2)
-		{
-			text.setTextForDraw("NickName must be 3 or more Symbols! Write your nickName:");
+			if(inline.getText().length() > 2)
+			{
+				if(!Game.theGame.gameSettingSaver.existString("UserNickName")) Game.theGame.gameSettingSaver.addString(inline.getText(), "UserNickName");
+				else Game.theGame.gameSettingSaver.updateString(inline.getText(), "UserNickName");
+				
+				Game.theGame.SaveSettings();
+				
+				Game.theGame.theDoubleBuffer.setScene(new Scene_Menu());
+			}
+			else
+			{
+				text.setTextForDraw("NickName must be 3 or more Symbols! Write your nickName:");
+			}
 		}
 	}
 }

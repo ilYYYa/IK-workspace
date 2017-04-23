@@ -13,6 +13,8 @@ public class GlobalInputLine extends DrawbleObject
 	private int t = 0;
 	
 	private int maxSymbols = 16;
+	
+	private boolean acceptSpace = true;
 
 	public GlobalInputLine(double x, double y, double w, double h, DrawbleObject parent)
 	{
@@ -21,6 +23,15 @@ public class GlobalInputLine extends DrawbleObject
 		posY = y;
 		width = w;
 		height = h;
+	}
+	
+	public void setAcceptinSpace(boolean acc)
+	{
+		acceptSpace = acc;
+	}
+	public boolean getSpaceAccepting()
+	{
+		return acceptSpace;
 	}
 	
 	public void setMaxSymbols(int m)
@@ -68,7 +79,8 @@ public class GlobalInputLine extends DrawbleObject
 	@Override
 	public void onKeyPress(KeyEvent e)
 	{
-		if(e.getKeyCode() >= 48 && e.getKeyCode() <= 90 && str.length() < maxSymbols) str += e.getKeyChar();
+		if(e.getKeyCode() >= 33 && e.getKeyCode() <= 90 && str.length() < maxSymbols) str += e.getKeyChar();
 		if(e.getKeyCode() == 8 && str.length() > 0) str = str.substring(0, str.length()-1);
+		if(e.getKeyCode() == 32 && this.acceptSpace && str.length() < maxSymbols) str += " ";
 	}
 }

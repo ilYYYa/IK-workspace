@@ -63,14 +63,16 @@ public class World
 		int cx = blockPosToChunkArrayPos(x);
 		while(cx == -1)
 		{
-			extendsChunkArray(chunks.length + 2);
+			if(chunks.length == 0) extendsChunkArray(1);
+			else extendsChunkArray(chunks.length + 2);
 			cx = blockPosToChunkArrayPos(x);
 		}
 		int cy = blockPosToChunkArrayPos(y);
 		if(cy == -1)
 		{
-			System.err.println("at World.class at setBlockMeta(int x, int y, BlockPos.blockPosLevel lvl, int meta)\n\tcy == -1");
-			return;
+			if(chunks.length == 0) extendsChunkArray(1);
+			else extendsChunkArray(chunks.length + 2);
+			cy = blockPosToChunkArrayPos(y);
 		}
 		chunks[cx][cy].setBlockMeta(x, y, lvl, meta);
 	}
@@ -85,13 +87,15 @@ public class World
 		int cx = blockPosToChunkArrayPos(x);
 		while(cx == -1)
 		{
-			extendsChunkArray(chunks.length + 2);
+			if(chunks.length == 0) extendsChunkArray(1);
+			else extendsChunkArray(chunks.length + 2);
 			cx = blockPosToChunkArrayPos(x);
 		}
 		int cy = blockPosToChunkArrayPos(y);
 		if(cy == -1)
 		{
-			extendsChunkArray(chunks.length + 2);
+			if(chunks.length == 0) extendsChunkArray(1);
+			else extendsChunkArray(chunks.length + 2);
 			cy = blockPosToChunkArrayPos(y);
 		}
 
@@ -221,6 +225,15 @@ public class World
 	public PlayingPlayerEntity getPlayingPlayerEntity()
 	{
 		return null;
+	}
+
+	public void setWorldName(String wn)
+	{
+		this.worldname = wn;
+	}
+	public String getWorldName()
+	{
+		return this.worldname;
 	}
 }
 
