@@ -36,10 +36,12 @@ public class Trigger_PlayerFirstSpawn extends Trigger
 	{
 		if(world.getBufferedPlayingPlayerEntity() == null)
 		{
-			PlayingPlayerEntity player = new PlayingPlayerEntity(world, 0);
+			PlayingPlayerEntity player = new PlayingPlayerEntity(world, 1);
 			player.setPosition(this.posX + 0.5D, this.posY + 1);
 			
 			player.setPlayerGamemode(0);
+			
+			player.setPlayerSpawn(this.posX, this.posY);
 			
 			world.setPlayingPlayer(player);
 		}

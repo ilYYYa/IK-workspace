@@ -221,17 +221,22 @@ public class World
 		entities = buff;
 	}
 	
-	public void despawnEntity(Entity e)
+	public void despawnEntity(Entity e) 
 	{
-		boolean found = false;
 		Entity[] buff = new Entity[entities.length - 1];
-		for(int i = 0; i < buff.length; i++)
-		{
-			if(e == entities[i]) found = true;
-			else if(!found)buff[i] = entities[i];
-			else buff[i - 1] = entities[i];
-		}
+		int ind = this.getEntityIndex(e);
+		for(int i = 0; i < ind; i++) buff[i] = entities[i];
+		for(int i = ind+1; i < entities.length; i++) buff[i-1] = entities[i];
 		entities = buff;
+	}
+	
+	public int getEntityIndex(Entity e)
+	{
+		for(int i = 0; i < entities.length; i++)
+		{
+			if(e == entities[i]) return i;
+		}
+		return -1;
 	}
 	
 	public int getUniqueId()
@@ -252,12 +257,31 @@ public class World
 	
 	public void WorldTick()
 	{
+		updatePlayer();
+		
 		sortEntities();
 		updateEntities();
 		
 		updateTriggers();
 		
 		worldTicks++;
+	}
+	
+	public void updatePlayer()
+	{
+		PlayingPlayerEntity pl = this.getPlayingPlayerEntity();
+		if(pl != null)
+		{
+			if(!pl.isEntityAlive())
+			{
+				pl.HP += pl.HPRegeneration;
+				if(pl.HP > pl.maxHP)
+				{
+					pl.HP = pl.maxHP;
+					pl.respawn();
+				}
+			}
+		}
 	}
 	
 	public void updateTriggers()
@@ -291,10 +315,20 @@ public class World
 	{
 		for(int i = 0; i < entities.length; i++)
 		{
-			if(entities[i].shouldDespawn()) this.despawnEntity(entities[i]);
+			if(entities[i].shouldDespawn())
+			{
+				this.despawnEntity(entities[i]);
+				i=-1;
+				break;
+			}
 			
 			if(entities[i].isEntityAlive()) entities[i].onEntityUpdate();
-			else this.despawnEntity(entities[i]);
+			else
+			{
+				this.despawnEntity(entities[i]);
+				i=-1;
+				break;
+			}
 		}
 	}
 	

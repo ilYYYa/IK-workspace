@@ -17,7 +17,16 @@ public class MonsterEntity extends LivingEntity
 	{
 		if(this.navigator.noPath() && movingCD <= 0)
 		{
-			this.navigator.tryMoveToXY(this.getX() + (int)(Math.random() * 16) - 8, this.getY() + (int)(Math.random() * 16) - 8);
+			int toX = (int)this.getX() + (int)(Math.random() * 16) - 8;
+			int toY = (int)this.getY() + (int)(Math.random() * 16) - 8;
+			
+			while(!this.canMoveTo(toX, toY))
+			{
+				toX = (int)this.getX() + (int)(Math.random() * 16) - 8;
+				toY = (int)this.getY() + (int)(Math.random() * 16) - 8;
+			}
+			
+			this.navigator.tryMoveToXY(toX, toY);
 			movingCD = 240;
 		}
 		else if(this.navigator.noPath() && movingCD > 0)
@@ -25,7 +34,7 @@ public class MonsterEntity extends LivingEntity
 			movingCD--;
 		}
 		
-		if(world.getPlayingPlayerEntity() != null && world.getDistanceToPlayingPlayerFromEntity(this) <= 32 && world.getPlayingPlayerEntity().getPlayerGamemode() == 0)
+		if(world.getPlayingPlayerEntity() != null && world.getDistanceToPlayingPlayerFromEntity(this) <= 32 && world.getPlayingPlayerEntity().getPlayerGamemode() == 0 && world.getPlayingPlayerEntity().isEntityAlive())
 		{
 			if(!navigator.noPath() && !navigator.movingToEntity())
 			{
@@ -34,6 +43,16 @@ public class MonsterEntity extends LivingEntity
 			if(navigator.noPath())
 			{
 				this.navigator.tryMoveToEntity(world.getPlayingPlayerEntity());
+			}
+			
+			if(this.collisionWithEntity(world.getPlayingPlayerEntity()))
+			{
+				this.currentMotionX = -this.currentMotionX;
+				this.currentMotionY = -this.currentMotionY;
+				world.getPlayingPlayerEntity().currentMotionX = -this.currentMotionX * 2;
+				world.getPlayingPlayerEntity().currentMotionY = -this.currentMotionY * 2;
+				
+				world.getPlayingPlayerEntity().attackFromLivingEntity(this, damageSource.PHYSICAL, 1D);
 			}
 		}
 		

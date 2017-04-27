@@ -30,27 +30,33 @@ public class PlayingPlayerEntity extends PlayerEntity
 	@Override
 	public void onEntityUpdate()
 	{
-		if(KeyRunPress) this.setMoveSpeed(2D);
-		else this.setMoveSpeed(1D);
+		if(!KeyRunPress) this.setMoveSpeed(0.1D);
 		
 		if(KeyLeftPress)
 		{
-			this.motionX = -this.getMoveSpeed();
+			this.motionX = -1D;
 		}
 		if(KeyRightPress)
 		{
-			this.motionX = this.getMoveSpeed();
+			this.motionX = 1D;
 		}
 		if(KeyUpPress)
 		{
-			this.motionY = -this.getMoveSpeed();
+			this.motionY = -1D;
 		}
 		if(KeyDownPress)
 		{
-			this.motionY = this.getMoveSpeed();
+			this.motionY = 1D;
 		}
 		if(!KeyRightPress && !KeyLeftPress) this.motionX = 0;
 		if(!KeyUpPress && !KeyDownPress) this.motionY = 0;
+
+		if(KeyRunPress)
+		{
+			this.setMoveSpeed(0.2D);
+			this.motionX *= 2;
+			this.motionY *= 2;
+		}
 		
 		super.onEntityUpdate();
 	}

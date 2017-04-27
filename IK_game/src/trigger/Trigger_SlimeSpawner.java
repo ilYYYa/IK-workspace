@@ -37,7 +37,7 @@ public class Trigger_SlimeSpawner extends Trigger
 		if(slimesCountNearly < this.width*this.height && world.getPlayingPlayerEntity() != null && world.theWorldRenderer != null
 				&& world.getPlayingPlayerEntity().getDistanceTo(spX, spY) < world.theWorldRenderer.blocksAtScreenByWidth + 32)
 		{
-			Entity_Slime slime = new Entity_Slime(world, 0);
+			Entity_Slime slime = new Entity_Slime(world, 2);
 			slime.setPosition(spX, spY);
 			world.spawnEntity(slime);
 		}

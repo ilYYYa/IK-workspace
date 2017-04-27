@@ -10,9 +10,13 @@ public class Navigator
 {
 	private LivingEntity entity;
 	
+	private Entity targetEntity = null;
+	
 	private ArrayList<double[]> path = new ArrayList<double[]>();
 	
 	private int movingTo = 0;
+	
+	private double deviation = 0.5;
 	
 	public Navigator(LivingEntity e)
 	{
@@ -21,17 +25,42 @@ public class Navigator
 	
 	public boolean noPath()
 	{
-		return path.size() == 0;
+		Update();
+		
+		return path.size() == 0 && targetEntity == null;
 	}
 	
 	public double[] getCurrentPoint()
 	{
-		return path.get(0);
+		Update();
+		
+		if(path.size() > 0 && movingTo == 1 && pointReached()) path.remove(0);
+		if(movingTo == 2 && entityReached())
+		{
+			targetEntity = null;
+			return null;
+		}
+		if(noPath()) return null;
+		
+		if(path.size() > 0 && movingTo == 1) return path.get(0);
+		else if(movingTo == 2) return new double[]{targetEntity.getX(), targetEntity.getY()};
+		else return new double[]{entity.getX(), entity.getY()};
 	}
 	
-	public void pointReached()
+	public boolean pointReached()
 	{
-		path.remove(0);
+		if(path.size() == 0) return true;
+		if(movingTo == 1 && path.size() != 0 && Math.abs(entity.getX() - path.get(0)[0]) <= deviation && Math.abs(entity.getY() - path.get(0)[1]) <= deviation) return true;
+		
+		return false;
+	}
+	
+	public boolean entityReached()
+	{
+		if(targetEntity == null) return true;
+		if(entity.collisionWithEntity(targetEntity)) return true;
+		
+		return false;
 	}
 	
 	public void tryMoveToXY(double x, double y)
@@ -44,8 +73,7 @@ public class Navigator
 	
 	public void tryMoveToEntity(Entity e)
 	{
-		path.add(new double[]{entity.getX(), e.getY()});
-		path.add(new double[]{e.getX(), e.getY()});
+		targetEntity = e;
 		movingTo = 2;
 	}
 
@@ -62,5 +90,11 @@ public class Navigator
 	public boolean movingToEntity()
 	{
 		return movingTo == 2;
+	}
+
+	public void Update()
+	{
+		if(path.size() > 0 && movingTo == 1 && pointReached()) path.remove(0);
+		if(movingTo == 2 && entityReached()) targetEntity = null;
 	}
 }

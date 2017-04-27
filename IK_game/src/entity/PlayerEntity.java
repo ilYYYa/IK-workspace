@@ -6,12 +6,20 @@ import world.World;
 public class PlayerEntity extends LivingEntity
 {
 	public int playerGamemode = 0;
+	
+	public int spawnX = 0;
+	public int spawnY = 0;
 
 	public PlayerEntity(World world, int uid)
 	{
 		super(world, "Player", 0, uid);
 		this.setWidth(1D);
 		this.setHeight(1.7D);
+	}
+	
+	public void setPlayerSpawn(int x, int y)
+	{
+		spawnX = x; spawnY = y;
 	}
 	
 	@Override
@@ -46,5 +54,16 @@ public class PlayerEntity extends LivingEntity
 	{
 		super.readFromSaver(saver, i);
 		this.playerGamemode = saver.getInt("PlayerGamemode" + i);
+	}
+
+	public void respawn()
+	{
+		this.isDead = false;
+		this.currentMotionX = 0;
+		this.currentMotionY = 0;
+		this.motionX = 0;
+		this.motionY = 0;
+		this.setPosition(spawnX + 0.5, spawnY + 1);
+		if(world.getEntityIndex(this) == -1) world.restorePlaingPlayer();
 	}
 }

@@ -77,30 +77,21 @@ public class LivingEntity extends Entity
 		{
 			double[] point = this.navigator.getCurrentPoint();
 			
-			if(point[0] < this.getX()) this.motionX = -this.getMoveSpeed();
-			if(point[0] > this.getX()) this.motionX = this.getMoveSpeed();
-			if(this.canReachPointInOneTick(point[0], this.getY()))
+			if(point != null)
 			{
-				this.setPosition(point[0], this.getY());
-				this.motionX = 0;
-			}
-			
-			if(point[1] < this.getY()) this.motionY = -this.getMoveSpeed();
-			if(point[1] > this.getY()) this.motionY = this.getMoveSpeed();
-			if(this.canReachPointInOneTick(this.getX(), point[1]))
-			{
-				this.setPosition(this.getX(), point[1]);
-				this.motionY = 0;
-			}
-			
-			if(this.canReachPointInOneTick(point[0], point[1]))
-			{
-				this.setPosition(point[0], point[1]);
-				this.navigator.pointReached();
+				if(point[0] < this.getX()) this.motionX = -1.5D;
+				if(point[0] > this.getX()) this.motionX = 1.5D;
 				
-				this.motionX = 0;
-				this.motionY = 0;
+				if(point[1] < this.getY()) this.motionY = -1.5D;
+				if(point[1] > this.getY()) this.motionY = 1.5D;
+
+				this.navigator.Update();
 			}
+		}
+		else if(!(this instanceof PlayingPlayerEntity))
+		{
+			this.motionX = 0;
+			this.motionY = 0;
 		}
 		
 		super.onEntityUpdate();

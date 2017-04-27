@@ -15,8 +15,10 @@ public class Entity
 	
 	public double motionX = 0;
 	public double motionY = 0;
-	
-	public double moveSpeed = 1.0D;
+	public double currentMotionX = 0;
+	public double currentMotionY = 0;
+
+	public double moveSpeed = 0.15D;
 	
 	public int id = 0;
 	public int uid = 0;
@@ -43,6 +45,16 @@ public class Entity
 		this.uid = uid;
 	}
 	
+	public boolean collisionWithEntity(Entity e)
+	{
+		if(e.posX > this.posX + this.width) return false;
+		if(e.posX + e.width < this.posX) return false;
+		if(e.posY > this.posY + this.height) return false;
+		if(e.posY + e.height < this.posY) return false;
+		
+		return true;
+	}
+
 	public void setMoveSpeed(double speed)
 	{
 		this.moveSpeed = speed;
@@ -133,8 +145,16 @@ public class Entity
     public void onEntityUpdate()
     {
     	lifeTime++;
-    	posX += motionX/25D;
-    	posY += motionY/25D;
+    	
+    	if(this.currentMotionX < this.motionX) this.currentMotionX += this.getMoveSpeed();
+    	if(this.currentMotionX > this.motionX) this.currentMotionX -= this.getMoveSpeed();
+    	if(Math.abs(this.currentMotionX - this.motionX) < this.getMoveSpeed()) this.currentMotionX = this.motionX;
+    	if(this.currentMotionY < this.motionY) this.currentMotionY += this.getMoveSpeed();
+    	if(this.currentMotionY > this.motionY) this.currentMotionY -= this.getMoveSpeed();
+    	if(Math.abs(this.currentMotionY - this.motionY) < this.getMoveSpeed()) this.currentMotionY = this.motionY;
+    	
+    	posX += currentMotionX/25D;
+    	posY += currentMotionY/25D;
     	if(motionX > 0) this.lookingTo = LookingVect.EAST;
     	if(motionX < 0) this.lookingTo = LookingVect.WEST;
     	if(motionY > 0) this.lookingTo = LookingVect.SOUTH;
@@ -143,7 +163,7 @@ public class Entity
     
     public boolean canReachPointInOneTick(double px, double py)
     {
-    	if(this.getDistanceTo(px, py) <= moveSpeed/24D) return true;
+    	if(this.getDistanceTo(px, py) <= (currentMotionX*currentMotionX + currentMotionY*currentMotionY)/(this.moveSpeed * 20)) return true;
     	else return false;
     }
     

@@ -9,9 +9,9 @@ import java.awt.event.MouseWheelEvent;
 import Game.Game;
 import Obj.DrawbleObject;
 import block.Block;
-import block.Blocks;
 import entity.Entity;
-import entity.PlayingPlayerEntity;
+import entity.LivingEntity;
+import entity.PlayerEntity;
 import trigger.Trigger;
 import world.BlockPos;
 import world.World;
@@ -105,6 +105,8 @@ public class Panel_worldrenderer extends GlobalPanel
 			drawMousePosAndInfo(g);
 		}
 		
+		if(world.getPlayingPlayerEntity() != null) g.drawString("" + world.getPlayingPlayerEntity().HP, 5, (int) (this.realHeight() - 15));
+		
 		super.draw(g);
 	}
 	
@@ -113,6 +115,12 @@ public class Panel_worldrenderer extends GlobalPanel
 		for(int i = 0; i < world.getEntitiesInWorld().length; i++)
 		{
 			Entity buff = world.getEntitiesInWorld()[i];
+			
+			if(buff == null)
+			{
+				System.err.println("at Panel_worldrenderer at drawEntities buff == null! i: " + i);
+				break;
+			}
 			
 			int ex = (int)this.worldPosToScreenPosX(buff.posX);
 			int ey = (int)this.worldPosToScreenPosY(buff.posY);
@@ -126,6 +134,10 @@ public class Panel_worldrenderer extends GlobalPanel
 			if(rectOnScreen(ex, ey, ew, eh))
 			{
 				buff.drawEntityOnScreen(g, ex, ey, ew, eh);
+
+				g.setColor(Color.WHITE);
+				
+				if(buff instanceof LivingEntity)g.drawString(("hp: " + ((LivingEntity) buff).HP), ex - 3, ey-3);
 			}
 		}
 	}
