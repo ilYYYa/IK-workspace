@@ -1,9 +1,15 @@
 package world;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import Panel.Panel_worldrenderer;
 import Resources.Saver;
 import block.Block;
 import entity.Entity;
 import entity.PlayingPlayerEntity;
+import trigger.Trigger;
+import trigger.Triggers;
 
 public class World
 {
@@ -11,9 +17,51 @@ public class World
 	private Chunk[][] chunks = new Chunk[0][0];
 	private String worldname = "";
 	
+	private Trigger[] triggers = new Trigger[0];
+	
+	private PlayingPlayerEntity playingPlayer = null;
+	private PlayingPlayerEntity playingPlayerBuffer = null;
+	
+	public Panel_worldrenderer theWorldRenderer = null;
+	public long worldTicks = 0;
+	
 	public World(String worldname)
 	{
 		this.worldname = worldname;
+	}
+	
+	public Trigger[] getTriggers()
+	{
+		return triggers;
+	}
+	
+	public void addTrigger(Trigger trigger)
+	{
+		Trigger[] buff = new Trigger[triggers.length + 1];
+		for(int i = 0; i < triggers.length; i++) buff[i] = triggers[i];
+		buff[buff.length - 1] = trigger;
+		triggers = buff;
+	}
+	
+	public void removeTrigger(Trigger trigger)
+	{
+		int i = 0;
+		Trigger[] buff = new Trigger[triggers.length - 1];
+		for(i = 0; i < triggers.length && triggers[i] != trigger; i++) buff[i] = triggers[i];
+		for(i++; i < triggers.length; i++) buff[i - 1] = triggers[i];
+		triggers = buff;
+	}
+	
+	public void removeTriggersAt(int x, int y)
+	{
+		for(int i = 0; i < triggers.length; i++)
+		{
+			if(triggers[i].isCrossingPoint(x,y))
+			{
+				removeTrigger(triggers[i]);
+				i = -1;
+			}
+		}
 	}
 	
 	public Chunk[][] getChunks()
@@ -144,6 +192,23 @@ public class World
 		return entities;
 	}
 	
+	public <T extends Entity> ArrayList<T> getEntitiesInWorldByClass(Class<? extends T> cl)
+	{
+		ArrayList<T> ret = new ArrayList<T>();
+		
+		for(int i = 0; i < entities.length; i++) if(entities[i].getClass() == cl) ret.add((T)entities[i]);
+		
+		return ret;
+	}
+	
+	public <T extends Entity> ArrayList<T> getEntitiesInWorldByClassAtPosWithRadius(Class<? extends T> cl, double x, double y, double r)
+	{
+		ArrayList<T> e = this.getEntitiesInWorldByClass(cl);
+		ArrayList<T> ret = new ArrayList<T>();
+		for(int i = 0; i < e.size(); i++) if(e.get(i).getDistanceTo(x, y) <= r) ret.add((T)e.get(i));
+		return ret;
+	}
+	
 	public void spawnEntity(Entity e)
 	{
 		Entity[] buff = new Entity[entities.length + 1];
@@ -187,14 +252,49 @@ public class World
 	
 	public void WorldTick()
 	{
+		sortEntities();
 		updateEntities();
+		
+		updateTriggers();
+		
+		worldTicks++;
+	}
+	
+	public void updateTriggers()
+	{
+		for(int i = 0; i < triggers.length; i++)
+		{
+			triggers[i].onTriggerUpdate(this);
+		}
+	}
+	
+	public void sortEntities()
+	{
+		if(entities.length == 0) return;
+		
+		Entity buff = entities[0];
+
+		for(int i = 0; i < entities.length-1; i++)
+		{
+			if(entities[i].getY() > entities[i+1].getY())
+			{
+				buff = entities[i];
+				entities[i] = entities[i+1];
+				entities[i+1] = buff;
+				
+				i = -1;
+			}
+		}
 	}
 	
 	public void updateEntities()
 	{
 		for(int i = 0; i < entities.length; i++)
 		{
-			entities[i].onEntityUpdate();
+			if(entities[i].shouldDespawn()) this.despawnEntity(entities[i]);
+			
+			if(entities[i].isEntityAlive()) entities[i].onEntityUpdate();
+			else this.despawnEntity(entities[i]);
 		}
 	}
 	
@@ -215,6 +315,16 @@ public class World
 			}
 		}
 		
+		saver.addInt(triggers.length, "TriggersSize");
+		for(int i = 0; i < triggers.length; i++)
+		{
+			saver.addString(triggers[i].unlocalizedTriggerName, "TriggerUnlocalizedName" + i);
+			saver.addInt(triggers[i].posX, "TriggerPosX"+i);
+			saver.addInt(triggers[i].posY, "TriggerPosY"+i);
+			saver.addInt(triggers[i].width, "TriggerWidth"+i);
+			saver.addInt(triggers[i].height, "TriggerHeight"+i);
+		}
+		
 		saver.addInt(entities.length, "EntitiesSize");
 		for(int i = 0; i < entities.length; i++)
 		{
@@ -226,31 +336,107 @@ public class World
 	
 	public void readWorldFromSaver(Saver saver)
 	{
-		int len = saver.getInt("ChunkSize");
-		
-		this.setWorldName(saver.getString("WorldName"));
-		
-		chunks = new Chunk[len][len];
-		for(int ix = 0; ix < len; ix++)
+		try
 		{
-			for(int iy = 0; iy < len; iy++)
+			this.setWorldName(saver.getString("WorldName"));
+		}
+		catch(Exception e)
+		{
+			System.err.println("World can't read world name from saver. Setted emptyworld name");
+			this.setWorldName(saver.getString("emptyworld"));
+		}
+		
+		int len = 0;
+		
+		try
+		{
+			len = saver.getInt("ChunkSize");
+			chunks = new Chunk[len][len];
+			for(int ix = 0; ix < len; ix++)
 			{
-				chunks[ix][iy] = new Chunk(saver.getInt("ChunkAX" + ix * chunks.length + iy), saver.getInt("ChunkAY" + ix * chunks.length + iy));
-				chunks[ix][iy].readFromSaver(saver, ix * chunks.length + iy);
+				for(int iy = 0; iy < len; iy++)
+				{
+					chunks[ix][iy] = new Chunk(saver.getInt("ChunkAX" + ix * chunks.length + iy), saver.getInt("ChunkAY" + ix * chunks.length + iy));
+					chunks[ix][iy].readFromSaver(saver, ix * chunks.length + iy);
+				}
 			}
 		}
-		
-		len = saver.getInt("EntitiesSize");
-		entities = new Entity[len];
-		for(int i = 0; i < len; i++)
+		catch(Exception e)
 		{
-			//reading entities...
+			System.err.println("World can't read chunks from saver.");
+			chunks = new Chunk[0][0];
 		}
+
+		try
+		{
+			len = saver.getInt("TriggersSize");
+			triggers = new Trigger[len];
+			for(int i = 0; i < len; i++)
+			{
+				triggers[i] = Triggers.create(
+						saver.getString("TriggerUnlocalizedName" + i),
+						saver.getInt("TriggerPosX"+i),
+						saver.getInt("TriggerPosY"+i),
+						saver.getInt("TriggerWidth"+i),
+						saver.getInt("TriggerHeight"+i));
+			}
+		}
+		catch(Exception e)
+		{
+			System.err.println("World can't read triggers from saver.");
+			triggers = new Trigger[0];
+		}
+
+		try
+		{
+			len = saver.getInt("EntitiesSize");
+			//entities = new Entity[len];
+			for(int i = 0; i < len; i++)
+			{
+				//reading entities...
+			}
+		}
+		catch(Exception e)
+		{
+			System.err.println("World can't read entities from saver.");
+			entities = new Entity[0];
+		}
+	}
+	
+	public double getDistanceToPlayingPlayerFromEntity(Entity e)
+	{
+		if(this.playingPlayer == null) return 0;
+		else return e.getDistanceToEntity(this.playingPlayer);
 	}
 
 	public PlayingPlayerEntity getPlayingPlayerEntity()
 	{
-		return null;
+		return this.playingPlayer;
+	}
+	
+	public PlayingPlayerEntity getBufferedPlayingPlayerEntity()
+	{
+		return this.playingPlayerBuffer;
+	}
+	
+	public void setPlayingPlayer(PlayingPlayerEntity plple)
+	{
+		this.playingPlayer = plple;
+		this.playingPlayerBuffer = plple;
+		this.spawnEntity(this.playingPlayer);
+	}
+	
+	public void restorePlaingPlayer()
+	{
+		this.playingPlayer = this.playingPlayerBuffer;
+		this.spawnEntity(this.playingPlayer);
+	}
+	
+	public void disbandPlayingPlayer()
+	{
+		this.playingPlayerBuffer = this.playingPlayer;
+		this.playingPlayer = null;
+		this.despawnEntity(this.playingPlayer);
 	}
 
 	public void setWorldName(String wn)

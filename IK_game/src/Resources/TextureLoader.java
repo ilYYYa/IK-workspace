@@ -21,11 +21,25 @@ public class TextureLoader
 	public static void initLoad() throws IOException
 	{
 		File f = new File(TextureLoader.class.getResource("").getFile() + "/Files/Textures");
-		File[] files = f.listFiles();
+		
+		loadTexturesFromFolder(f);
+		
+		/*File[] files = f.listFiles();
 		
 		for(int i = 0; files!=null && i < files.length; i++)
 		{
 			addImage(ImageIO.read(files[i]), files[i].getName().substring(0, files[i].getName().length() - 4));
+		}*/
+	}
+	
+	public static void loadTexturesFromFolder(File directory) throws IOException
+	{
+		File[] files = directory.listFiles();
+		
+		for(int i = 0; files!=null && i < files.length; i++)
+		{
+			if(files[i].isDirectory()) loadTexturesFromFolder(files[i]);
+			else addImage(ImageIO.read(files[i]), files[i].getName().substring(0, files[i].getName().length() - 4));
 		}
 	}
 	

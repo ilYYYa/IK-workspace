@@ -3,10 +3,14 @@ package entity;
 import Game.Game;
 import Resources.Saver;
 import entity.Entity.damageSource;
+import util.Navigator;
 import world.World;
 
 public class LivingEntity extends Entity
 {
+	public double maxHP = 10D;
+	public double maxMP = 10D;
+	
 	public double HP = 10D;
 	public double MP = 10D;
 	public double Armor = 0D;
@@ -15,7 +19,12 @@ public class LivingEntity extends Entity
 	public double HPRegeneration = 0.1D;
 	public double MPRegeneration = 0.1D;
 	
+	public double lastHPRestoring = 0;
+	public double lastMPRestoring = 0;
+	
 	public int Level = 1;
+	
+	public Navigator navigator = new Navigator(this);
 	
 	public LivingEntity latestAttacker = null;
 
@@ -24,8 +33,91 @@ public class LivingEntity extends Entity
 		super(world, unlocalizedname, id, uid);
 	}
 	
+	public void setMaxHP(double maxHP)
+	{
+		this.maxHP = maxHP;
+	}
+	
+	public double getMaxHP()
+	{
+		return this.maxHP;
+	}
+	
+	public void setMaxMP(double maxMP)
+	{
+		this.maxMP = maxMP;
+	}
+	
+	public double getMaxMP()
+	{
+		return this.maxMP;
+	}
+	
 	@Override
-	public void attack(damageSource damageType, double value)
+	public void onEntityUpdate()
+    {
+		if(HP > maxHP) HP = maxHP;
+		if(MP > maxMP) MP = maxMP;
+		
+		if(HP < maxHP && lastHPRestoring + 30 < this.lifeTime)
+		{
+			restoreHP(this.HPRegeneration);
+			lastHPRestoring = this.lifeTime;
+		}
+		if(MP < maxMP && lastMPRestoring + 30 < this.lifeTime)
+		{
+			restoreMP(this.MPRegeneration);
+			lastMPRestoring = this.lifeTime;
+		}
+		
+		if(HP <= 0) this.kill();
+		if(MP < 0) MP = 0D;
+		
+		if(!this.navigator.noPath())
+		{
+			double[] point = this.navigator.getCurrentPoint();
+			
+			if(point[0] < this.getX()) this.motionX = -this.getMoveSpeed();
+			if(point[0] > this.getX()) this.motionX = this.getMoveSpeed();
+			if(this.canReachPointInOneTick(point[0], this.getY()))
+			{
+				this.setPosition(point[0], this.getY());
+				this.motionX = 0;
+			}
+			
+			if(point[1] < this.getY()) this.motionY = -this.getMoveSpeed();
+			if(point[1] > this.getY()) this.motionY = this.getMoveSpeed();
+			if(this.canReachPointInOneTick(this.getX(), point[1]))
+			{
+				this.setPosition(this.getX(), point[1]);
+				this.motionY = 0;
+			}
+			
+			if(this.canReachPointInOneTick(point[0], point[1]))
+			{
+				this.setPosition(point[0], point[1]);
+				this.navigator.pointReached();
+				
+				this.motionX = 0;
+				this.motionY = 0;
+			}
+		}
+		
+		super.onEntityUpdate();
+    }
+	
+	public void restoreHP(double hp)
+	{
+		HP += hp;
+	}
+	
+	public void restoreMP(double mp)
+	{
+		MP += mp;
+	}
+	
+	@Override
+	public void attackFrom(damageSource damageType, double value)
 	{
 		double dl = 0.75D;
 		String dls = Game.theGame.gameSettingSaver.getString("DifficultyLevel");
@@ -45,14 +137,14 @@ public class LivingEntity extends Entity
 		{
 			this.isDead = true;
 		}
-		super.attack(damageType, value);
+		super.attackFrom(damageType, value);
 	}
 	
 	@Override
 	public void attackFromLivingEntity(LivingEntity e, damageSource damageType, double value)
 	{
 		latestAttacker = e;
-		this.attack(damageType, value);
+		this.attackFrom(damageType, value);
 		super.attackFromLivingEntity(e, damageType, value);
 	}
 
@@ -67,7 +159,8 @@ public class LivingEntity extends Entity
 		saver.addDouble(HPRegeneration, "EntityHPRegeneration"+i);
 		saver.addDouble(MPRegeneration, "EntityMPRegeneration"+i);
 		saver.addInt(Level, "EntityLevel"+i);
-		saver.addInt(latestAttacker.uid, "EntityLatestAttackerUid"+i);
+		if(latestAttacker != null) saver.addInt(latestAttacker.uid, "EntityLatestAttackerUid"+i);
+		else saver.addInt(-1, "EntityLatestAttackerUid"+i);
 	}
 	
 	@Override

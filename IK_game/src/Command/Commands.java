@@ -11,6 +11,10 @@ public class Commands
 				new Command_loadWorld(),
 				new Command_goToMainMenu(),
 				new Command_exit(),
-				new Command_quit()
+				new Command_quit(),
+				new Command_triggerCreate(),
+				new Command_removeTriggersAt(),
+				new Command_help(),
+				new Command_gamemode()
 		};
 }
