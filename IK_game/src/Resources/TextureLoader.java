@@ -60,7 +60,11 @@ public class TextureLoader
 				if(name.substring(1,4).equals("001"))
 				{
 					String[] split = name.substring(4).split("&");
+					
 					buff = TextureEditor.concatSummaringTexturesByMeta((BufferedImage)getTextureByNamePURE(split[0]), (BufferedImage)getTextureByNamePURE(split[1]), Integer.parseInt(split[2]));
+					
+					int a = (split.length - 1)/2;
+					for(int i = 1; i < a; i++) buff = TextureEditor.concatSummaringTexturesByMeta((BufferedImage)buff, (BufferedImage)getTextureByNamePURE(split[i*2 + 1]), Integer.parseInt(split[i*2 + 2]));
 					
 					addImage(buff, name);
 					

@@ -24,11 +24,11 @@ public class Block_Grass extends Block
 		
 		String buff = "";
 
-		if((meta & 8) == 8) buff = world.getBlock(pos.east()).getTextureName();
-		if((meta & 4) == 4) buff = world.getBlock(pos.west()).getTextureName();
-		if((meta & 2) == 2) buff = world.getBlock(pos.south()).getTextureName();
-		if((meta & 1) == 1) buff = world.getBlock(pos.north()).getTextureName();
+		if((meta & 8) == 8) buff += "&" + world.getBlock(pos.east()).getTextureName() + "&8";
+		if((meta & 4) == 4) buff += "&" + world.getBlock(pos.west()).getTextureName() + "&4";
+		if((meta & 2) == 2) buff += "&" + world.getBlock(pos.south()).getTextureName() + "&2";
+		if((meta & 1) == 1) buff += "&" + world.getBlock(pos.north()).getTextureName() + "&1";
 		
-		return "!001" + getTextureName() + "&" + buff + "&" + meta;
+		return "!001" + getTextureName() + buff;
 	}
 }

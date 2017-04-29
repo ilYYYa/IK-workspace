@@ -137,11 +137,6 @@ public class Panel_worldrenderer extends GlobalPanel
 
 				g.setColor(Color.WHITE);
 				
-				int zX1 = (int)this.worldPosToScreenPosX(buff.getX());
-				int zY1 = (int)this.worldPosToScreenPosY(buff.getY());
-				
-				g.drawRect(zX1, zY1, 1, 1);
-				
 				if(buff instanceof LivingEntity)g.drawString(("hp: " + ((LivingEntity) buff).HP), ex - 3, ey-3);
 			}
 		}

@@ -158,27 +158,28 @@ public class Entity
     {
     	lifeTime++;
     	
-    	if(this.currentMotionX < this.motionX) this.currentMotionX += this.getMoveSpeed();
-    	if(this.currentMotionX > this.motionX) this.currentMotionX -= this.getMoveSpeed();
-    	if(Math.abs(this.currentMotionX - this.motionX) < this.getMoveSpeed()) this.currentMotionX = this.motionX;
-    	if(this.currentMotionY < this.motionY) this.currentMotionY += this.getMoveSpeed();
-    	if(this.currentMotionY > this.motionY) this.currentMotionY -= this.getMoveSpeed();
-    	if(Math.abs(this.currentMotionY - this.motionY) < this.getMoveSpeed()) this.currentMotionY = this.motionY;
+    	double motionX = this.motionX;
+    	double motionY = this.motionY;
+    	
+    	motionX *= 1 - world.getBlock(this.getX(), this.getY(), BlockPos.blockPosLevel.BACK).getBlockMovementSlow();
+    	motionX *= 1 - world.getBlock(this.getX(), this.getY(), BlockPos.blockPosLevel.MIDDLE).getBlockMovementSlow();
+    	motionY *= 1 - world.getBlock(this.getX(), this.getY(), BlockPos.blockPosLevel.BACK).getBlockMovementSlow();
+    	motionY *= 1 - world.getBlock(this.getX(), this.getY(), BlockPos.blockPosLevel.MIDDLE).getBlockMovementSlow();
+    	
+    	if(this.currentMotionX < motionX) this.currentMotionX += this.getMoveSpeed();
+    	if(this.currentMotionX > motionX) this.currentMotionX -= this.getMoveSpeed();
+    	if(Math.abs(this.currentMotionX - motionX) < this.getMoveSpeed()) this.currentMotionX = motionX;
+    	if(this.currentMotionY < motionY) this.currentMotionY += this.getMoveSpeed();
+    	if(this.currentMotionY > motionY) this.currentMotionY -= this.getMoveSpeed();
+    	if(Math.abs(this.currentMotionY - motionY) < this.getMoveSpeed()) this.currentMotionY = motionY;
     	
     	if(canStayAt(this.getX() + currentMotionX/25D, this.getY())) this.setPosition(this.getX() + currentMotionX/25D, this.getY());
-    	else
-    		if(currentMotionX > 0) this.setPosition((int)(this.getX() + this.getWidth()/2) - this.getWidth()/2 + 0.99, this.getY());
-    		else  this.setPosition((int)(this.getX() - this.getWidth()/2) + this.getWidth()/2 - 0.99, this.getY());
-    	
     	if(canStayAt(this.getX(), this.getY() + currentMotionY/25D)) this.setPosition(this.getX(), this.getY() + currentMotionY/25D);
-    	else
-    		if(currentMotionY > 0) this.setPosition(this.getX(), (int)this.getY() + 0.99);
-    		else this.setPosition(this.getX(), (int)(this.getY() - this.getHeight()) + this.getHeight() - 0.99);
     	
-    	if(motionX > 0) this.lookingTo = LookingVect.EAST;
-    	if(motionX < 0) this.lookingTo = LookingVect.WEST;
-    	if(motionY > 0) this.lookingTo = LookingVect.SOUTH;
-    	if(motionY < 0) this.lookingTo = LookingVect.NORTH;
+    	if(this.motionX > 0) this.lookingTo = LookingVect.EAST;
+    	if(this.motionX < 0) this.lookingTo = LookingVect.WEST;
+    	if(this.motionY > 0) this.lookingTo = LookingVect.SOUTH;
+    	if(this.motionY < 0) this.lookingTo = LookingVect.NORTH;
     }
     
     public String getTexture()
@@ -213,15 +214,16 @@ public class Entity
     public boolean canStayAt(double x, double y)
     {
     	double x1 = x - this.getWidth()/2;
-    	double y1 = y - this.getHeight();
     	double x2 = x + this.getWidth()/2;
-    	double y2 = y;
+    	
+    	double y1 = y - 0.5;
+    	double y2 = y + 0.1;
     	
     	for(double ix = x1; ix <= x2; ix+=0.1)
     	{
     		for(double iy = y1; iy <= y2; iy+=0.1)
         	{
-    			if(!pointAtPassibleBlock(ix, iy)) return false;
+        		if(!pointAtPassibleBlock(ix, iy)) return false;
         	}
     	}
     	
