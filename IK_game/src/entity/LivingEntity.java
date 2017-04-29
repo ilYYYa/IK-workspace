@@ -137,6 +137,11 @@ public class LivingEntity extends Entity
 		latestAttacker = e;
 		this.attackFrom(damageType, value);
 		super.attackFromLivingEntity(e, damageType, value);
+		
+		e.currentMotionX = -e.currentMotionX;
+		e.currentMotionY = -e.currentMotionY;
+		this.currentMotionX = -e.currentMotionX * 2;
+		this.currentMotionY = -e.currentMotionY * 2;
 	}
 
 	@Override

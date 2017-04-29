@@ -65,8 +65,8 @@ public class Panel_worldrenderer extends GlobalPanel
 		}
 		else
 		{
-			cameraPosX = world.getPlayingPlayerEntity().posX;
-			cameraPosY = world.getPlayingPlayerEntity().posY;
+			cameraPosX = world.getPlayingPlayerEntity().getX();
+			cameraPosY = world.getPlayingPlayerEntity().getY() - world.getPlayingPlayerEntity().getHeight() / 2;
 			
 			if(this.blocksAtScreenByWidth < blocksAtScreenByWidthCONST) this.blocksAtScreenByWidth++;
 			if(this.blocksAtScreenByWidth > blocksAtScreenByWidthCONST) this.blocksAtScreenByWidth--;
@@ -136,6 +136,11 @@ public class Panel_worldrenderer extends GlobalPanel
 				buff.drawEntityOnScreen(g, ex, ey, ew, eh);
 
 				g.setColor(Color.WHITE);
+				
+				int zX1 = (int)this.worldPosToScreenPosX(buff.getX());
+				int zY1 = (int)this.worldPosToScreenPosY(buff.getY());
+				
+				g.drawRect(zX1, zY1, 1, 1);
 				
 				if(buff instanceof LivingEntity)g.drawString(("hp: " + ((LivingEntity) buff).HP), ex - 3, ey-3);
 			}

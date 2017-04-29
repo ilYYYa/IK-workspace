@@ -47,11 +47,6 @@ public class MonsterEntity extends LivingEntity
 			
 			if(this.collisionWithEntity(world.getPlayingPlayerEntity()))
 			{
-				this.currentMotionX = -this.currentMotionX;
-				this.currentMotionY = -this.currentMotionY;
-				world.getPlayingPlayerEntity().currentMotionX = -this.currentMotionX * 2;
-				world.getPlayingPlayerEntity().currentMotionY = -this.currentMotionY * 2;
-				
 				world.getPlayingPlayerEntity().attackFromLivingEntity(this, damageSource.PHYSICAL, 1D);
 			}
 		}

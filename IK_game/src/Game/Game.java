@@ -22,11 +22,24 @@ public class Game
 	
 	public long lastSaved = System.currentTimeMillis()/1000;
 	
-	public double fps = 0;
+	public static final int GAME_FPS = 60;
+	
+	public double fps = 3000;
+	public double avrFps = 0;
+	
+	public long globalTick = 0;
+	public long avrGlobalTick = 0;
+	public long maxGlobalTick = 0;
+	
 	public long logicTick = 0;
+	public long avrLogicTick = 0;
+	public long maxLogicTick = 0;
+	
 	public long renderTick = 0;
 	public long avrRenderTick = 0;
-	public long avrLogicTick = 0;
+	public long maxRenderTick = 0;
+
+	private long lastTickUpdate = 0;
 	
 	public static Block_Air air = (Block_Air) Blocks.AIR;
 	
@@ -60,30 +73,38 @@ public class Game
 	{
 		while(gameRunning)
 		{
+			if(globalTick != 0)fps = 1000D / (double)globalTick;
+			else fps = 1000D;
+			
 			long l1 = System.currentTimeMillis();
 			theDoubleBuffer.logic();
 			long l2 = System.currentTimeMillis();
 			if(theMainWindow != null) theMainWindow.repaint();
 			long l3 = System.currentTimeMillis();
+
+			if(avrFps == 0) avrFps = fps;
+			else avrFps = (avrFps + fps) / 2;
+
+			if(avrGlobalTick == 0) avrGlobalTick = globalTick;
+			else avrGlobalTick = (avrGlobalTick + globalTick) / 2;
 			
-			if(avrRenderTick == 0)avrRenderTick = (l2-l1);
-			else avrRenderTick = (avrRenderTick+(l2-l1))/2;
+			if(avrLogicTick == 0)avrLogicTick = (l2-l1);
+			else avrLogicTick = (avrLogicTick+(l2-l1))/2;
 			
-			if(avrLogicTick == 0)avrLogicTick = (l3-l2);
-			else avrLogicTick = (avrLogicTick+(l3-l2))/2;
+			if(avrRenderTick == 0)avrRenderTick = (l3-l2);
+			else avrRenderTick = (avrRenderTick+(l3-l2))/2;
 			
-			if(System.currentTimeMillis()/1000 % 2 == 0)
-			{
-				this.renderTick = this.avrRenderTick;
-				this.avrRenderTick = 0;
-				this.logicTick = this.avrLogicTick;
-				this.avrLogicTick = 0;
-			}
+			if(maxGlobalTick < globalTick) maxGlobalTick = globalTick;
+			if(maxLogicTick < l2-l1) maxLogicTick = l2-l1;
+			if(maxRenderTick < l3-l2) maxRenderTick = l3-l2;
 			
 			if(System.currentTimeMillis()/1000 % 10 == 0 && lastSaved != System.currentTimeMillis()) this.SaveSettings();
 			
-			try {Thread.sleep(16);} // 16 --> 1000/60 --> 60fps
-			catch (InterruptedException e){}
+			while(System.currentTimeMillis() < lastTickUpdate + 1000/GAME_FPS);
+			
+			lastTickUpdate = System.currentTimeMillis();
+			
+			this.globalTick = System.currentTimeMillis() - l1;
 		}
 	}
 	

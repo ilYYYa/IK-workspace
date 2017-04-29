@@ -10,6 +10,7 @@ import entity.Entity;
 import entity.PlayingPlayerEntity;
 import trigger.Trigger;
 import trigger.Triggers;
+import world.BlockPos.blockPosLevel;
 
 public class World
 {
@@ -480,6 +481,11 @@ public class World
 	public String getWorldName()
 	{
 		return this.worldname;
+	}
+
+	public Block getBlock(double x, double y, blockPosLevel lvl) 
+	{
+		return this.getBlock(x < 0 ? (int)x - 1 : (int)x, y < 0 ? (int)y - 1 : (int)y, lvl);
 	}
 }
 

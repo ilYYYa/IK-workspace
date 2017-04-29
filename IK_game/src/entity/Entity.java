@@ -35,6 +35,8 @@ public class Entity
 	
 	public boolean collisedWithBlocks = true;
 	
+	public boolean ghost = false;
+	
 	public World world;
 	
 	public Entity(World world, String unlocalizedname, int id, int uid)
@@ -53,6 +55,16 @@ public class Entity
 		if(e.posY + e.height < this.posY) return false;
 		
 		return true;
+	}
+	
+	public void setGhostly(boolean ghost)
+	{
+		this.ghost = ghost;
+	}
+	
+	public boolean isGhost()
+	{
+		return this.ghost;
 	}
 
 	public void setMoveSpeed(double speed)
@@ -153,18 +165,20 @@ public class Entity
     	if(this.currentMotionY > this.motionY) this.currentMotionY -= this.getMoveSpeed();
     	if(Math.abs(this.currentMotionY - this.motionY) < this.getMoveSpeed()) this.currentMotionY = this.motionY;
     	
-    	posX += currentMotionX/25D;
-    	posY += currentMotionY/25D;
+    	if(canStayAt(this.getX() + currentMotionX/25D, this.getY())) this.setPosition(this.getX() + currentMotionX/25D, this.getY());
+    	else
+    		if(currentMotionX > 0) this.setPosition((int)(this.getX() + this.getWidth()/2) - this.getWidth()/2 + 0.99, this.getY());
+    		else  this.setPosition((int)(this.getX() - this.getWidth()/2) + this.getWidth()/2 - 0.99, this.getY());
+    	
+    	if(canStayAt(this.getX(), this.getY() + currentMotionY/25D)) this.setPosition(this.getX(), this.getY() + currentMotionY/25D);
+    	else
+    		if(currentMotionY > 0) this.setPosition(this.getX(), (int)this.getY() + 0.99);
+    		else this.setPosition(this.getX(), (int)(this.getY() - this.getHeight()) + this.getHeight() - 0.99);
+    	
     	if(motionX > 0) this.lookingTo = LookingVect.EAST;
     	if(motionX < 0) this.lookingTo = LookingVect.WEST;
     	if(motionY > 0) this.lookingTo = LookingVect.SOUTH;
     	if(motionY < 0) this.lookingTo = LookingVect.NORTH;
-    }
-    
-    public boolean canReachPointInOneTick(double px, double py)
-    {
-    	if(this.getDistanceTo(px, py) <= (currentMotionX*currentMotionX + currentMotionY*currentMotionY)/(this.moveSpeed * 20)) return true;
-    	else return false;
     }
     
     public String getTexture()
@@ -195,6 +209,41 @@ public class Entity
     	
 		return true;
 	}
+    
+    public boolean canStayAt(double x, double y)
+    {
+    	double x1 = x - this.getWidth()/2;
+    	double y1 = y - this.getHeight();
+    	double x2 = x + this.getWidth()/2;
+    	double y2 = y;
+    	
+    	for(double ix = x1; ix <= x2; ix+=0.1)
+    	{
+    		for(double iy = y1; iy <= y2; iy+=0.1)
+        	{
+    			if(!pointAtPassibleBlock(ix, iy)) return false;
+        	}
+    	}
+    	
+		if(!pointAtPassibleBlock(x1, y1)) return false;
+		if(!pointAtPassibleBlock(x1, y2)) return false;
+		if(!pointAtPassibleBlock(x2, y1)) return false;
+		if(!pointAtPassibleBlock(x2, y2)) return false;
+    	
+    	return true;
+    }
+    
+    public boolean pointAtPassibleBlock(double x, double y)
+    {
+    	Block b1 = world.getBlock(x, y, BlockPos.blockPosLevel.BACK);
+    	Block b2 = world.getBlock(x, y, BlockPos.blockPosLevel.MIDDLE);
+    	
+    	if(b1 == null || b2 == null) return false;
+    	if(!b1.isPassable()) return false;
+    	if(!b2.isPassable()) return false;
+    	
+    	return true;
+    }
 
 	public static enum damageSource
     {
