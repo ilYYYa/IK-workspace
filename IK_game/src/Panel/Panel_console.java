@@ -28,7 +28,6 @@ public class Panel_console extends GlobalPanel
 		inline.setMaxSymbols(128);
 		
 		txt = new GlobalTextField(0, 0, 1, 0.95, this);
-		txt.setColor(255, 255, 255);
 
 		this.addChild(txt);
 		this.addChild(inline);

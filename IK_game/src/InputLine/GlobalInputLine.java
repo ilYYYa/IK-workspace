@@ -2,9 +2,12 @@ package InputLine;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.event.KeyEvent;
 
 import Obj.DrawbleObject;
+import Resources.TextureLoader;
+import util.TextureEditor;
 
 public class GlobalInputLine extends DrawbleObject
 {
@@ -73,7 +76,9 @@ public class GlobalInputLine extends DrawbleObject
 		g.drawRect((int)posXOnScreen(), (int)posYOnScreen(), (int)realWidth(), (int)realHeight());
 		g.drawRect((int)posXOnScreen()+1, (int)posYOnScreen()+1, (int)realWidth()-2, (int)realHeight()-2);
 		g.drawRect((int)posXOnScreen()+2, (int)posYOnScreen()+2, (int)realWidth()-4, (int)realHeight()-4);
-		g.drawString(strD, (int)posXOnScreen() + 5, (int)posYOnScreen() + (int)realHeight()/2);
+
+		Image buff = TextureLoader.getTextureByName("!002" + this.strD + "&" + ((int)this.realWidth()-10) + "&" + ((int)this.realHeight()/2));
+		g.drawImage(buff, (int)posXOnScreen() + 5, (int)posYOnScreen() + (int)this.realHeight()/4, null);
 	}
 
 	@Override

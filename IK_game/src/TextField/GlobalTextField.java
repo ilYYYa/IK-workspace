@@ -1,15 +1,16 @@
 package TextField;
 
-import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Image;
 import java.util.ArrayList;
 
 import Obj.DrawbleObject;
+import Resources.TextureLoader;
 
 public class GlobalTextField extends DrawbleObject
 {
 	private ArrayList<String> textForDraw = new ArrayList<String>();
-	private Color color = new Color(0,0,0);
+	private int textSize = 16;
 
 	public GlobalTextField(double x, double y, double w, double h, DrawbleObject parent)
 	{
@@ -37,13 +38,13 @@ public class GlobalTextField extends DrawbleObject
 		this.textForDraw.add(string);
 	}
 	
-	public void setColor(Color c)
+	public void setTextSize(int textSize)
 	{
-		color = c;
+		this.textSize = textSize;
 	}
-	public void setColor(int r, int g, int b)
+	public int getTextSize()
 	{
-		this.setColor(new Color(r,g,b));
+		return this.textSize;
 	}
 	
 	@Override
@@ -55,11 +56,35 @@ public class GlobalTextField extends DrawbleObject
 	@Override
 	public void draw(Graphics g)
 	{
-		g.setColor(color);
-		for(int i = 0; i < this.textForDraw.size(); i++)
+		for(int i = 0; i < textForDraw.size() && (i+1)*this.textSize < this.realHeight(); i++)
 		{
-			g.drawString(textForDraw.get(i), (int)posXOnScreen() + 5, (int)posYOnScreen() + i*15 + 15);
+			Image buff = TextureLoader.getTextureByName("!002" + textForDraw.get(i) + "&" + (int)this.realWidth() + "&" + this.textSize);
+			g.drawImage(buff, (int)this.posXOnScreen(), (int)this.posYOnScreen() + i*this.textSize, null);
 		}
 	}
-
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

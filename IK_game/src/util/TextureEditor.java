@@ -3,6 +3,8 @@ package util;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 
+import Resources.TextureLoader;
+
 public class TextureEditor
 {
 	public static BufferedImage concatSummaringTexturesByMeta(BufferedImage img1, BufferedImage img2, int meta)
@@ -28,4 +30,92 @@ public class TextureEditor
 	    g.dispose();
 	    return b;
 	}
+	
+	public static final int space = 2;
+	
+	public static BufferedImage getImageWithDrawedStringViaFont(String str, int width, int height)
+	{
+		int w = (int)((double)height/16D*12D)+space;
+
+	    BufferedImage b = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+	    Graphics g = b.getGraphics();
+	    
+	    char[] buff = str.toCharArray();
+		
+		for(int i = 0; i < buff.length; i++)
+		{
+			g.drawImage(getCharViaImage(buff[i]), i * w, 0, w-space, height, null);
+		}
+
+	    g.dispose();
+	    return b;
+	}
+	
+	public static int getStringWidthByHeight(String str, int height)
+	{
+		int w = (int)((double)height/16D*12D)+space;
+		return str.length() * w;
+	}
+	
+	public static BufferedImage getCharViaImage(char c)
+	{
+		String addSym = "" + c;
+		
+		if(c == '"') addSym = "34";
+		if(c == '*') addSym = "42";
+		if(c == '/') addSym = "47";
+		if(c == ':') addSym = "58";
+		if(c == '<') addSym = "60";
+		if(c == '>') addSym = "62";
+		if(c == '?') addSym = "63";
+		if(c == '\\') addSym = "92";
+		if(c == '|') addSym = "124";
+		
+		BufferedImage img = (BufferedImage)TextureLoader.getTextureByNamePURE("font_" + addSym);
+		
+		if(img == TextureLoader.getNullTexture() && c != '?') img = (BufferedImage)TextureLoader.getTextureByNamePURE("font_63");
+		
+	    BufferedImage b = new BufferedImage(img.getWidth(), img.getHeight(), img.getType());
+	    Graphics g = b.getGraphics();
+	    g.drawImage(img, 0, 0, null);
+	    g.dispose();
+	    return b;
+	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

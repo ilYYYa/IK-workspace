@@ -57,23 +57,48 @@ public class TextureLoader
 			Image buff = getTextureByNamePURE(name);
 			if(buff == nuller)
 			{
-				if(name.substring(1,4).equals("001"))
+				switch(name.substring(1,4))
 				{
-					String[] split = name.substring(4).split("&");
-					
-					buff = TextureEditor.concatSummaringTexturesByMeta((BufferedImage)getTextureByNamePURE(split[0]), (BufferedImage)getTextureByNamePURE(split[1]), Integer.parseInt(split[2]));
-					
-					int a = (split.length - 1)/2;
-					for(int i = 1; i < a; i++) buff = TextureEditor.concatSummaringTexturesByMeta((BufferedImage)buff, (BufferedImage)getTextureByNamePURE(split[i*2 + 1]), Integer.parseInt(split[i*2 + 2]));
-					
-					addImage(buff, name);
-					
-					return buff;
+					case "001": buff = func001(buff, name.substring(4)); break;
+					case "002": buff = func002(buff, name.substring(4)); break;
 				}
-				else return getNullTexture();
+
+				if(buff != getNullTexture()) addImage(buff, name);
+				
+				return buff;
 			}
 			else return buff;
 		}
+	}
+	
+	public static Image func001(Image buff, String str)
+	{
+		String[] split = str.split("&");
+		
+		buff = TextureEditor.concatSummaringTexturesByMeta((BufferedImage)getTextureByNamePURE(split[0]), (BufferedImage)getTextureByNamePURE(split[1]), Integer.parseInt(split[2]));
+		
+		int a = (split.length - 1)/2;
+		for(int i = 1; i < a; i++) buff = TextureEditor.concatSummaringTexturesByMeta((BufferedImage)buff, (BufferedImage)getTextureByNamePURE(split[i*2 + 1]), Integer.parseInt(split[i*2 + 2]));
+		
+		return buff;
+	}
+	
+	public static Image func002(Image buff, String str)
+	{
+		String[] split = str.split("&");
+		split[0] = split[0].toUpperCase();
+		try
+		{
+			buff = TextureEditor.getImageWithDrawedStringViaFont(split[0], Integer.parseInt(split[1]), Integer.parseInt(split[2]));
+		}
+		catch(NumberFormatException e)
+		{
+			System.err.println("at TextureLoader at func002");
+			System.err.println("\tstr: " + str);
+			System.err.println("\tthis function must be: <TEXTFORDRAW>&<INT WIDTH>&<INT HEIGHT>");
+			System.exit(-33);
+		}
+		return buff;
 	}
 	
 	public static Image getTextureByNamePURE(String name)

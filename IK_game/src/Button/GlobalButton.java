@@ -2,15 +2,17 @@ package Button;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.event.MouseEvent;
 
 import Obj.DrawbleObject;
+import Resources.TextureLoader;
+import util.TextureEditor;
 
 public class GlobalButton extends DrawbleObject
 {
 	public Color bgColor = new Color(200,200,200);
 	public Color borderColor = new Color(255,255,255);
-	public Color textColor = new Color(0,0,0);
 	public Color OnButtonMouseBgColor = new Color(180,180,180);
 	public Color ColorDali = new Color(0,255,0);
 	public Color OnNonActiveButton = new Color(150,150,150);
@@ -45,8 +47,9 @@ public class GlobalButton extends DrawbleObject
 		g.fillRect((int)posXOnScreen(), (int)posYOnScreen(), (int)realWidth(), (int)realHeight());
 		g.setColor(borderColor);
 		g.drawRect((int)posXOnScreen(), (int)posYOnScreen(), (int)realWidth(), (int)realHeight());
-		g.setColor(textColor);
-		g.drawString(Text, (int)posXOnScreen() + 5, (int)posYOnScreen() + (int)realHeight()/2);
+
+		Image buff = TextureLoader.getTextureByName("!002" + this.Text + "&" + TextureEditor.getStringWidthByHeight(this.Text, (int)this.realHeight()/2) + "&" + ((int)this.realHeight()/2));
+		g.drawImage(buff, (int)posXOnScreen() + (int)this.realWidth()/2 - buff.getWidth(null)/2, (int)posYOnScreen() + (int)this.realHeight()/4, null);
 	}
 	
 	public GlobalButton setText(String text)
@@ -58,12 +61,6 @@ public class GlobalButton extends DrawbleObject
 	public GlobalButton setBorderColor(int r, int g, int b)
 	{
 		borderColor = new Color(r,g,b);
-		return this;
-	}
-
-	public GlobalButton setTextColor(int r, int g, int b)
-	{
-		textColor = new Color(r,g,b);
 		return this;
 	}
 
