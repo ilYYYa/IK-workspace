@@ -13,9 +13,9 @@ public class Command_kill extends GCommand
 	@Override
 	public String Execute(String[] args)
 	{
-		if(Game.theGame.currentOpenedWorld.getPlayingPlayerEntity() == null) return "Player doesn't created";
+		if(Game.theGame.currentOpenedWorld.getPlayer() == null) return "Player doesn't created";
 		
-		Game.theGame.currentOpenedWorld.getPlayingPlayerEntity().kill();
+		Game.theGame.currentOpenedWorld.getPlayer().kill();
 		
 		return "Player killed";
 	}

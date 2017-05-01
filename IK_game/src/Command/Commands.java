@@ -16,6 +16,8 @@ public class Commands
 				new Command_removeTriggersAt(),
 				new Command_help(),
 				new Command_gamemode(),
-				new Command_kill()
+				new Command_kill(),
+				new Command_uncontrollable(),
+				new Command_kill2()
 		};
 }

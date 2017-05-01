@@ -20,9 +20,9 @@ public class Command_gamemode extends GCommand
 		if(gm < 0) return gm + " is not available";
 		if(gm > 1) return gm + " is not available";
 		
-		if(Game.theGame.currentOpenedWorld.getBufferedPlayingPlayerEntity() == null) return "player didn't created";
+		if(Game.theGame.currentOpenedWorld.getPlayer() == null) return "player didn't created";
 
-		Game.theGame.currentOpenedWorld.getBufferedPlayingPlayerEntity().setPlayerGamemode(gm);
+		Game.theGame.currentOpenedWorld.setGamemode(gm);
 		
 		return "Done";
 	}

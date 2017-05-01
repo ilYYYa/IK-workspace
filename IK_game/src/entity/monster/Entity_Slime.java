@@ -15,14 +15,16 @@ public class Entity_Slime extends MonsterEntity
 		
 		this.setMaxHP(10D);
 		this.setMaxMP(0D);
+		
+		this.motion = 1.5;
 	}
 
 	@Override
 	public String getTexture()
 	{
-		if(this.lifeTime % 80 < 20) return "slime1";
-		if(this.lifeTime % 80 >= 20 && this.lifeTime % 80 < 40) return "slime2";
-		if(this.lifeTime % 80 >= 40 && this.lifeTime % 80 < 60) return "slime1";
+		if(this.lifeTime % 40 < 10) return "slime1";
+		if(this.lifeTime % 40 >= 10 && this.lifeTime % 40 < 20) return "slime2";
+		if(this.lifeTime % 40 >= 20 && this.lifeTime % 40 < 30) return "slime1";
 		return "slime3";
 	}
 }

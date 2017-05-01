@@ -1,13 +1,13 @@
 package world;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import Panel.Panel_worldrenderer;
 import Resources.Saver;
 import block.Block;
 import entity.Entity;
-import entity.PlayingPlayerEntity;
+import entity.player.EntityController;
+import entity.player.PlayerEntity;
 import trigger.Trigger;
 import trigger.Triggers;
 import world.BlockPos.blockPosLevel;
@@ -20,15 +20,27 @@ public class World
 	
 	private Trigger[] triggers = new Trigger[0];
 	
-	private PlayingPlayerEntity playingPlayer = null;
-	private PlayingPlayerEntity playingPlayerBuffer = null;
+	private PlayerEntity player = null;
+	public EntityController controller = new EntityController();
 	
 	public Panel_worldrenderer theWorldRenderer = null;
 	public long worldTicks = 0;
 	
+	public int worldGamemode = 0;
+	
 	public World(String worldname)
 	{
 		this.worldname = worldname;
+	}
+	
+	public EntityController getController()
+	{
+		return this.controller;
+	}
+	
+	public void setControllableEntity(Entity e)
+	{
+		this.getController().setControllableEntity(e);
 	}
 	
 	public Trigger[] getTriggers()
@@ -193,6 +205,18 @@ public class World
 		return entities;
 	}
 	
+	public Entity getEntityAt(double x, double y)
+	{
+		for(int i = 0; i < entities.length; i++)
+		{
+			if(entities[i].pointOnEntity(x, y))
+			{
+				return entities[i];
+			}
+		}
+		return null;
+	}
+	
 	public <T extends Entity> ArrayList<T> getEntitiesInWorldByClass(Class<? extends T> cl)
 	{
 		ArrayList<T> ret = new ArrayList<T>();
@@ -270,16 +294,15 @@ public class World
 	
 	public void updatePlayer()
 	{
-		PlayingPlayerEntity pl = this.getPlayingPlayerEntity();
-		if(pl != null)
+		if(player != null)
 		{
-			if(!pl.isEntityAlive())
+			if(!player.isEntityAlive())
 			{
-				pl.HP += pl.HPRegeneration;
-				if(pl.HP > pl.maxHP)
+				player.HP += player.HPRegeneration;
+				if(player.HP > player.maxHP)
 				{
-					pl.HP = pl.maxHP;
-					pl.respawn();
+					player.HP = player.maxHP;
+					player.respawn();
 				}
 			}
 		}
@@ -323,7 +346,11 @@ public class World
 				break;
 			}
 			
-			if(entities[i].isEntityAlive()) entities[i].onEntityUpdate();
+			if(entities[i].isEntityAlive())
+			{
+				if(this.getController().getControllableEntity() == entities[i]) this.getController().onEntityUpdate();
+				else entities[i].onEntityUpdate();
+			}
 			else
 			{
 				this.despawnEntity(entities[i]);
@@ -333,11 +360,23 @@ public class World
 		}
 	}
 	
+	public void setGamemode(int gm)
+	{
+		this.worldGamemode = gm;
+	}
+	
+	public int getGamemode()
+	{
+		return this.worldGamemode;
+	}
+	
 	public Saver getWorldSaver()
 	{
 		Saver saver = new Saver("worlds/" + this.worldname + ".world");
 		
 		saver.addString(this.worldname, "WorldName");
+
+		saver.addInt(this.worldGamemode, "WorldGamemode");
 		
 		saver.addInt(chunks.length, "ChunkSize");
 		for(int ix = 0; ix < chunks.length; ix++)
@@ -379,6 +418,15 @@ public class World
 		{
 			System.err.println("World can't read world name from saver. Setted emptyworld name");
 			this.setWorldName(saver.getString("emptyworld"));
+		}
+		
+		try
+		{
+			this.worldGamemode = saver.getInt("WorldGamemode");
+		}
+		catch(Exception e)
+		{
+			System.err.println("World can't read world GAMEMODE from saver");
 		}
 		
 		int len = 0;
@@ -438,40 +486,28 @@ public class World
 		}
 	}
 	
-	public double getDistanceToPlayingPlayerFromEntity(Entity e)
+	public double getDistanceToPlayerFromEntity(Entity e)
 	{
-		if(this.playingPlayer == null) return 0;
-		else return e.getDistanceToEntity(this.playingPlayer);
+		if(this.player == null) return -1;
+		else return e.getDistanceToEntity(this.player);
 	}
 
-	public PlayingPlayerEntity getPlayingPlayerEntity()
+	public PlayerEntity getPlayer()
 	{
-		return this.playingPlayer;
+		return this.player;
 	}
 	
-	public PlayingPlayerEntity getBufferedPlayingPlayerEntity()
+	public void setPlayer(PlayerEntity pl)
 	{
-		return this.playingPlayerBuffer;
+		this.player = pl;
+		this.spawnEntity(this.player);
+		if(this.getController().getControllableEntity() == null || this.getGamemode() == 0) this.setControllableEntity(pl);
 	}
 	
-	public void setPlayingPlayer(PlayingPlayerEntity plple)
+	public void disbandPlayer()
 	{
-		this.playingPlayer = plple;
-		this.playingPlayerBuffer = plple;
-		this.spawnEntity(this.playingPlayer);
-	}
-	
-	public void restorePlaingPlayer()
-	{
-		this.playingPlayer = this.playingPlayerBuffer;
-		this.spawnEntity(this.playingPlayer);
-	}
-	
-	public void disbandPlayingPlayer()
-	{
-		this.playingPlayerBuffer = this.playingPlayer;
-		this.playingPlayer = null;
-		this.despawnEntity(this.playingPlayer);
+		this.despawnEntity(this.player);
+		player = null;
 	}
 
 	public void setWorldName(String wn)
@@ -486,6 +522,18 @@ public class World
 	public Block getBlock(double x, double y, blockPosLevel lvl) 
 	{
 		return this.getBlock(x < 0 ? (int)x - 1 : (int)x, y < 0 ? (int)y - 1 : (int)y, lvl);
+	}
+
+	public Entity[] getEntitiesByName(String name)
+	{
+		ArrayList<Entity> ret = new ArrayList<Entity>();
+		
+		for(int i = 0; i < entities.length; i++)
+		{
+			if(entities[i].unlocalizedName.toLowerCase().equals(name.toLowerCase())) ret.add(entities[i]);
+		}
+		
+		return ret.toArray(new Entity[0]);
 	}
 }
 

@@ -1,64 +1,65 @@
-package entity;
+package entity.player;
 
 import java.awt.event.KeyEvent;
 
 import Game.Game;
-import world.World;
+import entity.Entity;
 
-public class PlayingPlayerEntity extends PlayerEntity
+public class EntityController
 {
-	private boolean KeyUpPress = false;
-	private boolean KeyDownPress = false;
-	private boolean KeyLeftPress = false;
-	private boolean KeyRightPress = false;
-	private boolean KeyRunPress = false;
+	public Entity entity = null;
+	
+	public boolean KeyUpPress = false;
+	public boolean KeyDownPress = false;
+	public boolean KeyLeftPress = false;
+	public boolean KeyRightPress = false;
+	public boolean KeyRunPress = false;
+	
+	public void setControllableEntity(Entity e)
+	{
+		entity = e;
+	}
+	
+	public Entity getControllableEntity()
+	{
+		return entity;
+	}
+	
+	public void disbandEntity()
+	{
+		this.entity = null;
+	}
 
-	public PlayingPlayerEntity(World world, int uid)
-	{
-		super(world, uid);
-	}
-	
-	public void setPlayerGamemode(int gm)
-	{
-		this.playerGamemode = gm;
-	}
-	public int getPlayerGamemode()
-	{
-		return this.playerGamemode;
-	}
-	
-	@Override
 	public void onEntityUpdate()
 	{
-		if(!KeyRunPress) this.setMoveSpeed(0.1D);
+		if(entity == null) return;
 		
 		if(KeyLeftPress)
 		{
-			this.motionX = -1D;
+			entity.motionX = -entity.motion;
 		}
 		if(KeyRightPress)
 		{
-			this.motionX = 1D;
+			entity.motionX = entity.motion;
 		}
 		if(KeyUpPress)
 		{
-			this.motionY = -1D;
+			entity.motionY = -entity.motion;
 		}
 		if(KeyDownPress)
 		{
-			this.motionY = 1D;
+			entity.motionY = entity.motion;
 		}
-		if(!KeyRightPress && !KeyLeftPress) this.motionX = 0;
-		if(!KeyUpPress && !KeyDownPress) this.motionY = 0;
+		if(!KeyRightPress && !KeyLeftPress) entity.motionX = 0;
+		if(!KeyUpPress && !KeyDownPress) entity.motionY = 0;
 
 		if(KeyRunPress)
 		{
-			this.setMoveSpeed(0.2D);
-			this.motionX *= 2;
-			this.motionY *= 2;
+			entity.motionX *= 2;
+			entity.motionY *= 2;
 		}
 		
-		super.onEntityUpdate();
+		entity.onEntityUpdate();
 	}
 
 	public void keyPressed(KeyEvent e)

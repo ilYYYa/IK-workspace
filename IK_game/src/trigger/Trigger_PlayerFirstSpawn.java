@@ -1,7 +1,7 @@
 package trigger;
 
 import entity.Entity;
-import entity.PlayingPlayerEntity;
+import entity.player.PlayerEntity;
 import world.World;
 
 public class Trigger_PlayerFirstSpawn extends Trigger
@@ -34,16 +34,14 @@ public class Trigger_PlayerFirstSpawn extends Trigger
 	@Override
 	public void onTriggerUpdate(World world)
 	{
-		if(world.getBufferedPlayingPlayerEntity() == null)
+		if(world.getPlayer() == null)
 		{
-			PlayingPlayerEntity player = new PlayingPlayerEntity(world, 1);
+			PlayerEntity player = new PlayerEntity(world, 1);
 			player.setPosition(this.posX + 0.5D, this.posY + 1);
-			
-			player.setPlayerGamemode(0);
 			
 			player.setPlayerSpawn(this.posX, this.posY);
 			
-			world.setPlayingPlayer(player);
+			world.setPlayer(player);
 		}
 	}
 

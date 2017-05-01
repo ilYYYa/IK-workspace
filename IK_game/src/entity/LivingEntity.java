@@ -2,7 +2,6 @@ package entity;
 
 import Game.Game;
 import Resources.Saver;
-import entity.Entity.damageSource;
 import util.Navigator;
 import world.World;
 
@@ -73,25 +72,23 @@ public class LivingEntity extends Entity
 		if(HP <= 0) this.kill();
 		if(MP < 0) MP = 0D;
 		
-		if(!this.navigator.noPath())
+		if(world.getController().getControllableEntity() != this)
 		{
-			double[] point = this.navigator.getCurrentPoint();
-			
-			if(point != null)
+			if(!this.navigator.noPath())
 			{
-				if(point[0] < this.getX()) this.motionX = -1.5D;
-				if(point[0] > this.getX()) this.motionX = 1.5D;
+				double[] point = this.navigator.getCurrentPoint();
 				
-				if(point[1] < this.getY()) this.motionY = -1.5D;
-				if(point[1] > this.getY()) this.motionY = 1.5D;
+				if(point != null)
+				{
+					if(point[0] < this.getX()) this.motionX = -motion;
+					if(point[0] > this.getX()) this.motionX = motion;
+					
+					if(point[1] < this.getY()) this.motionY = -motion;
+					if(point[1] > this.getY()) this.motionY = motion;
 
-				this.navigator.Update();
+					this.navigator.Update();
+				}
 			}
-		}
-		else if(!(this instanceof PlayingPlayerEntity))
-		{
-			this.motionX = 0;
-			this.motionY = 0;
 		}
 		
 		super.onEntityUpdate();

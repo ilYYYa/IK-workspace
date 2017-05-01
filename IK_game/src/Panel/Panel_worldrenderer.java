@@ -11,7 +11,7 @@ import Obj.DrawbleObject;
 import block.Block;
 import entity.Entity;
 import entity.LivingEntity;
-import entity.PlayerEntity;
+import entity.player.PlayerEntity;
 import trigger.Trigger;
 import world.BlockPos;
 import world.World;
@@ -53,21 +53,24 @@ public class Panel_worldrenderer extends GlobalPanel
 	{
 		if(world == null) return;
 		
-		if(world.getPlayingPlayerEntity() == null || world.getPlayingPlayerEntity().getPlayerGamemode() == 1)
+		if(world.getController().getControllableEntity() == null)
 		{
 			if(this.focusOnMe())
 			{
-				if(mouseX > this.realWidth() - 25) cameraPosX += 0.5;
-				if(mouseX < 25) cameraPosX -= 0.5;
-				if(mouseY > this.realHeight() - 25) cameraPosY += 0.5;
-				if(mouseY < 25) cameraPosY -= 0.5;
+				if(world.getController().KeyRightPress) cameraPosX += 0.5;
+				if(world.getController().KeyLeftPress) cameraPosX -= 0.5;
+				if(world.getController().KeyDownPress) cameraPosY += 0.5;
+				if(world.getController().KeyUpPress) cameraPosY -= 0.5;
 			}
 		}
 		else
 		{
-			cameraPosX = world.getPlayingPlayerEntity().getX();
-			cameraPosY = world.getPlayingPlayerEntity().getY() - world.getPlayingPlayerEntity().getHeight() / 2;
-			
+			cameraPosX = world.getController().getControllableEntity().getX();
+			cameraPosY = world.getController().getControllableEntity().getY() - world.getController().getControllableEntity().getHeight() / 2;
+		}
+		
+		if(world.getGamemode() == 0)
+		{
 			if(this.blocksAtScreenByWidth < blocksAtScreenByWidthCONST) this.blocksAtScreenByWidth++;
 			if(this.blocksAtScreenByWidth > blocksAtScreenByWidthCONST) this.blocksAtScreenByWidth--;
 		}
@@ -99,13 +102,11 @@ public class Panel_worldrenderer extends GlobalPanel
 		drawEntities(g);
 		drawBlocks(g, BlockPos.blockPosLevel.HIGH);
 		
-		if(world.getPlayingPlayerEntity() == null || world.getPlayingPlayerEntity().getPlayerGamemode() == 1)
+		if(world.getGamemode() == 1)
 		{
 			if(this.showTriggers)drawTriggers(g);
 			drawMousePosAndInfo(g);
 		}
-		
-		if(world.getPlayingPlayerEntity() != null) g.drawString("" + world.getPlayingPlayerEntity().HP, 5, (int) (this.realHeight() - 15));
 		
 		super.draw(g);
 	}
@@ -278,13 +279,19 @@ public class Panel_worldrenderer extends GlobalPanel
 	@Override
 	public void onMousePress(MouseEvent e)
 	{
-		
+		super.onMousePress(e);
 	}
 	
 	@Override
 	public void onMouseRelease(MouseEvent e)
 	{
+		if(world.getGamemode() == 1 && world.getController().getControllableEntity() == null)
+		{
+			Entity entity = world.getEntityAt(this.mouseOnBlockX, this.mouseOnBlockY);
+			if(entity != null) world.getController().setControllableEntity(entity);
+		}
 		
+		super.onMouseRelease(e);
 	}
 	
 	@Override
@@ -292,12 +299,14 @@ public class Panel_worldrenderer extends GlobalPanel
 	{
 		mouseX = e.getX();
 		mouseY = e.getY();
+		super.onMouseMove(e);
 	}
 	
 	@Override
 	public void onMouseWheelMoved(MouseWheelEvent e)
 	{
-		if((world.getPlayingPlayerEntity() == null || world.getPlayingPlayerEntity().getPlayerGamemode() == 1) && this.blocksAtScreenByWidth + e.getWheelRotation() > 2)this.blocksAtScreenByWidth += e.getWheelRotation();
+		if(world.getGamemode() == 1 && this.blocksAtScreenByWidth + e.getWheelRotation() > 2)this.blocksAtScreenByWidth += e.getWheelRotation();
+		super.onMouseWheelMoved(e);
 	}
 	
 	@Override
@@ -307,10 +316,7 @@ public class Panel_worldrenderer extends GlobalPanel
 		else if(e.getKeyCode() == 112 && this.existChild(info)) this.removeChild(info);
 		if(e.getKeyCode() == 113) this.showTriggers = !this.showTriggers;
 		
-		if(world.getPlayingPlayerEntity() != null)
-		{
-			world.getPlayingPlayerEntity().keyPressed(e);
-		}
+		world.getController().keyPressed(e);
 		
 		super.onKeyPress(e);
 	}
@@ -318,10 +324,7 @@ public class Panel_worldrenderer extends GlobalPanel
 	@Override
 	public void onKeyRelease(KeyEvent e)
 	{
-		if(world.getPlayingPlayerEntity() != null)
-		{
-			world.getPlayingPlayerEntity().keyReleased(e);
-		}
+		world.getController().keyReleased(e);
 		super.onKeyRelease(e);
 	}
 }

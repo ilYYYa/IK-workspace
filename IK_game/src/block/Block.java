@@ -4,7 +4,7 @@ import java.awt.Graphics;
 
 import Resources.TextureLoader;
 import entity.Entity;
-import entity.PlayerEntity;
+import entity.player.PlayerEntity;
 import world.BlockPos;
 import world.World;
 

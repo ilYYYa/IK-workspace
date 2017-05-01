@@ -1,12 +1,12 @@
-package entity;
+package entity.player;
 
 import Resources.Saver;
+import entity.LivingEntity;
+import entity.Entity.LookingVect;
 import world.World;
 
 public class PlayerEntity extends LivingEntity
 {
-	public int playerGamemode = 0;
-	
 	public int spawnX = 0;
 	public int spawnY = 0;
 
@@ -46,14 +46,12 @@ public class PlayerEntity extends LivingEntity
 	public void writeToSaver(Saver saver, int i)
 	{
 		super.writeToSaver(saver, i);
-		saver.addInt(playerGamemode, "PlayerGamemode" + i);
 	}
 	
 	@Override
 	public void readFromSaver(Saver saver, int i)
 	{
 		super.readFromSaver(saver, i);
-		this.playerGamemode = saver.getInt("PlayerGamemode" + i);
 	}
 
 	public void respawn()
@@ -64,6 +62,6 @@ public class PlayerEntity extends LivingEntity
 		this.motionX = 0;
 		this.motionY = 0;
 		this.setPosition(spawnX + 0.5, spawnY + 1);
-		if(world.getEntityIndex(this) == -1) world.restorePlaingPlayer();
+		if(world.getEntityIndex(this) == -1) world.setPlayer(this);
 	}
 }

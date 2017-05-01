@@ -34,7 +34,9 @@ public class MonsterEntity extends LivingEntity
 			movingCD--;
 		}
 		
-		if(world.getPlayingPlayerEntity() != null && world.getDistanceToPlayingPlayerFromEntity(this) <= 32 && world.getPlayingPlayerEntity().getPlayerGamemode() == 0 && world.getPlayingPlayerEntity().isEntityAlive())
+		if(world.getPlayer() != null && world.getDistanceToPlayerFromEntity(this) <= 32 &&
+				((world.getGamemode() == 0 && world.getController().getControllableEntity() == world.getPlayer()) || (world.getGamemode() != 0 && world.getController().getControllableEntity() != world.getPlayer())) &&
+				world.getPlayer().isEntityAlive())
 		{
 			if(!navigator.noPath() && !navigator.movingToEntity())
 			{
@@ -42,12 +44,12 @@ public class MonsterEntity extends LivingEntity
 			}
 			if(navigator.noPath())
 			{
-				this.navigator.tryMoveToEntity(world.getPlayingPlayerEntity());
+				this.navigator.tryMoveToEntity(world.getPlayer());
 			}
 			
-			if(this.collisionWithEntity(world.getPlayingPlayerEntity()))
+			if(this.collisionWithEntity(world.getPlayer()))
 			{
-				world.getPlayingPlayerEntity().attackFromLivingEntity(this, damageSource.PHYSICAL, 1D);
+				world.getPlayer().attackFromLivingEntity(this, damageSource.PHYSICAL, 1D);
 			}
 		}
 		

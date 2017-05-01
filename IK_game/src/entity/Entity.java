@@ -18,6 +18,7 @@ public class Entity
 	public double currentMotionX = 0;
 	public double currentMotionY = 0;
 
+	public double motion = 1D;
 	public double moveSpeed = 0.15D;
 	
 	public int id = 0;
@@ -246,6 +247,16 @@ public class Entity
     	
     	return true;
     }
+
+	public boolean pointOnEntity(double x, double y)
+	{
+		if(x < this.posX) return false;
+		if(x > this.posX + this.width) return false;
+		if(y < this.posY) return false;
+		if(y > this.posY + this.height) return false;
+		
+		return true;
+	}
 
 	public static enum damageSource
     {
