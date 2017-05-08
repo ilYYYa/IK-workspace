@@ -13,6 +13,7 @@ import entity.Entity;
 import entity.LivingEntity;
 import entity.player.PlayerEntity;
 import trigger.Trigger;
+import util.Optimizator;
 import world.BlockPos;
 import world.World;
 
@@ -39,19 +40,24 @@ public class Panel_worldrenderer extends GlobalPanel
 	public double mouseOnBlockY = 0;
 	
 	public Panel_techinfo info;
+	public Panel_optimizator optimizator;
 	public boolean showTriggers = false;
+	
+	public boolean isPause = false;
 
 	public Panel_worldrenderer(double x, double y, double w, double h, DrawbleObject parent)
 	{
 		super(x, y, w, h, parent);
 		
 		info = new Panel_techinfo(0,0,1,1,this);
+		optimizator = new Panel_optimizator(0, 0, 1, 1, this);
 	}
 	
 	@Override
 	public void logic()
 	{
 		if(world == null) return;
+		if(isPause) return;
 		
 		if(world.getController().getControllableEntity() == null)
 		{
@@ -82,32 +88,48 @@ public class Panel_worldrenderer extends GlobalPanel
 		this.renderedYFrom = cameraPosY - blocksAtScreenByHeight()/2;
 		this.renderedXTo = cameraPosX + blocksAtScreenByWidth/2 + 1;
 		this.renderedYTo = cameraPosY + blocksAtScreenByHeight()/2 + 1;
-		
+
+		Optimizator.addPointToLatestLine("WT");
 		world.WorldTick();
-		
+		Optimizator.addPointToLatestLine("WTE");
+
+		Optimizator.addPointToLatestLine("TRB");
 		for(int i = 0; i < world.getTriggers().length; i++)
 		{
 			if(triggerOnScreen(world.getTriggers()[i])) world.getTriggers()[i].onTriggerOnScreen(world);
 			else world.getTriggers()[i].onTriggerNotOnScreen(world);
 		}
+		Optimizator.addPointToLatestLine("TRE");
 	}
 	
 	@Override
 	public void draw(Graphics g)
 	{
-		if(world == null) return;
+		if(world == null)
+		{
+			super.draw(g);
+			return;
+		}
 		
+		Optimizator.addPointToLatestLine("DB1");
 		drawBlocks(g, BlockPos.blockPosLevel.BACK);
+		Optimizator.addPointToLatestLine("DB2");
 		drawBlocks(g, BlockPos.blockPosLevel.MIDDLE);
+		Optimizator.addPointToLatestLine("DBE");
 		drawEntities(g);
+		Optimizator.addPointToLatestLine("DB3");
 		drawBlocks(g, BlockPos.blockPosLevel.HIGH);
 		
 		if(world.getGamemode() == 1)
 		{
+			Optimizator.addPointToLatestLine("DB4");
 			if(this.showTriggers)drawTriggers(g);
+			Optimizator.addPointToLatestLine("DB5");
 			drawMousePosAndInfo(g);
 		}
 		
+		Optimizator.addPointToLatestLine("EDB");
+
 		super.draw(g);
 	}
 	
@@ -229,11 +251,15 @@ public class Panel_worldrenderer extends GlobalPanel
 		int screenY = 0;
 		int screenW = 0;
 		int screenH = 0;
+
+		long z = 0;
 		
 		for(int ix = -1; ix < blocksAtScreenByWidth+1; ix++)
 		{
 			for(int iy = -1; iy < blocksAtScreenByHeight()+1; iy++)
 			{
+				z = System.nanoTime();
+				
 				BlockPos pos = new BlockPos((int)cameraPosX + ix - blocksAtScreenByWidth/2, (int)cameraPosY + iy - blocksAtScreenByHeight()/2, lvl);
 				Block block = world.getBlock(pos);
 				
@@ -315,6 +341,14 @@ public class Panel_worldrenderer extends GlobalPanel
 		if(e.getKeyCode() == 112 && !this.existChild(info)) this.addChild(info);
 		else if(e.getKeyCode() == 112 && this.existChild(info)) this.removeChild(info);
 		if(e.getKeyCode() == 113) this.showTriggers = !this.showTriggers;
+		if(e.getKeyCode() == 114 && !this.existChild(optimizator)) this.addChild(optimizator);
+		else if(e.getKeyCode() == 114 && this.existChild(optimizator)) this.removeChild(optimizator);
+		
+		if(e.getKeyChar() == 'p')
+		{
+			this.isPause = !this.isPause;
+			Optimizator.isPause = this.isPause;
+		}
 		
 		world.getController().keyPressed(e);
 		

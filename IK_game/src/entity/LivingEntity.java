@@ -22,10 +22,12 @@ public class LivingEntity extends Entity
 	public double lastMPRestoring = 0;
 	
 	public int Level = 1;
+	public int Experience = 1;
 	
 	public Navigator navigator = new Navigator(this);
 	
 	public LivingEntity latestAttacker = null;
+	public int lastAttackerUID = -1;
 
 	public LivingEntity(World world, String unlocalizedname, int id, int uid)
 	{
@@ -55,6 +57,11 @@ public class LivingEntity extends Entity
 	@Override
 	public void onEntityUpdate()
     {
+		if(lastAttackerUID >= 0 && latestAttacker == null) latestAttacker = (LivingEntity) world.getEntityByUID(lastAttackerUID);
+		if(latestAttacker == null && lastAttackerUID >= 0) lastAttackerUID = -1;
+		
+		if(latestAttacker != null && !latestAttacker.isEntityAlive()) latestAttacker = null;
+		
 		if(HP > maxHP) HP = maxHP;
 		if(MP > maxMP) MP = maxMP;
 		
@@ -132,6 +139,8 @@ public class LivingEntity extends Entity
 	public void attackFromLivingEntity(LivingEntity e, damageSource damageType, double value)
 	{
 		latestAttacker = e;
+		lastAttackerUID = e.uid;
+		
 		this.attackFrom(damageType, value);
 		super.attackFromLivingEntity(e, damageType, value);
 		
@@ -167,7 +176,7 @@ public class LivingEntity extends Entity
 		HPRegeneration = saver.getDouble("EntityHPRegeneration"+i);
 		MPRegeneration = saver.getDouble("EntityMPRegeneration"+i);
 		Level = saver.getInt("EntityLevel"+i);
-		//latestAttacker.uid = saver.getInt("EntityLatestAttackerUid"+i);
+		this.lastAttackerUID = saver.getInt("EntityLatestAttackerUid"+i);
 	}
 }
 

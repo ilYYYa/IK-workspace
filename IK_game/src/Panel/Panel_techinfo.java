@@ -30,10 +30,10 @@ public class Panel_techinfo extends GlobalPanel
 		g.drawString("Blocks per height: " + renderer.blocksAtScreenByHeight(), (int)this.realPosX() + 5, (int)this.realPosY() + 15*7);
 		g.drawString("World rendered from x: " + renderer.renderedXFrom + " y: " + renderer.renderedYFrom, (int)this.realPosX() + 5, (int)this.realPosY() + 15*8);
 		g.drawString("World rendered to x: " + renderer.renderedXTo + " y: " + renderer.renderedYTo, (int)this.realPosX() + 5, (int)this.realPosY() + 15*9);
-		g.drawString("fps: " + (int)Game.theGame.fps + " (" + (int)Game.theGame.avrFps + ") ms", (int)this.realPosX() + 5, (int)this.realPosY() + 15*10);
-		g.drawString("tick: " + Game.theGame.globalTick + " (" + Game.theGame.avrGlobalTick + "; " + Game.theGame.maxGlobalTick + ") ms", (int)this.realPosX() + 5, (int)this.realPosY() + 15*11);
-		g.drawString("logicTick: " + Game.theGame.logicTick + " (" + Game.theGame.avrLogicTick + "; " + Game.theGame.maxLogicTick + ") ms", (int)this.realPosX() + 5, (int)this.realPosY() + 15*12);
-		g.drawString("renderTick: " + Game.theGame.renderTick + " (" + Game.theGame.avrRenderTick + "; " + Game.theGame.maxRenderTick + ") ms", (int)this.realPosX() + 5, (int)this.realPosY() + 15*13);
+		g.drawString("fps: " + (int)Game.theGame.fps + " (" + (int)Game.theGame.avrFps + ")", (int)this.realPosX() + 5, (int)this.realPosY() + 15*10);
+		g.drawString("tick: " + Game.theGame.globalTick + " (" + Game.theGame.avrGlobalTick + "; " + Game.theGame.maxGlobalTick + ") ns", (int)this.realPosX() + 5, (int)this.realPosY() + 15*11);
+		g.drawString("logicTick: " + Game.theGame.logicTick + " (" + Game.theGame.avrLogicTick + "; " + Game.theGame.maxLogicTick + ") ns", (int)this.realPosX() + 5, (int)this.realPosY() + 15*12);
+		g.drawString("renderTick: " + Game.theGame.renderTick + " (" + Game.theGame.avrRenderTick + "; " + Game.theGame.maxRenderTick + ") ns", (int)this.realPosX() + 5, (int)this.realPosY() + 15*13);
 	}
 
 }

@@ -10,34 +10,53 @@ import world.World;
 
 public class Entity
 {
+	/** Позиция Х верхней левой точки ентити в миру */
 	public double posX = 0;
+	/** Позиция У верхней левой точки ентити в миру	 */
 	public double posY = 0;
 	
+	/** Скорость ентити по Х, к которой ентити будет сремиться */
 	public double motionX = 0;
+	/** Скорость ентити по У, к которой ентити будет сремиться */
 	public double motionY = 0;
+	/** Скорость ентити по Х в данный момент */
 	public double currentMotionX = 0;
+	/** Скорость ентити по У в данный момент */
 	public double currentMotionY = 0;
 
+	/** Максимальная скорость передвижения ентити */
 	public double motion = 1D;
+	/** Ускорение ентити */
 	public double moveSpeed = 0.15D;
-	
+
+	/** Идентификатор класса ентити */
 	public int id = 0;
+	/** Уникальный идентификатор данного ентити */
 	public int uid = 0;
+	/** Текстовый идентификатор класса ентити */
 	public String unlocalizedName = "";
-	
+
+	/** Ширина ентити в блоках */
 	public double width = 1D;
+	/** Высота ентити в блоках */
 	public double height = 1D;
-	
+
+	/** Вектор направления ентити */
 	public LookingVect lookingTo = LookingVect.SOUTH;
-	
+
+	/** Является ли ентити мертвым */
 	public boolean isDead = false;
-	
+
+	/** Время жизни ентити */
 	public long lifeTime = 0;
-	
+
+	/**  */
 	public boolean collisedWithBlocks = true;
-	
+
+	/** Является ли ентити призраком, если да, то проходит сквозь препятствия */
 	public boolean ghost = false;
-	
+
+	/** Мир */
 	public World world;
 	
 	public Entity(World world, String unlocalizedname, int id, int uid)
@@ -47,7 +66,8 @@ public class Entity
 		this.id = id;
 		this.uid = uid;
 	}
-	
+
+	/** Проверка на соприкосновение с ентити */
 	public boolean collisionWithEntity(Entity e)
 	{
 		if(e.posX > this.posX + this.width) return false;
@@ -57,57 +77,68 @@ public class Entity
 		
 		return true;
 	}
-	
+
+	/** Устанавливает, является ли ентити призраком. Если является, то проходит сквозь непроходимые блоки */
 	public void setGhostly(boolean ghost)
 	{
 		this.ghost = ghost;
 	}
-	
+
+	/** Является ли ентити призраком. Если является, то проходит сквозь непроходимые блоки */
 	public boolean isGhost()
 	{
 		return this.ghost;
 	}
 
+	/** Устанавливает значение ускорения ентити */
 	public void setMoveSpeed(double speed)
 	{
 		this.moveSpeed = speed;
 	}
-	
+
+	/** Ускорение ентити */
 	public double getMoveSpeed()
 	{
 		return this.moveSpeed;
 	}
-	
+
+	/** Устанвливает ширину ентити в блоках */
 	public void setWidth(double width)
 	{
 		this.width = width;
 	}
-	
+
+	/** Ширина ентити в блоках */
 	public double getWidth()
 	{
 		return this.width;
 	}
-	
+
+	/** Устанавливает высоту ентити */
 	public void setHeight(double height)
 	{
 		this.height = height;
 	}
-	
+
+	/** Высота ентити в блоках */
 	public double getHeight()
 	{
 		return this.height;
 	}
-	
+
+	/** Атаковать этот ентити */
 	public void attackFrom(damageSource damageType, double value)
 	{
 		
 	}
-	
+
+	/** Атаковать этот ентити живущем ентити */
 	public void attackFromLivingEntity(LivingEntity e, damageSource damageType, double value)
 	{
 		
 	}
-	
+
+	/** Устанавливает позицию ентити. Х - середина ентити, У - нижняя граница ентити */
 	public void setPosition(double x, double y)
 	{
 		posX = x - this.getWidth()/2; posY = y - this.getHeight();
@@ -117,44 +148,56 @@ public class Entity
 	{
 		return new BlockPos((int)(this.getX()), (int)(this.getY()), BlockPos.blockPosLevel.MIDDLE);
 	}
-	
+
+	/** Позиция ентити по Х (середина ентити) */
 	public double getX()
 	{
 		return posX + this.getWidth()/2;
 	}
-	
+
+	/** Позиция ентити по У (низняя граница ентити) */
 	public double getY()
 	{
 		return posY + this.getHeight();
 	}
-	
+
+	/** Возвращает квадратное расстояние до точки */
 	public double getDistanceSQTo(double x, double y)
 	{
 		return (this.getX() - x)*(this.getX() - x) + (this.getY() - y)*(this.getY() - y);
 	}
+
+	/** Возвращает расстояние до точки */
 	public double getDistanceTo(double x, double y)
 	{
 		return Math.sqrt(getDistanceSQTo(x, y));
 	}
+
+	/** Возвращает расстояние до центра блока */
 	public double getDistanceToBlockPos(BlockPos pos)
 	{
-		return getDistanceTo(pos.posX, pos.posY);
+		return getDistanceTo(pos.posX + 0.5, pos.posY + 0.5);
 	}
+	
+	/** Возвращает расстояние до ентити */
 	public double getDistanceToEntity(Entity entity)
 	{
 		return getDistanceTo(entity.getX(), entity.getY());
 	}
-	
+
+	/** Является ли этот ентити живым */
     public boolean isEntityAlive()
     {
         return !this.isDead;
     }
-    
+
+	/** Убить ентити */
     public void kill()
     {
     	this.isDead = true;
     }
-    
+
+	/** Логическая функция ентити */
     public void onEntityUpdate()
     {
     	lifeTime++;
@@ -162,10 +205,13 @@ public class Entity
     	double motionX = this.motionX;
     	double motionY = this.motionY;
     	
-    	motionX *= 1 - world.getBlock(this.getX(), this.getY(), BlockPos.blockPosLevel.BACK).getBlockMovementSlow();
-    	motionX *= 1 - world.getBlock(this.getX(), this.getY(), BlockPos.blockPosLevel.MIDDLE).getBlockMovementSlow();
-    	motionY *= 1 - world.getBlock(this.getX(), this.getY(), BlockPos.blockPosLevel.BACK).getBlockMovementSlow();
-    	motionY *= 1 - world.getBlock(this.getX(), this.getY(), BlockPos.blockPosLevel.MIDDLE).getBlockMovementSlow();
+    	if(!this.isGhost())
+    	{
+    		motionX *= 1 - world.getBlock(this.getX(), this.getY(), BlockPos.blockPosLevel.BACK).getBlockMovementSlow();
+    		motionX *= 1 - world.getBlock(this.getX(), this.getY(), BlockPos.blockPosLevel.MIDDLE).getBlockMovementSlow();
+    		motionY *= 1 - world.getBlock(this.getX(), this.getY(), BlockPos.blockPosLevel.BACK).getBlockMovementSlow();
+    		motionY *= 1 - world.getBlock(this.getX(), this.getY(), BlockPos.blockPosLevel.MIDDLE).getBlockMovementSlow();
+    	}
     	
     	if(this.currentMotionX < motionX) this.currentMotionX += this.getMoveSpeed();
     	if(this.currentMotionX > motionX) this.currentMotionX -= this.getMoveSpeed();
@@ -182,17 +228,19 @@ public class Entity
     	if(this.motionY > 0) this.lookingTo = LookingVect.SOUTH;
     	if(this.motionY < 0) this.lookingTo = LookingVect.NORTH;
     }
-    
+
+	/** Возвращает текстуру ентити */
     public String getTexture()
     {
     	return "";
     }
-    
+
+	/** Должен ли ентити деспауниться */
     public boolean shouldDespawn()
     {
     	return false;
     }
-    
+
     public boolean canMoveTo(BlockPos pos)
     {
     	return canMoveTo(pos.posX, pos.posY);
@@ -236,7 +284,7 @@ public class Entity
     	return true;
     }
     
-    public boolean pointAtPassibleBlock(double x, double y)
+    private boolean pointAtPassibleBlock(double x, double y)
     {
     	Block b1 = world.getBlock(x, y, BlockPos.blockPosLevel.BACK);
     	Block b2 = world.getBlock(x, y, BlockPos.blockPosLevel.MIDDLE);
@@ -304,7 +352,7 @@ public class Entity
 	
 	public static enum LookingVect
 	{
-		NORTH, SOUTH, WEST, EAST
+		NORTH, NORTHEAST, EAST, SOUTHEAST, SOUTH, SOUTHWEST, WEST, NORTHWEST
 	}
 }
 

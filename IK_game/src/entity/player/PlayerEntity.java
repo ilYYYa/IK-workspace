@@ -1,11 +1,11 @@
 package entity.player;
 
 import Resources.Saver;
-import entity.LivingEntity;
 import entity.Entity.LookingVect;
+import entity.GenericalHumanEntity;
 import world.World;
 
-public class PlayerEntity extends LivingEntity
+public class PlayerEntity extends GenericalHumanEntity
 {
 	public int spawnX = 0;
 	public int spawnY = 0;
@@ -13,8 +13,6 @@ public class PlayerEntity extends LivingEntity
 	public PlayerEntity(World world, int uid)
 	{
 		super(world, "Player", 0, uid);
-		this.setWidth(1D);
-		this.setHeight(1.7D);
 	}
 	
 	public void setPlayerSpawn(int x, int y)

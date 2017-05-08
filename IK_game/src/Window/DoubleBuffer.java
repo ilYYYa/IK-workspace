@@ -15,6 +15,7 @@ import javax.swing.JPanel;
 import Obj.DrawbleObject;
 import Scene.GlobalScene;
 import Scene.Scene_Logo;
+import util.Optimizator;
 
 public class DoubleBuffer extends JPanel
 {
@@ -65,7 +66,9 @@ public class DoubleBuffer extends JPanel
 	@Override
 	public void paint(Graphics g)
 	{
+		Optimizator.addPointToLatestLine("pB");
 		if(Scene != null) drawObjectsIn(Scene, g);
+		Optimizator.addPointToLatestLine("pE");
 	}
 	
 	public void onMouseClick(MouseEvent event)

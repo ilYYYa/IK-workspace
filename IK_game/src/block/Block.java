@@ -157,7 +157,7 @@ public class Block
 	
 	public String toString()
 	{
-		return "GlobalBlock";
+		return this.BlockUnlocalizedName + ":Block";
 	}
 }
 

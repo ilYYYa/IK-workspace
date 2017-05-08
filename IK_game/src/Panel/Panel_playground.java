@@ -28,7 +28,11 @@ public class Panel_playground extends GlobalPanel
 	public void onKeyPress(KeyEvent e)
 	{
 		if(e.getKeyCode() == 192 && !this.existChild(console)) this.addChild(console);
-		if(e.getKeyCode() == 27 && this.existChild(console)) this.removeChild(console);
+		if(e.getKeyCode() == 27)
+		{
+			if(this.existChild(console)) this.removeChild(console);
+		}
+		
 		super.onKeyPress(e);
 	}
 }

@@ -1,10 +1,13 @@
 package Game;
+import java.util.ArrayList;
+
 import Resources.Saver;
 import Scene.GlobalScene;
 import Window.DoubleBuffer;
 import Window.MainWindow;
 import block.Block_Air;
 import block.Blocks;
+import util.Optimizator;
 import world.World;
 
 public class Game
@@ -26,18 +29,22 @@ public class Game
 	
 	public double fps = 3000;
 	public double avrFps = 0;
+	public ArrayList<Double> fpss = new ArrayList<Double>();
 	
 	public long globalTick = 0;
 	public long avrGlobalTick = 0;
 	public long maxGlobalTick = 0;
+	public ArrayList<Long> globalTicks = new ArrayList<Long>();
 	
 	public long logicTick = 0;
 	public long avrLogicTick = 0;
 	public long maxLogicTick = 0;
+	public ArrayList<Long> logicTicks = new ArrayList<Long>();
 	
 	public long renderTick = 0;
 	public long avrRenderTick = 0;
 	public long maxRenderTick = 0;
+	public ArrayList<Long> renderTicks = new ArrayList<Long>();
 
 	private long lastTickUpdate = 0;
 	
@@ -73,39 +80,77 @@ public class Game
 	{
 		while(gameRunning)
 		{
-			if(globalTick != 0)fps = 1000D / (double)globalTick;
+			Optimizator.addLine();
+			Optimizator.addPointToLatestLine("i1B");
+			
+			if(globalTick != 0)fps = 1_000_000_000D / (double)globalTick;
 			else fps = 1000D;
 			
-			long l1 = System.currentTimeMillis();
+			long l1 = System.nanoTime();
+			Optimizator.addPointToLatestLine("i2B");
 			theDoubleBuffer.logic();
-			long l2 = System.currentTimeMillis();
+			Optimizator.addPointToLatestLine("i2E");
+			long l2 = System.nanoTime();
 			if(theMainWindow != null) theMainWindow.repaint();
-			long l3 = System.currentTimeMillis();
+			long l3 = System.nanoTime();
 
-			if(avrFps == 0) avrFps = fps;
-			else avrFps = (avrFps + fps) / 2;
-
-			if(avrGlobalTick == 0) avrGlobalTick = globalTick;
-			else avrGlobalTick = (avrGlobalTick + globalTick) / 2;
+			fpss.add(fps);
+			avrFps = this.getAVRD(fpss);
 			
-			if(avrLogicTick == 0)avrLogicTick = (l2-l1);
-			else avrLogicTick = (avrLogicTick+(l2-l1))/2;
+			globalTicks.add(globalTick);
+			avrGlobalTick = (long) this.getAVRL(globalTicks);
 			
-			if(avrRenderTick == 0)avrRenderTick = (l3-l2);
-			else avrRenderTick = (avrRenderTick+(l3-l2))/2;
+			logicTick = l2-l1;
+			logicTicks.add(logicTick);
+			avrLogicTick = (long) this.getAVRL(logicTicks);
+			
+			renderTick = l3-l2;
+			renderTicks.add(renderTick);
+			avrRenderTick = (long) this.getAVRL(renderTicks);
 			
 			if(maxGlobalTick < globalTick) maxGlobalTick = globalTick;
 			if(maxLogicTick < l2-l1) maxLogicTick = l2-l1;
 			if(maxRenderTick < l3-l2) maxRenderTick = l3-l2;
 			
-			if(System.currentTimeMillis()/1000 % 10 == 0 && lastSaved != System.currentTimeMillis()) this.SaveSettings();
-			
+			if(System.currentTimeMillis()/1000 % 10 == 0 && lastSaved != System.currentTimeMillis()/1000)
+			{
+				Optimizator.addPointToLatestLine("S1B");
+				this.SaveSettings();
+				Optimizator.addPointToLatestLine("S1E");
+				fpss.clear();
+				globalTicks.clear();
+				logicTicks.clear();
+				renderTicks.clear();
+				
+				lastSaved = System.currentTimeMillis()/1000;
+			}
+
 			while(System.currentTimeMillis() < lastTickUpdate + 1000/GAME_FPS);
 			
 			lastTickUpdate = System.currentTimeMillis();
 			
-			this.globalTick = System.currentTimeMillis() - l1;
+			this.globalTick = System.nanoTime() - l1;
 		}
+	}
+	
+	public double getAVRD(ArrayList<Double> al)
+	{
+		double sum = 0;
+		for(int i = 0; i < al.size(); i++)
+		{
+			sum += al.get(i);
+		}
+		return sum / (double) al.size();
+	}
+	
+	public double getAVRL(ArrayList<Long> al)
+	{
+		long sum = 0;
+		for(int i = 0; i < al.size(); i++)
+		{
+			sum += al.get(i);
+		}
+		return (double)sum / (double) al.size();
 	}
 	
 	public void createWnindow()

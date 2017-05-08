@@ -29,6 +29,9 @@ public class Trigger_SlimeSpawner extends Trigger
 			return;
 		}
 		
+		int slimesInWorld = world.getEntitiesInWorldByClass(Entity_Slime.class).size();
+		if(slimesInWorld >= 10) return;
+		
 		int slimesCountNearly = world.getEntitiesInWorldByClassAtPosWithRadius(Entity_Slime.class, this.posX + this.width/2, this.posY + this.height/2, Math.sqrt(width*width + height*height)/2 + 8).size(); 
 		
 		double spX = (int)(this.posX + Math.random() * (double)(width - 1)) + 0.5D;
