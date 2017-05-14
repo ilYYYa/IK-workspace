@@ -500,9 +500,19 @@ public class Saver
 		{
 			try
 			{
-				File d = new File(f.getAbsoluteFile().getParent());
-				d.mkdirs();
-				f.createNewFile();
+				String parent = f.getAbsoluteFile().getParent();
+				if(parent == null) parent = f.getParent();
+				if(parent != null)
+				{
+					File d = new File(f.getAbsoluteFile().getParent());
+					d.mkdirs();
+					f.createNewFile();
+				}
+				else
+				{
+					System.err.println("Parent is null");
+					return;
+				}
 			}
 			catch (IOException e)
 			{
