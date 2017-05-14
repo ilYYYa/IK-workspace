@@ -1,12 +1,12 @@
 package Button;
 
 import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Image;
 import java.awt.event.MouseEvent;
 
 import Obj.DrawbleObject;
+import Resources.Texture;
 import Resources.TextureLoader;
+import Window.MainWindow;
 import util.TextureEditor;
 
 public class GlobalButton extends DrawbleObject
@@ -33,7 +33,7 @@ public class GlobalButton extends DrawbleObject
 	}
 	
 	@Override
-	public void draw(Graphics g)
+	public void draw(MainWindow g)
 	{
 	    switch (mouseAction)
 	    {
@@ -48,8 +48,8 @@ public class GlobalButton extends DrawbleObject
 		g.setColor(borderColor);
 		g.drawRect((int)posXOnScreen(), (int)posYOnScreen(), (int)realWidth(), (int)realHeight());
 
-		Image buff = TextureLoader.getTextureByName("!002" + this.Text + "&" + TextureEditor.getStringWidthByHeight(this.Text, (int)this.realHeight()/2) + "&" + ((int)this.realHeight()/2));
-		g.drawImage(buff, (int)posXOnScreen() + (int)this.realWidth()/2 - buff.getWidth(null)/2, (int)posYOnScreen() + (int)this.realHeight()/4, null);
+		Texture buff = TextureLoader.getTextureByName("!002" + this.Text + "&" + TextureEditor.getStringWidthByHeight(this.Text, (int)this.realHeight()/2) + "&" + ((int)this.realHeight()/2));
+		g.drawTexture(buff, (int)posXOnScreen() + (int)this.realWidth()/2 - buff.width/2, (int)posYOnScreen() + (int)this.realHeight()/4);
 	}
 	
 	public GlobalButton setText(String text)
@@ -77,31 +77,31 @@ public class GlobalButton extends DrawbleObject
 	}
 	
 	@Override
-	public void onMouseMove(MouseEvent event)
+	public void onMouseMove(int x, int y, int dx, int dy)
 	{
 		if(ButtonActive) mouseAction = 1;
-		super.onMouseMove(event);
+		super.onMouseMove(x,y,dx,dy);
 	}
 	
 	@Override
-	public void onMouseMoveNotOnYou(MouseEvent event)
+	public void onMouseMoveNotOnYou(int x, int y)
 	{
 		mouseAction = 0;
-		super.onMouseMoveNotOnYou(event);
+		super.onMouseMoveNotOnYou(x, y);
 	}
 	
 	@Override
-	public void onMousePress(MouseEvent event)
+	public void onMousePress(int x, int y, int btn)
 	{
 		if(ButtonActive) mouseAction = 2;
-	    super.onMousePress(event);
+	    super.onMousePress(x, y, btn);
 	}
 	
 	@Override
-	public void onMouseRelease(MouseEvent event)
+	public void onMouseRelease(int x, int y, int btn)
 	{
 		mouseAction = 0;
-		super.onMouseRelease(event);
+		super.onMouseRelease(x,y,btn);
 	}
 
 	@Override

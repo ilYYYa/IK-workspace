@@ -1,11 +1,11 @@
 package TextField;
 
-import java.awt.Graphics;
-import java.awt.Image;
 import java.util.ArrayList;
 
 import Obj.DrawbleObject;
+import Resources.Texture;
 import Resources.TextureLoader;
+import Window.MainWindow;
 
 public class GlobalTextField extends DrawbleObject
 {
@@ -54,12 +54,12 @@ public class GlobalTextField extends DrawbleObject
 	}
 
 	@Override
-	public void draw(Graphics g)
+	public void draw(MainWindow g)
 	{
 		for(int i = 0; i < textForDraw.size() && (i+1)*this.textSize < this.realHeight(); i++)
 		{
-			Image buff = TextureLoader.getTextureByName("!002" + textForDraw.get(i) + "&" + (int)this.realWidth() + "&" + this.textSize);
-			g.drawImage(buff, (int)this.posXOnScreen(), (int)this.posYOnScreen() + i*this.textSize, null);
+			Texture buff = TextureLoader.getTextureByName("!002" + textForDraw.get(i) + "&" + (int)this.realWidth() + "&" + this.textSize);
+			g.drawTexture(buff, (int)this.posXOnScreen(), (int)this.posYOnScreen() + i*this.textSize);
 		}
 	}
 }

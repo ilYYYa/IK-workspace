@@ -2,7 +2,7 @@ package block;
 
 public class BlockRegister
 {
-	private static Block[] registeredBlocks = new Block[0];
+	static Block[] registeredBlocks = new Block[0];
 	
 	public static Block registerBlock(Block block)
 	{
@@ -19,20 +19,34 @@ public class BlockRegister
 		return block;
 	}
 	
+	static Block latestBlock = null;
+	
 	public static Block getBlockById(int id)
 	{
+		if(latestBlock != null && latestBlock.BlockId == id) return latestBlock;
+		
 		for(int i = 0; i < registeredBlocks.length; i++)
 		{
-			if(registeredBlocks[i].BlockId == id) return registeredBlocks[i];
+			if(registeredBlocks[i].BlockId == id)
+			{
+				latestBlock = registeredBlocks[i];
+				return latestBlock;
+			}
 		}
 		return null;
 	}
 	
 	public static Block getBlockByUnlocalizedName(String name)
 	{
+		if(latestBlock != null && latestBlock.BlockUnlocalizedName.equals(name)) return latestBlock;
+		
 		for(int i = 0; i < registeredBlocks.length; i++)
 		{
-			if(registeredBlocks[i].BlockUnlocalizedName.equals(name)) return registeredBlocks[i];
+			if(registeredBlocks[i].BlockUnlocalizedName.equals(name))
+			{
+				latestBlock = registeredBlocks[i];
+				return latestBlock;
+			}
 		}
 		return null;
 	}

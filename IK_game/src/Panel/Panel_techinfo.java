@@ -1,11 +1,10 @@
 package Panel;
 
 import java.awt.Color;
-import java.awt.Graphics;
 
 import Game.Game;
 import Game.GameInfo;
-import Obj.DrawbleObject;
+import Window.MainWindow;
 
 public class Panel_techinfo extends GlobalPanel
 {
@@ -18,7 +17,7 @@ public class Panel_techinfo extends GlobalPanel
 	}
 	
 	@Override
-	public void draw(Graphics g)
+	public void draw(MainWindow g)
 	{
 		g.setColor(Color.white);
 		g.drawString("" + GameInfo.getGameFullestName(), (int)this.realPosX() + 5, (int)this.realPosY() + 15*1);

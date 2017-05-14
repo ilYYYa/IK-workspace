@@ -16,9 +16,9 @@ public class Button_menu_newGame extends GlobalButton
 	}
 	
 	@Override
-	public void onMouseClick(MouseEvent e)
+	public void onMouseRelease(int x, int y, int btn)
 	{
-		super.onMouseClick(e);
-		Game.theGame.theDoubleBuffer.setScene(new Scene_WorldLoader(null));
+		super.onMouseRelease(x,y,btn);
+		Game.theGame.setScene(new Scene_WorldLoader(null));
 	}
 }

@@ -15,14 +15,12 @@ public class Button_settings_video_fullScreen extends GlobalButton
 	}
 	
 	@Override
-	public void onMouseClick(MouseEvent event)
+	public void onMouseRelease(int x, int y, int btn)
 	{
 		Game.theGame.gameSettingSaver.updateBoolean(!Game.theGame.gameSettingSaver.getBoolean("FullScreen"), "FullScreen");
 		this.setText("FullScreen: " + Game.theGame.gameSettingSaver.getBoolean("FullScreen"));
-		Game.theGame.setWindowVisible(false);
+		Game.theGame.destroyWindow();
 		Game.theGame.createWnindow();
-		Game.theGame.setupDoubleBuffer();
-		Game.theGame.setWindowVisible(true);
 		Game.theGame.SaveSettings();
 	}
 }

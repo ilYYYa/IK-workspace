@@ -1,14 +1,13 @@
 package Scene;
 
 import java.awt.Color;
-import java.awt.Graphics;
 import java.io.IOException;
 
 import Game.Game;
 import Resources.LanguageLoader;
 import Resources.SoundLoader;
 import Resources.TextureLoader;
-import Window.DoubleBuffer;
+import Window.MainWindow;
 
 public class Scene_Load extends GlobalScene
 {
@@ -18,15 +17,20 @@ public class Scene_Load extends GlobalScene
 	public Scene_Load()
 	{
 		super();
-		l.start();
 	}
 
 	@Override
-	public void draw(Graphics g)
+	public void draw(MainWindow g)
 	{
 		g.setColor(Color.BLACK);
-		g.drawString("Loading resources", 10, 20);
-		g.drawString(progress, 10, 40);
+		g.drawLine(50, 50, 50, 100);
+		g.drawLine(50, 100, 100, 100);
+		g.drawLine(100, 100, 100, 50);
+		g.drawLine(100, 50, 50, 50);
+		g.drawLine(50, 50, 75, 75);
+		g.drawLine(75, 75, 100, 50);
+		if(l.progress < -1) l.progress++;
+		if(l.progress == -1) l.run();
 	}
 
 	@Override
@@ -37,16 +41,15 @@ public class Scene_Load extends GlobalScene
 		if(l.progress == 2) progress = "Loading Languages";
 		if(l.progress == 3)
 		{
-			Game.theGame.theDoubleBuffer.setScene(new Scene_Login());
+			Game.theGame.setScene(new Scene_Login());
 		}
 	}
 }
 
-class loader extends Thread
+class loader
 {
-	int progress = 0;
-	
-	@Override
+	int progress = -5;
+
 	public void run()
 	{
 		try

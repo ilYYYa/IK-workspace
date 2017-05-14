@@ -1,11 +1,12 @@
 package Scene;
 
 import java.awt.Color;
-import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 
+import org.lwjgl.input.Keyboard;
+
 import Game.Game;
-import Window.DoubleBuffer;
+import Window.MainWindow;
 
 public class Scene_Logo extends GlobalScene
 {
@@ -17,13 +18,10 @@ public class Scene_Logo extends GlobalScene
 	}
 
 	@Override
-	public void draw(Graphics g)
+	public void draw(MainWindow g)
 	{
-		int c = (int)((double)timer/180d*255d);
-		g.setColor(new Color(c,c,c));
-		g.fillRect(0, 0, (int)realWidth(), (int)realHeight());
-		g.setColor(new Color(255-c,255-c,255-c));
-		g.drawString("LOGO MFK!!! (missed) | " + timer, 100, 100);
+		g.setColorF(1,0,0,1);
+		g.fillRect((int)(this.realWidth()/180d)*timer, (int)(this.realHeight()/180d)*timer, 50, 50);
 	}
 
 	@Override
@@ -32,14 +30,14 @@ public class Scene_Logo extends GlobalScene
 		timer++;
 		if(timer >= 180)
 		{
-			Game.theGame.theDoubleBuffer.setScene(new Scene_Load());
+			Game.theGame.setScene(new Scene_Load());
 		}
 	}
 	
 	@Override
-	public void onKeyPress(KeyEvent event)
+	public void onKeyPress(int key, String name)
 	{
-		if(event.getKeyCode() == 32 || event.getKeyCode() == 10) Game.theGame.theDoubleBuffer.setScene(new Scene_Load());
-		super.onKeyPress(event);
+		if(key == Keyboard.KEY_RETURN || key == Keyboard.KEY_SPACE) Game.theGame.setScene(new Scene_Load());
+		super.onKeyPress(key, name);
 	}
 }

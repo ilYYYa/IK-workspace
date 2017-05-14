@@ -162,12 +162,16 @@ public class World
 
 		chunks[cx][cy].setBlock(x, y, lvl, block);
 		
-		BlockPos buff = new BlockPos(x,y,lvl);		
+		BlockPos buff = new BlockPos(x,y,lvl);
+		BlockPos buffN = buff.north();
+		BlockPos buffS = buff.south();
+		BlockPos buffW = buff.west();
+		BlockPos buffE = buff.east();
 		block.onBlockPlaced(this, buff);
-		if(this.getBlock(buff.north()) != null)this.getBlock(buff.north()).onNeighborBlocksChanged(this, buff.north());
-		if(this.getBlock(buff.south()) != null)this.getBlock(buff.south()).onNeighborBlocksChanged(this, buff.south());
-		if(this.getBlock(buff.west()) != null)this.getBlock(buff.west()).onNeighborBlocksChanged(this, buff.west());
-		if(this.getBlock(buff.east()) != null)this.getBlock(buff.east()).onNeighborBlocksChanged(this, buff.east());
+		if(this.getBlock(buffN) != null)this.getBlock(buffN).onNeighborBlocksChanged(this, buffN);
+		if(this.getBlock(buffS) != null)this.getBlock(buffS).onNeighborBlocksChanged(this, buffS);
+		if(this.getBlock(buffW) != null)this.getBlock(buffW).onNeighborBlocksChanged(this, buffW);
+		if(this.getBlock(buffE) != null)this.getBlock(buffE).onNeighborBlocksChanged(this, buffE);
 	}
 	
 	public int getBlockMeta(int x, int y, BlockPos.blockPosLevel lvl)
@@ -230,7 +234,8 @@ public class World
 	{
 		ArrayList<T> e = this.getEntitiesInWorldByClass(cl);
 		ArrayList<T> ret = new ArrayList<T>();
-		for(int i = 0; i < e.size(); i++) if(e.get(i).getDistanceTo(x, y) <= r) ret.add((T)e.get(i));
+		int eSize = e.size();
+		for(int i = 0; i < eSize; i++) if(e.get(i).getDistanceTo(x, y) <= r) ret.add((T)e.get(i));
 		return ret;
 	}
 	

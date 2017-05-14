@@ -1,16 +1,15 @@
 package Panel;
 
 import java.awt.Color;
-import java.awt.Graphics;
 import java.awt.event.KeyEvent;
+
+import org.lwjgl.input.Keyboard;
 
 import Command.Commands;
 import InputLine.GlobalInputLine;
 import Obj.DrawbleObject;
 import TextField.GlobalTextField;
-import block.Block;
-import block.BlockRegister;
-import world.BlockPos;
+import Window.MainWindow;
 
 public class Panel_console extends GlobalPanel
 {
@@ -78,7 +77,7 @@ public class Panel_console extends GlobalPanel
 	}
 	
 	@Override
-	public void draw(Graphics g)
+	public void draw(MainWindow g)
 	{
 		g.setColor(new Color(0,0,0,150));
 		g.fillRect((int)this.realPosX(), (int)this.realPosY(), (int)this.realWidth()+1, (int)this.realHeight()+1);
@@ -86,9 +85,9 @@ public class Panel_console extends GlobalPanel
 	}
 	
 	@Override
-	public void onKeyPress(KeyEvent e)
+	public void onKeyPress(int code, String name)
 	{
-		if(e.getKeyCode() == 10) onEnterPressed();
-		super.onKeyPress(e);
+		if(code == Keyboard.KEY_RETURN) onEnterPressed();
+		super.onKeyPress(code, name);
 	}
 }

@@ -1,13 +1,11 @@
 package Scene;
 
-import java.awt.Graphics;
 import java.io.File;
 import java.net.URL;
 
 import Game.Game;
 import Resources.Saver;
-import block.Blocks;
-import world.BlockPos;
+import Window.MainWindow;
 import world.World;
 
 public class Scene_WorldLoader extends GlobalScene
@@ -23,7 +21,7 @@ public class Scene_WorldLoader extends GlobalScene
 	}
 	
 	@Override
-	public void draw(Graphics g)
+	public void draw(MainWindow g)
 	{
 		g.drawString("Loading world", (int)this.realPosX() + 5, (int)this.realPosY() + 15);
 		
@@ -50,7 +48,7 @@ public class Scene_WorldLoader extends GlobalScene
 			
 			Game.theGame.currentOpenedWorld = world;
 			
-			Game.theGame.theDoubleBuffer.setScene(new Scene_Playground());
+			Game.theGame.setScene(new Scene_Playground());
 		}
 	}
 
@@ -67,7 +65,7 @@ public class Scene_WorldLoader extends GlobalScene
 			
 			Game.theGame.currentOpenedWorld = world;
 			
-			Game.theGame.theDoubleBuffer.setScene(new Scene_Playground());
+			Game.theGame.setScene(new Scene_Playground());
 		}
 		else
 		{
@@ -79,7 +77,7 @@ public class Scene_WorldLoader extends GlobalScene
 			
 			Game.theGame.currentOpenedWorld = world;
 			
-			Game.theGame.theDoubleBuffer.setScene(new Scene_Playground());
+			Game.theGame.setScene(new Scene_Playground());
 		}
 	}
 }

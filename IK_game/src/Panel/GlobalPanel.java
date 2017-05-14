@@ -1,12 +1,7 @@
 package Panel;
 
-import java.awt.Graphics;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
-import java.util.ArrayList;
-
 import Obj.DrawbleObject;
-import Scene.GlobalScene;
+import Window.MainWindow;
 
 public class GlobalPanel extends DrawbleObject
 {
@@ -20,5 +15,5 @@ public class GlobalPanel extends DrawbleObject
 	}
 
 	public void logic(){}
-	public void draw(Graphics g){}
+	public void draw(MainWindow g){}
 }

@@ -24,11 +24,11 @@ public class Button_back extends GlobalButton
 	}
 	
 	@Override
-	public void onMouseClick(MouseEvent event)
+	public void onMouseRelease(int x, int y, int btn)
 	{
 		if(type == 0)parent.parent.removeChild(parent);
-		if(type == 1)Game.theGame.theDoubleBuffer.setScene(Scene);
+		if(type == 1)Game.theGame.setScene(Scene);
 		
-		super.onMouseClick(event);
+		super.onMouseRelease(x,y,btn);
 	}
 }

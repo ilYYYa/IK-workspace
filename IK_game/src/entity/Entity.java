@@ -1,9 +1,8 @@
 package entity;
 
-import java.awt.Graphics;
-
 import Resources.Saver;
 import Resources.TextureLoader;
+import Window.MainWindow;
 import block.Block;
 import world.BlockPos;
 import world.World;
@@ -345,9 +344,9 @@ public class Entity
 		this.lookingTo = lv == 0 ? LookingVect.NORTH : lv == 1 ? LookingVect.SOUTH : lv == 2 ? LookingVect.WEST : LookingVect.EAST;
 	}
 
-	public void drawEntityOnScreen(Graphics g, int sx, int sy, int sw, int sh)
+	public void drawEntityOnScreen(MainWindow g, int sx, int sy, int sw, int sh)
 	{
-		g.drawImage(TextureLoader.getTextureByName(this.getTexture()), sx, sy, sw, sh, null);
+		g.drawTexture(TextureLoader.getTextureByName(this.getTexture()), sx, sy, sw, sh);
 	}
 	
 	public static enum LookingVect

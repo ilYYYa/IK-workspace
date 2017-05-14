@@ -1,9 +1,9 @@
 package Panel;
 
 import java.awt.Color;
-import java.awt.Graphics;
 
 import Obj.DrawbleObject;
+import Window.MainWindow;
 import util.OptLine;
 import util.OptPoint;
 import util.Optimizator;
@@ -16,7 +16,7 @@ public class Panel_optimizator extends GlobalPanel
 	}
 
 	@Override
-	public void draw(Graphics g)
+	public void draw(MainWindow g)
 	{
 		int wd = 30;
 		int xx = 0;

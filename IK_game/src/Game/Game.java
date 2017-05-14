@@ -1,9 +1,13 @@
 package Game;
+
 import java.util.ArrayList;
 
+import org.lwjgl.input.Keyboard;
+
+import Obj.DrawbleObject;
 import Resources.Saver;
 import Scene.GlobalScene;
-import Window.DoubleBuffer;
+import Scene.Scene_Logo;
 import Window.MainWindow;
 import block.Block_Air;
 import block.Blocks;
@@ -13,11 +17,11 @@ import world.World;
 public class Game
 {
 	public static Game theGame;
+	public GlobalScene Scene = new Scene_Logo();
 	
 	public Saver gameSettingSaver;
 	
 	public MainWindow theMainWindow;
-	public DoubleBuffer theDoubleBuffer;
 	
 	public World currentOpenedWorld = null;
 	
@@ -58,9 +62,6 @@ public class Game
 		createDefaultSettings();
 		
 		createWnindow();
-		createDoubleBuffer();
-		setupDoubleBuffer();
-		setWindowVisible(true);
 		
 		startGameRunning();
 	}
@@ -74,6 +75,8 @@ public class Game
 	public void stopGameRunning()
 	{
 		gameRunning = false;
+		this.SaveSettings();
+		if(this.currentOpenedWorld != null) this.currentOpenedWorld.getWorldSaver().initSave();
 	}
 	
 	public void GameRunning()
@@ -85,13 +88,15 @@ public class Game
 			
 			if(globalTick != 0)fps = 1_000_000_000D / (double)globalTick;
 			else fps = 1000D;
-			
+
+			if(theMainWindow != null) theMainWindow.mouseUpdate();
+			if(theMainWindow != null) theMainWindow.keyboardUpdate();
 			long l1 = System.nanoTime();
 			Optimizator.addPointToLatestLine("i2B");
-			theDoubleBuffer.logic();
+			this.logic();
 			Optimizator.addPointToLatestLine("i2E");
 			long l2 = System.nanoTime();
-			if(theMainWindow != null) theMainWindow.repaint();
+			if(theMainWindow != null) theMainWindow.render();
 			long l3 = System.nanoTime();
 
 			fpss.add(fps);
@@ -125,11 +130,17 @@ public class Game
 				lastSaved = System.currentTimeMillis()/1000;
 			}
 
-			while(System.currentTimeMillis() < lastTickUpdate + 1000/GAME_FPS);
+			if(theMainWindow != null) theMainWindow.display.sync(this.GAME_FPS);
 			
 			lastTickUpdate = System.currentTimeMillis();
 			
 			this.globalTick = System.nanoTime() - l1;
+			
+			if(theMainWindow != null && theMainWindow.display.isCloseRequested())
+			{
+				this.destroyWindow();
+				this.stopGameRunning();
+			}
 		}
 	}
 	
@@ -158,22 +169,6 @@ public class Game
 		theMainWindow = new MainWindow();
 	}
 	
-	public void createDoubleBuffer()
-	{
-		theDoubleBuffer = new DoubleBuffer(theMainWindow);
-	}
-	
-	public void setupDoubleBuffer()
-	{
-		theMainWindow.addKeyListener(theDoubleBuffer.listeners);
-		theMainWindow.add(theDoubleBuffer);
-	}
-	
-	public void setWindowVisible(boolean v)
-	{
-		theMainWindow.setVisible(v);
-	}
-	
 	public void createSaver()
 	{
 		gameSettingSaver = new Saver("gameSettings.save");
@@ -183,6 +178,8 @@ public class Game
 	public void createDefaultSettings()
 	{
 		if(!gameSettingSaver.existBoolean("FullScreen")) gameSettingSaver.addBoolean(true, "FullScreen");
+		if(!gameSettingSaver.existInt("ScreenWidth")) gameSettingSaver.addInt(1280, "ScreenWidth");
+		if(!gameSettingSaver.existInt("ScreenHeight")) gameSettingSaver.addInt(720, "ScreenHeight");
 		
 		if(!gameSettingSaver.existDouble("SoundScale")) gameSettingSaver.addDouble(1.0, "SoundScale");
 		if(!gameSettingSaver.existDouble("MusicScale")) gameSettingSaver.addDouble(1.0, "MusicScale");
@@ -190,11 +187,12 @@ public class Game
 
 		if(!gameSettingSaver.existString("DifficultyLevel")) gameSettingSaver.addString("Normal", "DifficultyLevel");
 
-		if(!gameSettingSaver.existInt("Key_NorthMotion")) gameSettingSaver.addInt(87, "Key_NorthMotion"); //Default W key
-		if(!gameSettingSaver.existInt("Key_SouthMotion")) gameSettingSaver.addInt(83, "Key_SouthMotion"); //Default S key
-		if(!gameSettingSaver.existInt("Key_WestMotion")) gameSettingSaver.addInt(65, "Key_WestMotion"); //Default A key
-		if(!gameSettingSaver.existInt("Key_EastMotion")) gameSettingSaver.addInt(68, "Key_EastMotion"); //Default D key
-		if(!gameSettingSaver.existInt("Key_Run")) gameSettingSaver.addInt(16, "Key_Run"); //Default Shift key
+		if(!gameSettingSaver.existInt("Key_NorthMotion")) gameSettingSaver.addInt(Keyboard.KEY_W, "Key_NorthMotion"); //Default W key
+		if(!gameSettingSaver.existInt("Key_SouthMotion")) gameSettingSaver.addInt(Keyboard.KEY_S, "Key_SouthMotion"); //Default S key
+		if(!gameSettingSaver.existInt("Key_WestMotion")) gameSettingSaver.addInt(Keyboard.KEY_A, "Key_WestMotion"); //Default A key
+		if(!gameSettingSaver.existInt("Key_EastMotion")) gameSettingSaver.addInt(Keyboard.KEY_D, "Key_EastMotion"); //Default D key
+		if(!gameSettingSaver.existInt("Key_Run")) gameSettingSaver.addInt(Keyboard.KEY_LSHIFT, "Key_Run"); //Default Shift key
+		if(!gameSettingSaver.existInt("Key_Space")) gameSettingSaver.addInt(Keyboard.KEY_SPACE, "Key_Space"); //Default Space key
 	}
 	
 	public void SaveSettings()
@@ -205,7 +203,40 @@ public class Game
 
 	public void setScene(GlobalScene scene)
 	{
-		this.theDoubleBuffer.setScene(scene);
+		this.Scene = scene;
+	}
+
+	public void logic()
+	{
+		if(Scene != null) logicObjectsIn(Scene);
+	}
+	
+	private void logicObjectsIn(DrawbleObject obj)
+	{
+		obj.logic();
+		for(int i = 0; i < obj.childs.length; i++)
+		{
+			logicObjectsIn(obj.childs[i]);
+		}
+	}
+	
+	private void drawObjectsIn(DrawbleObject obj)
+	{
+		obj.draw(theMainWindow);
+		for(int i = 0; i < obj.childs.length; i++)
+		{
+			drawObjectsIn(obj.childs[i]);
+		}
+	}
+	
+	public void draw()
+	{
+		if(Scene != null) drawObjectsIn(Scene);
+	}
+
+	public void destroyWindow()
+	{
+		theMainWindow.destroy();
 	}
 }
 

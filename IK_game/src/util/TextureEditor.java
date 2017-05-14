@@ -1,5 +1,6 @@
 package util;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 
@@ -35,6 +36,8 @@ public class TextureEditor
 	
 	public static BufferedImage getImageWithDrawedStringViaFont(String str, int width, int height)
 	{
+		width = (width/height+1)*height;
+		
 		int w = (int)((double)height/16D*12D)+space;
 
 	    BufferedImage b = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
@@ -71,15 +74,27 @@ public class TextureEditor
 		if(c == '\\') addSym = "92";
 		if(c == '|') addSym = "124";
 		
-		BufferedImage img = (BufferedImage)TextureLoader.getTextureByNamePURE("font_" + addSym);
+		BufferedImage img = TextureLoader.getTextureByNamePURE("font_" + addSym).image;
 		
-		if(img == TextureLoader.getNullTexture() && c != '?') img = (BufferedImage)TextureLoader.getTextureByNamePURE("font_63");
+		if(img == TextureLoader.getNullTexture().image && c != '?') img = (BufferedImage)TextureLoader.getTextureByNamePURE("font_63").image;
 		
 	    BufferedImage b = new BufferedImage(img.getWidth(), img.getHeight(), img.getType());
 	    Graphics g = b.getGraphics();
 	    g.drawImage(img, 0, 0, null);
 	    g.dispose();
 	    return b;
+	}
+
+	public static BufferedImage getFilledRect(int width, int height, Color color)
+	{
+		if(width <= 0 || height <= 0) return null;
+		
+		BufferedImage ret = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+		Graphics g = ret.getGraphics();
+		g.setColor(color);
+		g.fillRect(0, 0, width, height);
+		g.dispose();
+		return ret;
 	}
 }
 

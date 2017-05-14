@@ -1,9 +1,9 @@
 package Panel;
 
 import java.awt.Color;
-import java.awt.Graphics;
 
 import Scene.GlobalScene;
+import Window.MainWindow;
 
 public class Panel_settings extends GlobalPanel
 {
@@ -16,7 +16,7 @@ public class Panel_settings extends GlobalPanel
 	}
 	
 	@Override
-	public void draw(Graphics g)
+	public void draw(MainWindow g)
 	{
 		g.setColor(Color.gray);
 		g.fillRect(0, 0, (int)realWidth(), (int)realHeight());

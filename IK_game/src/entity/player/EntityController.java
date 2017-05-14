@@ -62,21 +62,21 @@ public class EntityController
 		entity.onEntityUpdate();
 	}
 
-	public void keyPressed(KeyEvent e)
+	public void keyPressed(int code)
 	{
-		if(e.getKeyCode() == Game.theGame.gameSettingSaver.getInt("Key_NorthMotion")) KeyUpPress = true;
-		if(e.getKeyCode() == Game.theGame.gameSettingSaver.getInt("Key_SouthMotion")) KeyDownPress = true;
-		if(e.getKeyCode() == Game.theGame.gameSettingSaver.getInt("Key_WestMotion")) KeyLeftPress = true;
-		if(e.getKeyCode() == Game.theGame.gameSettingSaver.getInt("Key_EastMotion")) KeyRightPress = true;
-		if(e.getKeyCode() == Game.theGame.gameSettingSaver.getInt("Key_Run")) KeyRunPress = true;
+		if(code == Game.theGame.gameSettingSaver.getInt("Key_NorthMotion")) KeyUpPress = true;
+		if(code == Game.theGame.gameSettingSaver.getInt("Key_SouthMotion")) KeyDownPress = true;
+		if(code == Game.theGame.gameSettingSaver.getInt("Key_WestMotion")) KeyLeftPress = true;
+		if(code == Game.theGame.gameSettingSaver.getInt("Key_EastMotion")) KeyRightPress = true;
+		if(code == Game.theGame.gameSettingSaver.getInt("Key_Run")) KeyRunPress = true;
 	}
 
-	public void keyReleased(KeyEvent e)
+	public void keyReleased(int code)
 	{
-		if(e.getKeyCode() == Game.theGame.gameSettingSaver.getInt("Key_NorthMotion")) KeyUpPress = false;
-		if(e.getKeyCode() == Game.theGame.gameSettingSaver.getInt("Key_SouthMotion")) KeyDownPress = false;
-		if(e.getKeyCode() == Game.theGame.gameSettingSaver.getInt("Key_WestMotion")) KeyLeftPress = false;
-		if(e.getKeyCode() == Game.theGame.gameSettingSaver.getInt("Key_EastMotion")) KeyRightPress = false;
-		if(e.getKeyCode() == Game.theGame.gameSettingSaver.getInt("Key_Run")) KeyRunPress = false;
+		if(code == Game.theGame.gameSettingSaver.getInt("Key_NorthMotion")) KeyUpPress = false;
+		if(code == Game.theGame.gameSettingSaver.getInt("Key_SouthMotion")) KeyDownPress = false;
+		if(code == Game.theGame.gameSettingSaver.getInt("Key_WestMotion")) KeyLeftPress = false;
+		if(code == Game.theGame.gameSettingSaver.getInt("Key_EastMotion")) KeyRightPress = false;
+		if(code == Game.theGame.gameSettingSaver.getInt("Key_Run")) KeyRunPress = false;
 	}
 }

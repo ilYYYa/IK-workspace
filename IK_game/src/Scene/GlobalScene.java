@@ -8,6 +8,7 @@ import java.util.ArrayList;
 
 import Obj.DrawbleObject;
 import Panel.GlobalPanel;
+import Window.MainWindow;
 
 public class GlobalScene extends DrawbleObject
 {
@@ -30,5 +31,5 @@ public class GlobalScene extends DrawbleObject
 	}
 
 	public void logic(){}
-	public void draw(Graphics g){}
+	public void draw(MainWindow g){}
 }

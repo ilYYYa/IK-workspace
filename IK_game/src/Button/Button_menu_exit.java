@@ -16,7 +16,7 @@ public class Button_menu_exit extends GlobalButton
 	}
 
 	@Override
-	public void onMouseClick(MouseEvent event)
+	public void onMouseRelease(int x, int y, int btn)
 	{
 		System.exit(0);
 	}

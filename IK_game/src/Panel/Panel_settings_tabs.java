@@ -29,13 +29,13 @@ public class Panel_settings_tabs extends GlobalPanel
 	}
 	
 	@Override
-	public void onMouseClick(MouseEvent event)
+	public void onMouseRelease(int x, int y, int btn)
 	{
-		if(video_setts_btn.checkingPointCrossingThisObject(event.getX(), event.getY()))
+		if(video_setts_btn.checkingPointCrossingThisObject(x, y))
 		{
 			parent.addChild(new Panel_settings_video(0.3, 0.1, 0.6, 0.8, parent));
 		}
 		
-		super.onMouseClick(event);
+		super.onMouseRelease(x,y,btn);
 	}
 }

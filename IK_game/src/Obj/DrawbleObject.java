@@ -7,6 +7,7 @@ import java.awt.event.MouseWheelEvent;
 import java.util.ArrayList;
 
 import Button.Button_back;
+import Window.MainWindow;
 
 public abstract class DrawbleObject
 {
@@ -41,12 +42,12 @@ public abstract class DrawbleObject
 	
 	public double realWidth()
 	{
-		if(parent==null) return Game.Game.theGame.theDoubleBuffer.getWidth();
+		if(parent==null) return Game.Game.theGame.theMainWindow.width;
 		else return width * parent.realWidth();
 	}
 	public double realHeight()
 	{
-		if(parent==null) return Game.Game.theGame.theDoubleBuffer.getHeight();
+		if(parent==null) return Game.Game.theGame.theMainWindow.height;
 		else return height * parent.realHeight();
 	}
 	
@@ -110,7 +111,7 @@ public abstract class DrawbleObject
 	}
 
 	public abstract void logic();
-	public abstract void draw(Graphics g);
+	public abstract void draw(MainWindow theMainWindow);
 	
 	public boolean checkingPointCrossingSomeObject(DrawbleObject obj, double pointX, double pointY)
 	{
@@ -155,48 +156,15 @@ public abstract class DrawbleObject
 		return false;
 	}
 	
-	private MouseEvent getNewMouseEvent(MouseEvent e, int x, int y)
-	{
-		return new MouseEvent(e.getComponent(), e.getID(), e.getWhen(), e.getModifiers(), x, y, e.getClickCount(), e.isPopupTrigger(), e.getButton());
-	}
-	
-	public void onMouseClick(MouseEvent event)
+	public void onMousePress(int x, int y, int btn)
 	{
 		for(int i = childs.length - 1; i >= 0; i--)
 		{
 			DrawbleObject buff = childs[i];
 			
-			if(checkingPointCrossingSomeObject(buff, event.getX(), event.getY()))
+			if(checkingPointCrossingSomeObject(buff, x, y))
 			{
-				buff.onMouseClick(getNewMouseEvent(event, event.getX() - (int)buff.realPosX(), event.getY() - (int)buff.realPosY()));
-
-				moveObject(i);
-				
-				break;
-			}
-			else
-			{
-				buff.onMouseClickNotOnYou();
-			}
-		}
-	}
-	public void onMouseClickNotOnYou()
-	{
-		for(int i = childs.length - 1; i >= 0; i--)
-		{
-			DrawbleObject buff = childs[i];
-			buff.onMouseClickNotOnYou();
-		}
-	}
-	public void onMousePress(MouseEvent event)
-	{
-		for(int i = childs.length - 1; i >= 0; i--)
-		{
-			DrawbleObject buff = childs[i];
-			
-			if(checkingPointCrossingSomeObject(buff, event.getX(), event.getY()))
-			{
-				buff.onMousePress(getNewMouseEvent(event, event.getX() - (int)buff.realPosX(), event.getY() - (int)buff.realPosY()));
+				buff.onMousePress(x - (int)buff.realPosX(), y - (int)buff.realPosY(), btn);
 
 				moveObject(i);
 				
@@ -216,15 +184,15 @@ public abstract class DrawbleObject
 			buff.onMousePressNotOnYou();
 		}
 	}
-	public void onMouseRelease(MouseEvent event)
+	public void onMouseRelease(int x, int y, int btn)
 	{
 		for(int i = childs.length - 1; i >= 0; i--)
 		{
 			DrawbleObject buff = childs[i];
 			
-			if(checkingPointCrossingSomeObject(buff, event.getX(), event.getY()))
+			if(checkingPointCrossingSomeObject(buff, x, y))
 			{
-				buff.onMouseRelease(getNewMouseEvent(event, event.getX() - (int)buff.realPosX(), event.getY() - (int)buff.realPosY()));
+				buff.onMouseRelease(x - (int)buff.realPosX(), y - (int)buff.realPosY(), btn);
 
 				moveObject(i);
 				
@@ -245,47 +213,47 @@ public abstract class DrawbleObject
 		}
 	}
 
-	public void onMouseMove(MouseEvent event)
+	public void onMouseMove(int x, int y, int dx, int dy)
 	{
 		for(int i = childs.length - 1; i >= 0; i--)
 		{
 			DrawbleObject buff = childs[i];
 			
-			if(checkingPointCrossingSomeObject(buff, event.getX(), event.getY()))
+			if(checkingPointCrossingSomeObject(buff, x, y))
 			{
-				buff.onMouseMove(getNewMouseEvent(event, event.getX() - (int)buff.realPosX(), event.getY() - (int)buff.realPosY()));
+				buff.onMouseMove(x - (int)buff.realPosX(), y - (int)buff.realPosY(), dx, dy);
 			}
 			else
 			{
-				buff.onMouseMoveNotOnYou(getNewMouseEvent(event, event.getX() - (int)buff.realPosX(), event.getY() - (int)buff.realPosY()));
+				buff.onMouseMoveNotOnYou(x - (int)buff.realPosX(), y - (int)buff.realPosY());
 			}
 		}
 	}
-	public void onMouseMoveNotOnYou(MouseEvent event)
+	public void onMouseMoveNotOnYou(int x, int y)
 	{
 		for(int i = childs.length - 1; i >= 0; i--)
 		{
 			DrawbleObject buff = childs[i];
 			
-			if(!checkingPointCrossingSomeObject(buff, event.getX(), event.getY()))
+			if(!checkingPointCrossingSomeObject(buff, x, y))
 			{
-				buff.onMouseMoveNotOnYou(getNewMouseEvent(event, event.getX() - (int)buff.realPosX(), event.getY() - (int)buff.realPosY()));
+				buff.onMouseMoveNotOnYou(x - (int)buff.realPosX(), y - (int)buff.realPosY());
 			}
 		}
 	}
 
 
-	public void onMouseWheelMoved(MouseWheelEvent event)
+	public void onMouseWheelMoved(int wheel)
 	{
-		if(childs.length > 0) childs[childs.length - 1].onMouseWheelMoved(event);
+		if(childs.length > 0) childs[childs.length - 1].onMouseWheelMoved(wheel);
 	}
 	
-	public void onKeyPress(KeyEvent event)
+	public void onKeyPress(int keyCode, String keyName)
 	{
-		if(childs.length > 0) childs[childs.length - 1].onKeyPress(event);
+		if(childs.length > 0) childs[childs.length - 1].onKeyPress(keyCode, keyName);
 	}
-	public void onKeyRelease(KeyEvent event)
+	public void onKeyRelease(int keyCode, String keyName)
 	{
-		if(childs.length > 0) childs[childs.length - 1].onKeyRelease(event);
+		if(childs.length > 0) childs[childs.length - 1].onKeyRelease(keyCode, keyName);
 	}
 }

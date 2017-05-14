@@ -8,6 +8,7 @@ import InputLine.GlobalInputLine;
 import Obj.DrawbleObject;
 import Scene.Scene_Menu;
 import TextField.GlobalTextField;
+import Window.MainWindow;
 
 public class Panel_login extends GlobalPanel
 {
@@ -26,15 +27,15 @@ public class Panel_login extends GlobalPanel
 		if(Game.theGame.gameSettingSaver.existString("UserNickName")) inline.setText(Game.theGame.gameSettingSaver.getString("UserNickName"));
 		inline.setAcceptinSpace(false);
 		
+		this.addChild(okBtn);
 		this.addChild(text);
 		this.addChild(inline);
-		this.addChild(okBtn);
 	}
-
+	
 	@Override
-	public void onMouseClick(MouseEvent e)
+	public void onMouseRelease(int x, int y, int btn)
 	{
-		if(okBtn.checkingPointCrossingThisObject(e.getX(), e.getY()))
+		if(okBtn.checkingPointCrossingThisObject(x,y))
 		{
 			if(inline.getText().length() > 2)
 			{
@@ -43,7 +44,7 @@ public class Panel_login extends GlobalPanel
 				
 				Game.theGame.SaveSettings();
 				
-				Game.theGame.theDoubleBuffer.setScene(new Scene_Menu());
+				Game.theGame.setScene(new Scene_Menu());
 			}
 			else
 			{

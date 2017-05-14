@@ -6,12 +6,14 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 
+import org.lwjgl.input.Keyboard;
+
 import Game.Game;
 import Obj.DrawbleObject;
+import Window.MainWindow;
 import block.Block;
 import entity.Entity;
 import entity.LivingEntity;
-import entity.player.PlayerEntity;
 import trigger.Trigger;
 import util.Optimizator;
 import world.BlockPos;
@@ -94,7 +96,8 @@ public class Panel_worldrenderer extends GlobalPanel
 		Optimizator.addPointToLatestLine("WTE");
 
 		Optimizator.addPointToLatestLine("TRB");
-		for(int i = 0; i < world.getTriggers().length; i++)
+		int triggersLength = world.getTriggers().length;
+		for(int i = 0; i < triggersLength; i++)
 		{
 			if(triggerOnScreen(world.getTriggers()[i])) world.getTriggers()[i].onTriggerOnScreen(world);
 			else world.getTriggers()[i].onTriggerNotOnScreen(world);
@@ -103,7 +106,7 @@ public class Panel_worldrenderer extends GlobalPanel
 	}
 	
 	@Override
-	public void draw(Graphics g)
+	public void draw(MainWindow g)
 	{
 		if(world == null)
 		{
@@ -133,11 +136,14 @@ public class Panel_worldrenderer extends GlobalPanel
 		super.draw(g);
 	}
 	
-	private void drawEntities(Graphics g)
+	private void drawEntities(MainWindow g)
 	{
-		for(int i = 0; i < world.getEntitiesInWorld().length; i++)
+		Entity[] entities = world.getEntitiesInWorld();
+		int entitiesLength = entities.length;
+		Entity buff;
+		for(int i = 0; i < entitiesLength; i++)
 		{
-			Entity buff = world.getEntitiesInWorld()[i];
+			buff = entities[i];
 			
 			if(buff == null)
 			{
@@ -175,16 +181,20 @@ public class Panel_worldrenderer extends GlobalPanel
 		return true;
 	}
 
-	public void drawTriggers(Graphics g)
+	public void drawTriggers(MainWindow g)
 	{
-		for(int i = 0; i < world.getTriggers().length; i++)
+		Trigger[] triggers = world.getTriggers();
+		int triggersCount = triggers.length;
+		Trigger buff;
+		for(int i = 0; i < triggersCount; i++)
 		{
-			if(triggerOnScreen(world.getTriggers()[i]))
+			buff = triggers[i];
+			if(triggerOnScreen(buff))
 			{
-				int px1 = (int)worldPosToScreenPosX(world.getTriggers()[i].posX);
-				int py1 = (int)worldPosToScreenPosY(world.getTriggers()[i].posY);
-				int px2 = (int)worldPosToScreenPosX(world.getTriggers()[i].posX + world.getTriggers()[i].width);
-				int py2 = (int)worldPosToScreenPosY(world.getTriggers()[i].posY + world.getTriggers()[i].height);
+				int px1 = (int)worldPosToScreenPosX(buff.posX);
+				int py1 = (int)worldPosToScreenPosY(buff.posY);
+				int px2 = (int)worldPosToScreenPosX(buff.posX + buff.width);
+				int py2 = (int)worldPosToScreenPosY(buff.posY + buff.height);
 				
 				g.setColor(Color.RED);
 				g.drawRect(px1,py1,px2-px1,py2-py1);
@@ -192,8 +202,8 @@ public class Panel_worldrenderer extends GlobalPanel
 				g.drawRect(px1 + 1,py1 + 1,px2-px1 - 2,py2-py1 - 2);
 				g.setColor(Color.white);
 				g.drawString(world.getTriggers()[i].unlocalizedTriggerName + " trigger", px1+5, py1+15);
-				g.drawString("from " + world.getTriggers()[i].posX + ":" + world.getTriggers()[i].posY, px1+5, py1+30);
-				g.drawString("to " + (world.getTriggers()[i].posX + world.getTriggers()[i].width) + ":" + (world.getTriggers()[i].posY + world.getTriggers()[i].height), px1+5, py1+45);
+				g.drawString("from " + buff.posX + ":" + buff.posY, px1+5, py1+30);
+				g.drawString("to " + (buff.posX + buff.width) + ":" + (buff.posY + buff.height), px1+5, py1+45);
 			}
 		}
 	}
@@ -227,7 +237,7 @@ public class Panel_worldrenderer extends GlobalPanel
 		return (-cameraD * blockHeightOnScreen) + ((pos - topBlockPos)*blockHeightOnScreen);
 	}
 
-	public void drawMousePosAndInfo(Graphics g)
+	public void drawMousePosAndInfo(MainWindow g)
 	{
 		int screenX = (int)worldPosToScreenPosX(getIntedMouseX());
 		int screenY = (int)worldPosToScreenPosY(getIntedMouseY());
@@ -244,22 +254,21 @@ public class Panel_worldrenderer extends GlobalPanel
 		g.setColor(Color.black);
 		g.drawString("x: " + (int)(mouseOnBlockX < 0 ? mouseOnBlockX - 1 : mouseOnBlockX) + "; y: " + (int)(mouseOnBlockY < 0 ? mouseOnBlockY - 1 : mouseOnBlockY), mouseX - 45, mouseY - 10);
 	}
-	
-	public void drawBlocks(Graphics g, BlockPos.blockPosLevel lvl)
+
+	public void drawBlocks(MainWindow g, BlockPos.blockPosLevel lvl)
 	{
 		int screenX = 0;
 		int screenY = 0;
 		int screenW = 0;
 		int screenH = 0;
 
-		long z = 0;
+		int xxx = blocksAtScreenByWidth+1;
+		int yyy = blocksAtScreenByHeight()+1;
 		
-		for(int ix = -1; ix < blocksAtScreenByWidth+1; ix++)
+		for(int ix = -1; ix < xxx; ix++)
 		{
-			for(int iy = -1; iy < blocksAtScreenByHeight()+1; iy++)
+			for(int iy = -1; iy < yyy; iy++)
 			{
-				z = System.nanoTime();
-				
 				BlockPos pos = new BlockPos((int)cameraPosX + ix - blocksAtScreenByWidth/2, (int)cameraPosY + iy - blocksAtScreenByHeight()/2, lvl);
 				Block block = world.getBlock(pos);
 				
@@ -268,14 +277,18 @@ public class Panel_worldrenderer extends GlobalPanel
 				screenW = (int)(this.realWidth()/(double)blocksAtScreenByWidth) + 1;
 				screenH = (int)(this.realHeight()/(double)blocksAtScreenByHeight())+1;
 				
-				if(block != null) block.drawAtScreen(g, screenX, screenY, screenW, screenH, world, pos);
+				if(block != null)
+				{
+					block.drawAtScreen(g, screenX, screenY, screenW, screenH, world, pos);
+				}
 				else
 				{
-					g.setColor(new Color((int)(Math.random() * 255D),(int)(Math.random() * 255D), (int)(Math.random() * 255D)));
+					g.setColor(Color.MAGENTA);
 					g.fillRect(screenX, screenY, screenW, screenH);
 				}
 			}
 		}
+
 	}
 	
 	public void setWorld(World w)
@@ -303,13 +316,7 @@ public class Panel_worldrenderer extends GlobalPanel
 	}
 	
 	@Override
-	public void onMousePress(MouseEvent e)
-	{
-		super.onMousePress(e);
-	}
-	
-	@Override
-	public void onMouseRelease(MouseEvent e)
+	public void onMouseRelease(int x, int y, int btn)
 	{
 		if(world.getGamemode() == 1 && world.getController().getControllableEntity() == null)
 		{
@@ -317,48 +324,48 @@ public class Panel_worldrenderer extends GlobalPanel
 			if(entity != null) world.getController().setControllableEntity(entity);
 		}
 		
-		super.onMouseRelease(e);
+		super.onMouseRelease(x,y,btn);
 	}
 	
 	@Override
-	public void onMouseMove(MouseEvent e)
+	public void onMouseMove(int x, int y, int dx, int dy)
 	{
-		mouseX = e.getX();
-		mouseY = e.getY();
-		super.onMouseMove(e);
+		mouseX = x;
+		mouseY = y;
+		super.onMouseMove(x,y,dx,dy);
 	}
 	
 	@Override
-	public void onMouseWheelMoved(MouseWheelEvent e)
+	public void onMouseWheelMoved(int w)
 	{
-		if(world.getGamemode() == 1 && this.blocksAtScreenByWidth + e.getWheelRotation() > 2)this.blocksAtScreenByWidth += e.getWheelRotation();
-		super.onMouseWheelMoved(e);
+		if(world.getGamemode() == 1 && this.blocksAtScreenByWidth + w > 2)this.blocksAtScreenByWidth += w;
+		super.onMouseWheelMoved(w);
 	}
 	
 	@Override
-	public void onKeyPress(KeyEvent e)
+	public void onKeyPress(int code, String name)
 	{
-		if(e.getKeyCode() == 112 && !this.existChild(info)) this.addChild(info);
-		else if(e.getKeyCode() == 112 && this.existChild(info)) this.removeChild(info);
-		if(e.getKeyCode() == 113) this.showTriggers = !this.showTriggers;
-		if(e.getKeyCode() == 114 && !this.existChild(optimizator)) this.addChild(optimizator);
-		else if(e.getKeyCode() == 114 && this.existChild(optimizator)) this.removeChild(optimizator);
+		if(code == Keyboard.KEY_F1 && !this.existChild(info)) this.addChild(info);
+		else if(code == Keyboard.KEY_F1 && this.existChild(info)) this.removeChild(info);
+		if(code == Keyboard.KEY_F2) this.showTriggers = !this.showTriggers;
+		if(code == Keyboard.KEY_F3 && !this.existChild(optimizator)) this.addChild(optimizator);
+		else if(code == Keyboard.KEY_F3 && this.existChild(optimizator)) this.removeChild(optimizator);
 		
-		if(e.getKeyChar() == 'p')
+		if(code == Keyboard.KEY_F9)
 		{
 			this.isPause = !this.isPause;
 			Optimizator.isPause = this.isPause;
 		}
 		
-		world.getController().keyPressed(e);
+		world.getController().keyPressed(code);
 		
-		super.onKeyPress(e);
+		super.onKeyPress(code, name);
 	}
 	
 	@Override
-	public void onKeyRelease(KeyEvent e)
+	public void onKeyRelease(int code, String name)
 	{
-		world.getController().keyReleased(e);
-		super.onKeyRelease(e);
+		world.getController().keyReleased(code);
+		super.onKeyRelease(code, name);
 	}
 }

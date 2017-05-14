@@ -2,6 +2,8 @@ package Panel;
 
 import java.awt.event.KeyEvent;
 
+import org.lwjgl.input.Keyboard;
+
 import Game.Game;
 import Obj.DrawbleObject;
 import block.Blocks;
@@ -25,14 +27,14 @@ public class Panel_playground extends GlobalPanel
 	}
 	
 	@Override
-	public void onKeyPress(KeyEvent e)
+	public void onKeyPress(int code, String name)
 	{
-		if(e.getKeyCode() == 192 && !this.existChild(console)) this.addChild(console);
-		if(e.getKeyCode() == 27)
+		if(code == Keyboard.KEY_GRAVE && !this.existChild(console)) this.addChild(console);
+		if(code == Keyboard.KEY_ESCAPE)
 		{
 			if(this.existChild(console)) this.removeChild(console);
 		}
 		
-		super.onKeyPress(e);
+		super.onKeyPress(code, name);
 	}
 }

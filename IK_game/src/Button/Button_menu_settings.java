@@ -4,10 +4,7 @@ import java.awt.event.MouseEvent;
 
 import Game.Game;
 import Obj.DrawbleObject;
-import Panel.GlobalPanel;
-import Scene.GlobalScene;
 import Scene.Scene_Settings;
-import Window.DoubleBuffer;
 
 public class Button_menu_settings extends GlobalButton
 {
@@ -19,8 +16,8 @@ public class Button_menu_settings extends GlobalButton
 	}
 
 	@Override
-	public void onMouseClick(MouseEvent event)
+	public void onMouseRelease(int x, int y, int btn)
 	{
-		Game.theGame.theDoubleBuffer.setScene(new Scene_Settings());
+		Game.theGame.setScene(new Scene_Settings());
 	}
 }

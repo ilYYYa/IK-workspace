@@ -500,7 +500,7 @@ public class Saver
 		{
 			try
 			{
-				File d = new File(f.getParent());
+				File d = new File(f.getAbsoluteFile().getParent());
 				d.mkdirs();
 				f.createNewFile();
 			}

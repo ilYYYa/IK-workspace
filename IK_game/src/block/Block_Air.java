@@ -1,9 +1,6 @@
 package block;
 
-import java.awt.Color;
-import java.awt.Graphics;
-
-import Resources.TextureLoader;
+import Window.MainWindow;
 import world.BlockPos;
 import world.World;
 
@@ -17,7 +14,7 @@ public class Block_Air extends Block
 	}
 	
 	@Override
-	public void drawAtScreen(Graphics g, int x, int y, int width, int height, World world, BlockPos pos)
+	public void drawAtScreen(MainWindow g, int x, int y, int width, int height, World world, BlockPos pos)
 	{
 		//Air doesn't drawind at world!
 	}

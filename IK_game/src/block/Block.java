@@ -1,8 +1,8 @@
 package block;
 
-import java.awt.Graphics;
-
+import Resources.Texture;
 import Resources.TextureLoader;
+import Window.MainWindow;
 import entity.Entity;
 import entity.player.PlayerEntity;
 import world.BlockPos;
@@ -150,9 +150,11 @@ public class Block
 		return this.lighting;
 	}
 
-	public void drawAtScreen(Graphics g, int x, int y, int width, int height, World world, BlockPos pos)
+	public void drawAtScreen(MainWindow g, int x, int y, int width, int height, World world, BlockPos pos)
 	{
-		g.drawImage(TextureLoader.getTextureByName(this.getTextureNameByMetaData(world, pos)), x, y, width, height, null);
+		String textureName = this.getTextureNameByMetaData(world, pos);
+		Texture texture = TextureLoader.getTextureByName(textureName);
+		g.drawTexture(texture, x, y, width, height);
 	}
 	
 	public String toString()

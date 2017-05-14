@@ -14,22 +14,14 @@ import util.TextureEditor;
 
 public class TextureLoader
 {
-	public static ArrayList<String> fileNames = new ArrayList<String>();
-	public static ArrayList<Image> textures = new ArrayList<Image>();
-	private static BufferedImage nuller = null;
+	public static ArrayList<Texture> textures = new ArrayList<Texture>();
+	private static Texture nuller = null;
 	
 	public static void initLoad() throws IOException
 	{
 		File f = new File(TextureLoader.class.getResource("").getFile() + "/Files/Textures");
 		
 		loadTexturesFromFolder(f);
-		
-		/*File[] files = f.listFiles();
-		
-		for(int i = 0; files!=null && i < files.length; i++)
-		{
-			addImage(ImageIO.read(files[i]), files[i].getName().substring(0, files[i].getName().length() - 4));
-		}*/
 	}
 	
 	public static void loadTexturesFromFolder(File directory) throws IOException
@@ -39,54 +31,80 @@ public class TextureLoader
 		for(int i = 0; files!=null && i < files.length; i++)
 		{
 			if(files[i].isDirectory()) loadTexturesFromFolder(files[i]);
-			else addImage(ImageIO.read(files[i]), files[i].getName().substring(0, files[i].getName().length() - 4));
+			else addTexture(ImageIO.read(files[i]), files[i].getName().substring(0, files[i].getName().length() - 4));
 		}
 	}
 	
-	public static void addImage(Image img, String name)
+	public static void addTexture(Image img, String name)
 	{
-		fileNames.add(name);
-		textures.add(img);
+		if(img == null)
+		{
+			//System.err.println(name + " texture can't loaded");
+			return;
+		}
+		Texture t = new Texture((BufferedImage) img, name);
+		textures.add(t);
 	}
 	
-	public static Image getTextureByName(String name)
+	public static void addTexture(Texture texture, String name)
+	{
+		texture.textureName = name;
+		textures.add(texture);
+	}
+	
+	public static Texture getTextureByName(String name)
 	{
 		if(!name.substring(0,1).equals("!")) return getTextureByNamePURE(name);
 		else
 		{
-			Image buff = getTextureByNamePURE(name);
+			Texture buff = getTextureByNamePURE(name);
 			if(buff == nuller)
 			{
 				switch(name.substring(1,4))
 				{
-					case "001": buff = func001(buff, name.substring(4)); break;
-					case "002": buff = func002(buff, name.substring(4)); break;
+					case "001": buff = new Texture(func001(name.substring(4)), name); break;
+					case "002": buff = new Texture(func002(name.substring(4)), name); break;
+					case "003": buff = new Texture(func003(name.substring(4)), name); break;
 				}
 
-				if(buff != getNullTexture()) addImage(buff, name);
+				if(buff != getNullTexture()) addTexture(buff, name);
 				
 				return buff;
 			}
 			else return buff;
 		}
 	}
+
+	public static Texture getTextureByNamePURE(String name)
+	{
+		int size = textures.size();
+		for(int i = 0; i < size; i++)
+		{
+			if(textures.get(i).textureName.equals(name))
+			{
+				return textures.get(i);
+			}
+		}
+		return getNullTexture();
+	}
 	
-	public static Image func001(Image buff, String str)
+	public static BufferedImage func001(String str)
 	{
 		String[] split = str.split("&");
 		
-		buff = TextureEditor.concatSummaringTexturesByMeta((BufferedImage)getTextureByNamePURE(split[0]), (BufferedImage)getTextureByNamePURE(split[1]), Integer.parseInt(split[2]));
+		BufferedImage buff = TextureEditor.concatSummaringTexturesByMeta(getTextureByNamePURE(split[0]).image, getTextureByNamePURE(split[1]).image, Integer.parseInt(split[2]));
 		
 		int a = (split.length - 1)/2;
-		for(int i = 1; i < a; i++) buff = TextureEditor.concatSummaringTexturesByMeta((BufferedImage)buff, (BufferedImage)getTextureByNamePURE(split[i*2 + 1]), Integer.parseInt(split[i*2 + 2]));
+		for(int i = 1; i < a; i++) buff = TextureEditor.concatSummaringTexturesByMeta((BufferedImage)buff, getTextureByNamePURE(split[i*2 + 1]).image, Integer.parseInt(split[i*2 + 2]));
 		
 		return buff;
 	}
 	
-	public static Image func002(Image buff, String str)
+	public static BufferedImage func002(String str)
 	{
 		String[] split = str.split("&");
 		split[0] = split[0].toUpperCase();
+		BufferedImage buff = null;
 		try
 		{
 			buff = TextureEditor.getImageWithDrawedStringViaFont(split[0], Integer.parseInt(split[1]), Integer.parseInt(split[2]));
@@ -101,24 +119,31 @@ public class TextureLoader
 		return buff;
 	}
 	
-	public static Image getTextureByNamePURE(String name)
+	public static BufferedImage func003(String str)
 	{
-		for(int i = 0; i < fileNames.size(); i++)
+		String[] split = str.split("&");
+		split[0] = split[0].toUpperCase();
+		BufferedImage buff = null;
+		try
 		{
-			if(fileNames.get(i).equals(name))
-			{
-				return textures.get(i);
-			}
+			buff = TextureEditor.getFilledRect(Integer.parseInt(split[0]), Integer.parseInt(split[1]), new Color(Integer.parseInt(split[2]),Integer.parseInt(split[3]),Integer.parseInt(split[4]),Integer.parseInt(split[5])));
 		}
-		return getNullTexture();
+		catch(NumberFormatException e)
+		{
+			System.err.println("at TextureLoader at func003");
+			System.err.println("\tstr: " + str);
+			System.err.println("\tthis function must be: <INT WIDTH>&<INT HEIGHT>&<INT R>&<INT G>&<INT B>&<INT A>");
+			System.exit(-33);
+		}
+		return buff;
 	}
 	
-	public static Image getNullTexture()
+	public static Texture getNullTexture()
 	{
 		if(nuller == null)
 		{
-			nuller = new BufferedImage(100,100,BufferedImage.TYPE_INT_RGB);
-			Graphics g = nuller.getGraphics();
+			BufferedImage nullImg = new BufferedImage(100,100,BufferedImage.TYPE_INT_RGB);
+			Graphics g = nullImg.getGraphics();
 			g.setColor(Color.black);
 			g.fillRect(0, 0, 50, 50);
 			g.fillRect(50, 50, 50, 50);
@@ -126,6 +151,9 @@ public class TextureLoader
 			g.fillRect(0, 50, 50, 50);
 			g.fillRect(50, 0, 50, 50);
 			g.dispose();
+			
+			nuller = new Texture(nullImg, "nuller");
+			nuller.textureName = "nuller";
 		}
 		
 		return nuller;
