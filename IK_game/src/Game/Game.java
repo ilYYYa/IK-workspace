@@ -29,7 +29,7 @@ public class Game
 	
 	public long lastSaved = System.currentTimeMillis()/1000;
 	
-	public static final int GAME_FPS = 60;
+	public static int GAME_FPS = 60;
 	
 	public double fps = 3000;
 	public double avrFps = 0;

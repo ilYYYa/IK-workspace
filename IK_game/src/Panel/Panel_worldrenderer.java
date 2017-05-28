@@ -316,6 +316,14 @@ public class Panel_worldrenderer extends GlobalPanel
 	}
 	
 	@Override
+	public void onMousePress(int x, int y, int btn)
+	{
+		world.getController().mousePress(btn);
+		
+		super.onMousePress(x,y,btn);
+	}
+	
+	@Override
 	public void onMouseRelease(int x, int y, int btn)
 	{
 		if(world.getGamemode() == 1 && world.getController().getControllableEntity() == null)
@@ -323,6 +331,8 @@ public class Panel_worldrenderer extends GlobalPanel
 			Entity entity = world.getEntityAt(this.mouseOnBlockX, this.mouseOnBlockY);
 			if(entity != null) world.getController().setControllableEntity(entity);
 		}
+
+		world.getController().mouseRelease(btn);
 		
 		super.onMouseRelease(x,y,btn);
 	}

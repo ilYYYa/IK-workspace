@@ -41,7 +41,7 @@ public class Scene_Load extends GlobalScene
 		if(l.progress == 2) progress = "Loading Languages";
 		if(l.progress == 3)
 		{
-			Game.theGame.setScene(new Scene_Login());
+			Game.theGame.setScene(new Scene_Menu());
 		}
 	}
 }

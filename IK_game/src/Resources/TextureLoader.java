@@ -65,6 +65,7 @@ public class TextureLoader
 					case "001": buff = new Texture(func001(name.substring(4)), name); break;
 					case "002": buff = new Texture(func002(name.substring(4)), name); break;
 					case "003": buff = new Texture(func003(name.substring(4)), name); break;
+					case "004": buff = new Texture(func004(name.substring(4)), name); break;
 				}
 
 				if(buff != getNullTexture()) addTexture(buff, name);
@@ -107,13 +108,15 @@ public class TextureLoader
 		BufferedImage buff = null;
 		try
 		{
-			buff = TextureEditor.getImageWithDrawedStringViaFont(split[0], Integer.parseInt(split[1]), Integer.parseInt(split[2]));
+			//buff = TextureEditor.getImageWithDrawedStringViaFont(split[0], Integer.parseInt(split[1]), Integer.parseInt(split[2]));
+			buff = TextureEditor.getCharViaImage(split[0].toCharArray()[0]);
 		}
 		catch(NumberFormatException e)
 		{
 			System.err.println("at TextureLoader at func002");
 			System.err.println("\tstr: " + str);
-			System.err.println("\tthis function must be: <TEXTFORDRAW>&<INT WIDTH>&<INT HEIGHT>");
+			//System.err.println("\tthis function must be: <TEXTFORDRAW>&<INT WIDTH>&<INT HEIGHT>");
+			System.err.println("\tthis function must be: <CHAR ch>");
 			System.exit(-33);
 		}
 		return buff;
@@ -138,6 +141,24 @@ public class TextureLoader
 		return buff;
 	}
 	
+	public static BufferedImage func004(String str)
+	{
+		String[] split = str.split("&");
+		BufferedImage buff = null;
+		try
+		{
+			buff = TextureEditor.createText(split[0], Integer.parseInt(split[1]));
+		}
+		catch(NumberFormatException e)
+		{
+			System.err.println("at TextureLoader at func004");
+			System.err.println("\tstr: " + str);
+			System.err.println("\tthis function must be: <String STR>&<INT RGBColor>");
+			System.exit(-33);
+		}
+		return buff;
+	}
+	
 	public static Texture getNullTexture()
 	{
 		if(nuller == null)
@@ -157,6 +178,15 @@ public class TextureLoader
 		}
 		
 		return nuller;
+	}
+
+	public static void updateTexturesOpenGL()
+	{
+		int size = textures.size();
+		for(int i = 0; i < size; i++)
+		{
+			textures.get(i).initOpenGL();
+		}
 	}
 }
 

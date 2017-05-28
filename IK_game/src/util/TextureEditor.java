@@ -1,13 +1,18 @@
 package util;
 
 import java.awt.Color;
+import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics;
+import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 
 import Resources.TextureLoader;
 
 public class TextureEditor
 {
+	public static Font TIMESROMAN_FONT = new Font("TimesRoman", Font.PLAIN, 12); 
+	
 	public static BufferedImage concatSummaringTexturesByMeta(BufferedImage img1, BufferedImage img2, int meta)
 	{
 		img1 = copyImage(img1);
@@ -95,6 +100,23 @@ public class TextureEditor
 		g.fillRect(0, 0, width, height);
 		g.dispose();
 		return ret;
+	}
+
+	public static BufferedImage createText(String str, int color)
+	{
+		FontMetrics metrics = Toolkit.getDefaultToolkit().getFontMetrics(TIMESROMAN_FONT);
+		int w = metrics.stringWidth(str);
+		int h = metrics.getHeight();
+		
+		BufferedImage buff = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
+		
+		Graphics g = buff.getGraphics();
+		g.setColor(new Color(color, true));
+		g.setFont(TIMESROMAN_FONT);
+		g.drawString(str, 0, TIMESROMAN_FONT.getSize());
+		g.dispose();
+		
+		return buff;
 	}
 }
 

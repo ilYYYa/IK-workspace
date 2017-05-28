@@ -47,9 +47,9 @@ public class GlobalButton extends DrawbleObject
 		g.fillRect((int)posXOnScreen(), (int)posYOnScreen(), (int)realWidth(), (int)realHeight());
 		g.setColor(borderColor);
 		g.drawRect((int)posXOnScreen(), (int)posYOnScreen(), (int)realWidth(), (int)realHeight());
-
-		Texture buff = TextureLoader.getTextureByName("!002" + this.Text + "&" + TextureEditor.getStringWidthByHeight(this.Text, (int)this.realHeight()/2) + "&" + ((int)this.realHeight()/2));
-		g.drawTexture(buff, (int)posXOnScreen() + (int)this.realWidth()/2 - buff.width/2, (int)posYOnScreen() + (int)this.realHeight()/4);
+		
+		int TW = TextureEditor.getStringWidthByHeight(this.Text, (int)this.realHeight()/2);
+		g.drawText(this.Text, (int)posXOnScreen() + (int)this.realWidth()/2 - TW/4, (int)posYOnScreen() + (int)this.realHeight()/4, TW, ((int)this.realHeight()/2));
 	}
 	
 	public GlobalButton setText(String text)

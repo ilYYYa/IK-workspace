@@ -21,24 +21,38 @@ public class PlayerEntity extends GenericalHumanEntity
 	}
 	
 	@Override
-	public String getTexture()
+	public void attack()
 	{
-		if(this.lookingTo == LookingVect.EAST && this.motionX > 0 && this.lifeTime % 20 < 10) return "playerEast1";
-		else if(this.lookingTo == LookingVect.EAST && this.motionX > 0 && this.lifeTime % 20 >= 10) return "playerEast2";
-		else if(this.lookingTo == LookingVect.EAST && this.motionX == 0) return "playerEastStay";
-		else if(this.lookingTo == LookingVect.WEST && this.motionX < 0 && this.lifeTime % 20 < 10) return "playerWest1";
-		else if(this.lookingTo == LookingVect.WEST && this.motionX < 0 && this.lifeTime % 20 >= 10) return "playerWest2";
-		else if(this.lookingTo == LookingVect.WEST && this.motionX == 0) return "playerWestStay";
-		else if(this.lookingTo == LookingVect.SOUTH && this.motionY > 0 && this.lifeTime % 20 < 10) return "playerSouth1";
-		else if(this.lookingTo == LookingVect.SOUTH && this.motionY > 0 && this.lifeTime % 20 >= 10) return "playerSouth2";
-		else if(this.lookingTo == LookingVect.SOUTH && this.motionY == 0) return "playerSouthStay";
-		else if(this.lookingTo == LookingVect.NORTH && this.motionY < 0 && this.lifeTime % 20 < 10) return "playerNorth1";
-		else if(this.lookingTo == LookingVect.NORTH && this.motionY < 0 && this.lifeTime % 20 >= 10) return "playerNorth2";
-		else if(this.lookingTo == LookingVect.NORTH && this.motionY == 0) return "playerNorthStay";
-		
-		return "miss";
+		System.out.println("attack!!");
 	}
 	
+	@Override
+	public String getTexture()
+	{
+		String ret = "miss";
+		
+		if(this.currentMotionX == 0 || this.currentMotionY == 0)
+		{
+			if(this.lookingTo == LookingVect.E) ret = "playerEastStay" + (this.lifeTime % 60 / 10 + 1);
+			if(this.lookingTo == LookingVect.W) ret = "playerWestStay" + (this.lifeTime % 60 / 10 + 1);
+		}
+		if(this.currentMotionX != 0 || this.currentMotionY != 0)
+		{
+			if(this.lookingTo == LookingVect.E) ret = "playerEastWalk" + (this.lifeTime % 60 / 10 + 1);
+			if(this.lookingTo == LookingVect.W) ret = "playerWestWalk" + (this.lifeTime % 60 / 10 + 1);
+		}
+		
+		return ret;
+	}
+	
+	@Override
+	public void updateLookingVector()
+    {
+    	if(this.motionX > 0) this.lookingTo = LookingVect.E;
+    	else if(this.motionX < 0) this.lookingTo = LookingVect.W;
+    	
+    	if(this.lookingTo != LookingVect.E && this.lookingTo != LookingVect.W) this.lookingTo = LookingVect.E;
+    }
 
 	@Override
 	public void writeToSaver(Saver saver, int i)

@@ -116,7 +116,20 @@ public class Texture
 	@Override
 	public String toString()
 	{
-		return super.toString() + "\n\ttextureName: " + this.textureName + "\n\ttextureID: " + this.textureID + "\n\twidth: " + this.width + "\n\theight: " + this.height + "\n\tU:" + U + "\n\tV:" + V;
+		return super.toString() + "\n\ttextureName: " + this.textureName + "\n\ttextureID: " + this.textureID + "\n\twidth: " + this.width + "\n\theight: " + this.height + "\n\tU: " + U + "\n\tV: " + V + "\n\tImage W/H: " + image.getWidth() + "/" + image.getHeight();
+	}
+	
+	public void saveImage()
+	{
+		File file = new File("BUFF_" + this.textureName + ".png");
+		try
+		{
+			ImageIO.write(this.image, "PNG", file);
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
 	}
 }
 

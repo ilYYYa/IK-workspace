@@ -78,8 +78,7 @@ public class GlobalInputLine extends DrawbleObject
 		g.drawRect((int)posXOnScreen()+1, (int)posYOnScreen()+1, (int)realWidth()-2, (int)realHeight()-2);
 		g.drawRect((int)posXOnScreen()+2, (int)posYOnScreen()+2, (int)realWidth()-4, (int)realHeight()-4);
 
-		Texture buff = TextureLoader.getTextureByName("!002" + this.strD + "&" + ((int)this.realWidth()-10) + "&" + ((int)this.realHeight()/2));
-		g.drawTexture(buff, (int)posXOnScreen() + 5, (int)posYOnScreen() + (int)this.realHeight()/4);
+		g.drawText(strD, (int)posXOnScreen() + 5, (int)posYOnScreen() + (int)this.realHeight()/4, ((int)this.realWidth()-10), ((int)this.realHeight()/2));
 	}
 
 	@Override

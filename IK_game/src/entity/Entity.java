@@ -41,7 +41,7 @@ public class Entity
 	public double height = 1D;
 
 	/** Вектор направления ентити */
-	public LookingVect lookingTo = LookingVect.SOUTH;
+	public LookingVect lookingTo = LookingVect.S;
 
 	/** Является ли ентити мертвым */
 	public boolean isDead = false;
@@ -136,6 +136,11 @@ public class Entity
 	{
 		
 	}
+	
+	public void attack()
+	{
+		
+	}
 
 	/** Устанавливает позицию ентити. Х - середина ентити, У - нижняя граница ентити */
 	public void setPosition(double x, double y)
@@ -222,10 +227,19 @@ public class Entity
     	if(canStayAt(this.getX() + currentMotionX/25D, this.getY())) this.setPosition(this.getX() + currentMotionX/25D, this.getY());
     	if(canStayAt(this.getX(), this.getY() + currentMotionY/25D)) this.setPosition(this.getX(), this.getY() + currentMotionY/25D);
     	
-    	if(this.motionX > 0) this.lookingTo = LookingVect.EAST;
-    	if(this.motionX < 0) this.lookingTo = LookingVect.WEST;
-    	if(this.motionY > 0) this.lookingTo = LookingVect.SOUTH;
-    	if(this.motionY < 0) this.lookingTo = LookingVect.NORTH;
+    	updateLookingVector();
+    }
+    
+    public void updateLookingVector()
+    {
+    	if(this.motionX > 0 && this.motionY > 0) this.lookingTo = LookingVect.SE;
+    	if(this.motionX > 0 && this.motionY < 0) this.lookingTo = LookingVect.NE;
+    	if(this.motionX > 0 && this.motionY == 0) this.lookingTo = LookingVect.E;
+    	if(this.motionX < 0 && this.motionY > 0) this.lookingTo = LookingVect.SW;
+    	if(this.motionX < 0 && this.motionY < 0) this.lookingTo = LookingVect.NW;
+    	if(this.motionX < 0 && this.motionY == 0) this.lookingTo = LookingVect.W;
+    	if(this.motionX == 0 && this.motionY > 0) this.lookingTo = LookingVect.S;
+    	if(this.motionX == 0 && this.motionY < 0) this.lookingTo = LookingVect.N;
     }
 
 	/** Возвращает текстуру ентити */
@@ -323,7 +337,18 @@ public class Entity
 		saver.addDouble(height, "EntityHeight"+i);
 		saver.addBoolean(isDead, "EntityIsDead"+i);
 		saver.addLong(lifeTime, "EntityLifeTime"+i);
-		byte lv = (byte)(this.lookingTo == LookingVect.NORTH ? 0 : this.lookingTo == LookingVect.SOUTH ? 1 : this.lookingTo == LookingVect.WEST ? 2 : 3);
+		byte lv = 0;
+		switch(this.lookingTo)
+		{
+			case N: lv = 0; break;
+			case NE: lv = 1; break;
+			case E: lv = 2; break;
+			case SE: lv = 3; break;
+			case S: lv = 4; break;
+			case SW: lv = 5; break;
+			case W: lv = 6; break;
+			case NW: lv = 7; break;
+		}
 		saver.addByte(lv, "EntityLookingTo"+i);
 	}
 
@@ -341,7 +366,17 @@ public class Entity
 		isDead = saver.getBoolean("EntityIsDead" + i);
 		lifeTime = saver.getLong("EntityLifeTime" + i);
 		byte lv = saver.getByte("EntityLookingTo"+i);
-		this.lookingTo = lv == 0 ? LookingVect.NORTH : lv == 1 ? LookingVect.SOUTH : lv == 2 ? LookingVect.WEST : LookingVect.EAST;
+		switch(lv)
+		{
+			case 0: this.lookingTo = LookingVect.N; break;
+			case 1: this.lookingTo = LookingVect.NE; break;
+			case 2: this.lookingTo = LookingVect.E; break;
+			case 3: this.lookingTo = LookingVect.SE; break;
+			case 4: this.lookingTo = LookingVect.S; break;
+			case 5: this.lookingTo = LookingVect.SW; break;
+			case 6: this.lookingTo = LookingVect.W; break;
+			case 7: this.lookingTo = LookingVect.NW; break;
+		}
 	}
 
 	public void drawEntityOnScreen(MainWindow g, int sx, int sy, int sw, int sh)
@@ -351,7 +386,7 @@ public class Entity
 	
 	public static enum LookingVect
 	{
-		NORTH, NORTHEAST, EAST, SOUTHEAST, SOUTH, SOUTHWEST, WEST, NORTHWEST
+		N, NE, E, SE, S, SW, W, NW
 	}
 }
 

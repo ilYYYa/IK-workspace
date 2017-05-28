@@ -4,10 +4,6 @@ import static org.lwjgl.opengl.GL11.*;
 
 import java.awt.Color;
 import java.awt.Toolkit;
-import java.io.File;
-import java.io.IOException;
-
-import javax.imageio.ImageIO;
 
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Keyboard;
@@ -30,6 +26,7 @@ public class MainWindow
 	public boolean fullScreen = false;
 	
 	public float[] color = {0f,0f,0f,0f};
+	public Color colorObj = new Color(0f,0f,0f,0f);
 	
 	public String title = GameInfo.getGameFullestName();
 	
@@ -70,7 +67,10 @@ public class MainWindow
 		}
 
 		display.setTitle(title);
+		//display.setResizable(true);
 		display.create();
+		
+		TextureLoader.updateTexturesOpenGL();
 	}
 	private void initOpenGL()
 	{
@@ -186,6 +186,8 @@ public class MainWindow
 		color[1] = g;
 		color[2] = b;
 		color[3] = a;
+		
+		colorObj = new Color(r,g,b,a);
 	}
 	
 	public void setColor(Color c)
@@ -200,7 +202,28 @@ public class MainWindow
 	
 	public void drawString(String str, int x, int y)
 	{
+		int xx = 0;
 		
+		for(int i = 0; i < str.length(); i++)
+		{
+			Texture text = TextureLoader.getTextureByName("!004" + str.substring(i, i+1) + "&" + colorObj.getRGB());
+			this.drawTexture(text, x+xx, y - text.height);
+			x+=text.width;
+		}
+	}
+	
+	public void drawText(String str, int x, int y, int width, int height)
+	{
+		if(str.length() == 0) return;
+		int xx = 0;
+		int w = width/str.length();
+		
+		for(int i = 0; i < str.length(); i++)
+		{
+			Texture text = TextureLoader.getTextureByName("!002" + str.substring(i, i+1));
+			this.drawTexture(text, x+xx, y);
+			x+=text.width;
+		}
 	}
 	
 	public void drawLine(int x1, int y1, int x2, int y2)

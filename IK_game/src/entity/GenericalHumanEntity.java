@@ -9,7 +9,7 @@ public class GenericalHumanEntity extends LivingEntity
 	{
 		super(world, unlocalizedname, id, uid);
 		this.setWidth(1D);
-		this.setHeight(1.8D);
+		this.setHeight(1.6D);
 	}
 
 }

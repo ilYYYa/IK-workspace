@@ -15,6 +15,8 @@ public class EntityController
 	public boolean KeyRightPress = false;
 	public boolean KeyRunPress = false;
 	
+	public boolean MLBPress = false;
+	
 	public void setControllableEntity(Entity e)
 	{
 		entity = e;
@@ -59,7 +61,22 @@ public class EntityController
 			entity.motionY *= 2;
 		}
 		
+		if(MLBPress)
+		{
+			entity.attack();
+		}
+		
 		entity.onEntityUpdate();
+	}
+	
+	public void mousePress(int btn)
+	{
+		if(btn == 0) MLBPress = true;
+	}
+	
+	public void mouseRelease(int btn)
+	{
+		if(btn == 0) MLBPress = false;
 	}
 
 	public void keyPressed(int code)
