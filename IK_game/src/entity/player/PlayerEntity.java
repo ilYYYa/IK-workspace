@@ -2,10 +2,10 @@ package entity.player;
 
 import Resources.Saver;
 import entity.Entity.LookingVect;
-import entity.GenericalHumanEntity;
+import entity.LivingEntity;
 import world.World;
 
-public class PlayerEntity extends GenericalHumanEntity
+public class PlayerEntity extends LivingEntity
 {
 	public int spawnX = 0;
 	public int spawnY = 0;
@@ -13,6 +13,11 @@ public class PlayerEntity extends GenericalHumanEntity
 	public PlayerEntity(World world, int uid)
 	{
 		super(world, "Player", 0, uid);
+		this.setWidth(1.6D);
+		this.setHeight(1.6D);
+		this.setHitboxWidth(0.8);
+		this.motion = 1.4;
+		this.setMoveSpeed(0.2);
 	}
 	
 	public void setPlayerSpawn(int x, int y)
@@ -23,7 +28,7 @@ public class PlayerEntity extends GenericalHumanEntity
 	@Override
 	public void attack()
 	{
-		System.out.println("attack!!");
+		
 	}
 	
 	@Override
@@ -31,15 +36,16 @@ public class PlayerEntity extends GenericalHumanEntity
 	{
 		String ret = "miss";
 		
-		if(this.currentMotionX == 0 || this.currentMotionY == 0)
+		if(this.currentMotionX == 0 && this.currentMotionY == 0)
 		{
-			if(this.lookingTo == LookingVect.E) ret = "playerEastStay" + (this.lifeTime % 60 / 10 + 1);
-			if(this.lookingTo == LookingVect.W) ret = "playerWestStay" + (this.lifeTime % 60 / 10 + 1);
+			int a = (int)(this.lifeTime % 60 / 10 + 1);
+			if(a > 4) a = Math.abs(a - 8);
+			ret = "player" + this.lookingTo + a;
 		}
 		if(this.currentMotionX != 0 || this.currentMotionY != 0)
 		{
-			if(this.lookingTo == LookingVect.E) ret = "playerEastWalk" + (this.lifeTime % 60 / 10 + 1);
-			if(this.lookingTo == LookingVect.W) ret = "playerWestWalk" + (this.lifeTime % 60 / 10 + 1);
+			int a = (int)(this.lifeTime % 60 / 10 + 1);
+			ret = "player" + this.lookingTo + "M" + a;
 		}
 		
 		return ret;
@@ -48,10 +54,14 @@ public class PlayerEntity extends GenericalHumanEntity
 	@Override
 	public void updateLookingVector()
     {
-    	if(this.motionX > 0) this.lookingTo = LookingVect.E;
-    	else if(this.motionX < 0) this.lookingTo = LookingVect.W;
-    	
-    	if(this.lookingTo != LookingVect.E && this.lookingTo != LookingVect.W) this.lookingTo = LookingVect.E;
+    	if(this.motionX > 0 && this.motionY > 0) this.lookingTo = LookingVect.SE;
+    	else if(this.motionX == 0 && this.motionY > 0) this.lookingTo = LookingVect.S;
+    	else if(this.motionX < 0 && this.motionY > 0) this.lookingTo = LookingVect.SW;
+    	else if(this.motionX > 0 && this.motionY == 0) this.lookingTo = LookingVect.E;
+    	else if(this.motionX < 0 && this.motionY == 0) this.lookingTo = LookingVect.W;
+    	else if(this.motionX > 0 && this.motionY < 0) this.lookingTo = LookingVect.NE;
+    	else if(this.motionX == 0 && this.motionY < 0) this.lookingTo = LookingVect.N;
+    	else if(this.motionX < 0 && this.motionY < 0) this.lookingTo = LookingVect.NW;
     }
 
 	@Override

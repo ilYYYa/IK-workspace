@@ -58,7 +58,7 @@ public class Navigator
 	public boolean entityReached()
 	{
 		if(targetEntity == null) return true;
-		if(entity.collisionWithEntity(targetEntity)) return true;
+		if(entity.collisionWithEntityByHitbox(targetEntity)) return true;
 		
 		return false;
 	}

@@ -39,6 +39,11 @@ public class Entity
 	public double width = 1D;
 	/** Высота ентити в блоках */
 	public double height = 1D;
+	
+	/** Ширина хитбокса ентити в блоках */
+	public double hitboxWidth = 1D;
+	/** Высота хитбокса ентити в блоках */
+	public double hitboxHeight = 1D;
 
 	/** Вектор направления ентити */
 	public LookingVect lookingTo = LookingVect.S;
@@ -73,6 +78,17 @@ public class Entity
 		if(e.posX + e.width < this.posX) return false;
 		if(e.posY > this.posY + this.height) return false;
 		if(e.posY + e.height < this.posY) return false;
+		
+		return true;
+	}
+
+	/** Проверка на соприкосновение с ентити хитбоксами */
+	public boolean collisionWithEntityByHitbox(Entity e)
+	{
+		if(e.posX + e.width/2 - e.hitboxWidth/2 > this.posX + this.width/2 + this.hitboxWidth/2) return false;
+		if(e.posX + e.width/2 + e.hitboxWidth/2 < this.posX + this.width/2 - this.hitboxWidth/2) return false;
+		if(e.posY + e.height/2 - e.hitboxHeight/2 > this.posY + this.height/2 + this.hitboxHeight/2) return false;
+		if(e.posY + e.height/2 + e.hitboxHeight/2 < this.posY + this.height/2 - this.hitboxHeight/2) return false;
 		
 		return true;
 	}
@@ -123,6 +139,30 @@ public class Entity
 	public double getHeight()
 	{
 		return this.height;
+	}
+	
+	/** Устанвливает ширину хитбокса ентити в блоках */
+	public void setHitboxWidth(double width)
+	{
+		this.hitboxWidth = width;
+	}
+
+	/** Ширина хитбокса ентити в блоках */
+	public double getHitboxWidth()
+	{
+		return this.hitboxWidth;
+	}
+
+	/** Устанавливает высоту хитбокса ентити */
+	public void setHitboxHeight(double height)
+	{
+		this.hitboxHeight = height;
+	}
+
+	/** Высота хитбокса ентити в блоках */
+	public double getHitboxHeight()
+	{
+		return this.hitboxHeight;
 	}
 
 	/** Атаковать этот ентити */
@@ -223,9 +263,17 @@ public class Entity
     	if(this.currentMotionY < motionY) this.currentMotionY += this.getMoveSpeed();
     	if(this.currentMotionY > motionY) this.currentMotionY -= this.getMoveSpeed();
     	if(Math.abs(this.currentMotionY - motionY) < this.getMoveSpeed()) this.currentMotionY = motionY;
-    	
-    	if(canStayAt(this.getX() + currentMotionX/25D, this.getY())) this.setPosition(this.getX() + currentMotionX/25D, this.getY());
-    	if(canStayAt(this.getX(), this.getY() + currentMotionY/25D)) this.setPosition(this.getX(), this.getY() + currentMotionY/25D);
+
+    	if(!this.isGhost())
+    	{
+    		if(canStayAt(this.getX() + currentMotionX/25D, this.getY())) this.setPosition(this.getX() + currentMotionX/25D, this.getY());
+    		if(canStayAt(this.getX(), this.getY() + currentMotionY/25D)) this.setPosition(this.getX(), this.getY() + currentMotionY/25D);
+    	}
+    	else
+    	{
+    		this.setPosition(this.getX() + currentMotionX/25D, this.getY());
+    		this.setPosition(this.getX(), this.getY() + currentMotionY/25D);
+    	}
     	
     	updateLookingVector();
     }
@@ -275,11 +323,11 @@ public class Entity
     
     public boolean canStayAt(double x, double y)
     {
-    	double x1 = x - this.getWidth()/2;
-    	double x2 = x + this.getWidth()/2;
+    	double x1 = x - this.getHitboxWidth()/2;
+    	double x2 = x + this.getHitboxWidth()/2;
     	
     	double y1 = y - 0.5;
-    	double y2 = y + 0.1;
+    	double y2 = y;
     	
     	for(double ix = x1; ix <= x2; ix+=0.1)
     	{
@@ -301,10 +349,12 @@ public class Entity
     {
     	Block b1 = world.getBlock(x, y, BlockPos.blockPosLevel.BACK);
     	Block b2 = world.getBlock(x, y, BlockPos.blockPosLevel.MIDDLE);
+    	Block b3 = world.getBlock(x, y, BlockPos.blockPosLevel.HIGH);
     	
-    	if(b1 == null || b2 == null) return false;
+    	if(b1 == null || b2 == null || b3 == null) return false;
     	if(!b1.isPassable()) return false;
     	if(!b2.isPassable()) return false;
+    	if(!b3.isPassable()) return false;
     	
     	return true;
     }

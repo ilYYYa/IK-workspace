@@ -2,7 +2,7 @@ package block;
 
 public class BlockRegister
 {
-	static Block[] registeredBlocks = new Block[0];
+	public static Block[] registeredBlocks = new Block[0];
 	
 	public static Block registerBlock(Block block)
 	{

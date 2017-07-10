@@ -12,11 +12,12 @@ public class Entity_Slime extends MonsterEntity
 		
 		this.setWidth(0.9);
 		this.setHeight(0.9);
+		this.setHitboxWidth(0.9);
 		
 		this.setMaxHP(10D);
 		this.setMaxMP(0D);
 		
-		this.motion = 1.5;
+		this.motion = 0.75 + Math.random();
 	}
 
 	@Override

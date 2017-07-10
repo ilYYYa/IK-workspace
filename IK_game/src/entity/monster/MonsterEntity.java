@@ -49,9 +49,11 @@ public class MonsterEntity extends LivingEntity
 				this.navigator.tryMoveToEntity(world.getPlayer());
 			}
 			
-			if(this.collisionWithEntity(latestAttacker))
+			if(this.collisionWithEntityByHitbox(latestAttacker))
 			{
 				latestAttacker.attackFromLivingEntity(this, damageSource.PHYSICAL, 1D);
+				this.currentMotionX = -this.currentMotionX;
+				this.currentMotionY = -this.currentMotionY;
 			}
 		}
 		

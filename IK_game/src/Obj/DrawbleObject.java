@@ -11,6 +11,8 @@ import Window.MainWindow;
 
 public abstract class DrawbleObject
 {
+	public int focusOn = 0;
+	
 	public double posX = 0.0;
 	public double posY = 0.0;
 
@@ -60,7 +62,24 @@ public abstract class DrawbleObject
 		this.parent = parent;
 	}
 	
-	public void moveObject(int index)
+	public void setPosX(double x)
+	{
+		posX = x;
+	}
+	public void setPosY(double y)
+	{
+		posY = y;
+	}
+	public void setWidth(double w)
+	{
+		width = w;
+	}
+	public void setHeight(double h)
+	{
+		height = h;
+	}
+	
+	public void moveObjectOnTop(int index)
 	{
 		if(index >= childs.length) return;
 		
@@ -70,6 +89,8 @@ public abstract class DrawbleObject
 		for(i++; i < childs.length; i++) buff[i-1] = childs[i];
 		buff[buff.length - 1] = childs[index];
 		childs = buff;
+		
+		focusOn = buff.length - 1;
 	}
 	
 	public void addChild(DrawbleObject ch)
@@ -80,6 +101,8 @@ public abstract class DrawbleObject
 		for(int i = 0; i < childs.length; i++) buff[i] = childs[i];
 		buff[buff.length - 1] = ch;
 		childs = buff;
+		
+		focusOn = buff.length - 1;
 	}
 	
 	public void removeChild(DrawbleObject ch)
@@ -91,6 +114,8 @@ public abstract class DrawbleObject
 		for(i = 0; i < childs.length && childs[i] != ch; i++) buff[i] = childs[i];
 		for(i++; i < childs.length; i++) buff[i-1] = childs[i];
 		childs = buff;
+		
+		focusOn = buff.length - 1;
 	}
 	
 	public boolean existChild(DrawbleObject ch)
@@ -152,7 +177,12 @@ public abstract class DrawbleObject
 	public boolean focusOnMe()
 	{
 		if(parent == null) return true;
-		if(parent.childs.length > 0 && parent.childs[parent.childs.length - 1] == this) return true;
+		if(parent.childs.length > 0 && parent.childs[parent.focusOn] == this) return true;
+		return false;
+	}
+	
+	public boolean isAlwaysOnTop()
+	{
 		return false;
 	}
 	
@@ -166,7 +196,7 @@ public abstract class DrawbleObject
 			{
 				buff.onMousePress(x - (int)buff.realPosX(), y - (int)buff.realPosY(), btn);
 
-				moveObject(i);
+				moveObjectOnTop(i);
 				
 				break;
 			}
@@ -194,7 +224,7 @@ public abstract class DrawbleObject
 			{
 				buff.onMouseRelease(x - (int)buff.realPosX(), y - (int)buff.realPosY(), btn);
 
-				moveObject(i);
+				moveObjectOnTop(i);
 				
 				break;
 			}
@@ -245,15 +275,45 @@ public abstract class DrawbleObject
 
 	public void onMouseWheelMoved(int wheel)
 	{
-		if(childs.length > 0) childs[childs.length - 1].onMouseWheelMoved(wheel);
+		if(childs.length > 0) childs[focusOn].onMouseWheelMoved(wheel);
 	}
 	
 	public void onKeyPress(int keyCode, String keyName)
 	{
-		if(childs.length > 0) childs[childs.length - 1].onKeyPress(keyCode, keyName);
+		if(childs.length > 0) childs[focusOn].onKeyPress(keyCode, keyName);
 	}
 	public void onKeyRelease(int keyCode, String keyName)
 	{
-		if(childs.length > 0) childs[childs.length - 1].onKeyRelease(keyCode, keyName);
+		if(childs.length > 0) childs[focusOn].onKeyRelease(keyCode, keyName);
+	}
+	public void checkFortALWAYSONTOPObjects()
+	{
+		for(int i = 0; i < childs.length-1; i++)
+		{
+			if(childs[i].isAlwaysOnTop() && !childs[i + 1].isAlwaysOnTop())
+			{
+				if(focusOn == i+1) focusOn--;
+				
+				DrawbleObject buff = childs[i];
+				childs[i] = childs[i+1];
+				childs[i+1] = buff;
+				i = -1;
+			}
+		}
 	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

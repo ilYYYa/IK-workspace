@@ -58,7 +58,7 @@ public class GlobalTextField extends DrawbleObject
 	{
 		for(int i = 0; i < textForDraw.size() && (i+1)*this.textSize < this.realHeight(); i++)
 		{
-			g.drawText(textForDraw.get(i), (int)this.posXOnScreen(), (int)this.posYOnScreen() + i*this.textSize, (int)this.realWidth(), this.textSize);
+			g.drawText(textForDraw.get(i), (int)this.posXOnScreen(), (int)this.posYOnScreen() + i*this.textSize, (int)this.realWidth());
 		}
 	}
 }

@@ -153,6 +153,7 @@ public class TextureLoader
 		{
 			System.err.println("at TextureLoader at func004");
 			System.err.println("\tstr: " + str);
+			System.err.println("\tsplit[0]: " + split[0] + " split[1]: " + split[1]);
 			System.err.println("\tthis function must be: <String STR>&<INT RGBColor>");
 			System.exit(-33);
 		}

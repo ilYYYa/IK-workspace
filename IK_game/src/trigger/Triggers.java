@@ -10,6 +10,8 @@ public class Triggers
 
 		if(triggerName.equals("playerspawner")) return new Trigger_PlayerFirstSpawn(x, y);
 		
+		if(triggerName.equals("butterflyspawner")) return new Trigger_ButterflySpawner(x, y, width, height);
+		
 		return null;
 	}
 }

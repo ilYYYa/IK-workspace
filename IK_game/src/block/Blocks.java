@@ -8,6 +8,15 @@ public class Blocks
 	public static final Block STONE;
 	public static final Block LAVA;
 	public static final Block LAVASTONE;
+	public static final Block GRASSWITHFWHITELOWER;
+	public static final Block GRASSWITHFREDLOWER;
+	public static final Block GRASSWITHFYELLOWLOWER;
+	public static final Block TREE;
+	public static final Block UNICORN;
+	public static final Block TECH_BLOCK_MOVESTOPPER;
+	public static final Block BLUEHOUSE;
+	public static final Block REDHOUSE1;
+	public static final Block REDHOUSE2;
 	
 	static
 	{
@@ -17,5 +26,14 @@ public class Blocks
 		STONE = BlockRegister.registerBlock(new Block_Stone(3, "stone"));
 		LAVA = BlockRegister.registerBlock(new Block_Lava(4, "lava"));
 		LAVASTONE = BlockRegister.registerBlock(new Block_LavaStone(5, "lavastone"));
+		GRASSWITHFWHITELOWER = BlockRegister.registerBlock(new Block_GrassWithWhiteFlower(6, "grasswithwhiteflower"));
+		GRASSWITHFREDLOWER = BlockRegister.registerBlock(new Block_GrassWithRedFlower(7, "grasswithredflower"));
+		GRASSWITHFYELLOWLOWER = BlockRegister.registerBlock(new Block_GrassWithYellowFlower(8, "grasswithyellowflower"));
+		TREE = BlockRegister.registerBlock(new HugeBlock_Tree(9, "tree"));
+		UNICORN = BlockRegister.registerBlock(new HugeBlock_Unicorn(10, "unicorn"));
+		TECH_BLOCK_MOVESTOPPER = BlockRegister.registerBlock(new TECH_BLOCK_MOVESTOPPER(11, "tech_movestopper"));
+		BLUEHOUSE = BlockRegister.registerBlock(new HugeBlock_BlueHouse(12, "bluehouse"));
+		REDHOUSE1 = BlockRegister.registerBlock(new HugeBlock_RedHouse1(13, "redhouse"));
+		REDHOUSE2 = BlockRegister.registerBlock(new HugeBlock_RedHouse2(14, "redhouse2"));
 	}
 }

@@ -17,7 +17,11 @@ public class Trigger_SlimeSpawner extends Trigger
 	@Override
 	public void onTriggerOnScreen(World world)
 	{
-		
+		if(cooldown > 0)
+		{
+			cooldown--;
+			return;
+		}
 	}
 
 	@Override

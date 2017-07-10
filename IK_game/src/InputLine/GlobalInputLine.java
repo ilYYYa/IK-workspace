@@ -78,7 +78,7 @@ public class GlobalInputLine extends DrawbleObject
 		g.drawRect((int)posXOnScreen()+1, (int)posYOnScreen()+1, (int)realWidth()-2, (int)realHeight()-2);
 		g.drawRect((int)posXOnScreen()+2, (int)posYOnScreen()+2, (int)realWidth()-4, (int)realHeight()-4);
 
-		g.drawText(strD, (int)posXOnScreen() + 5, (int)posYOnScreen() + (int)this.realHeight()/4, ((int)this.realWidth()-10), ((int)this.realHeight()/2));
+		g.drawText(strD, (int)posXOnScreen() + 5, (int)posYOnScreen() + (int)this.realHeight()/4, ((int)this.realWidth()-10));
 	}
 
 	@Override
@@ -88,7 +88,7 @@ public class GlobalInputLine extends DrawbleObject
 
 		if(code == Keyboard.KEY_BACK && str.length() > 0) str = str.substring(0, str.length()-1);
 		else if(code == Keyboard.KEY_SPACE && this.acceptSpace && str.length() < maxSymbols) str += " ";
-		else if(str.length() < maxSymbols) str += name.substring(0, 1);
+		else if(str.length() < maxSymbols && name.length() == 1) str += name;
 	}
 }
 

@@ -506,7 +506,7 @@ public class World
 	{
 		this.player = pl;
 		this.spawnEntity(this.player);
-		if(this.getController().getControllableEntity() == null || this.getGamemode() == 0) this.setControllableEntity(pl);
+		if(this.getController().getControllableEntity() == null && this.getGamemode() == 0) this.setControllableEntity(pl);
 	}
 	
 	public void disbandPlayer()

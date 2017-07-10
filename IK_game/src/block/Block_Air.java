@@ -16,7 +16,7 @@ public class Block_Air extends Block
 	@Override
 	public void drawAtScreen(MainWindow g, int x, int y, int width, int height, World world, BlockPos pos)
 	{
-		//Air doesn't drawind at world!
+		//Air doesn't drawing at world!
 	}
 	
 	public String toString()

@@ -83,6 +83,7 @@ public class MainWindow
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	    glEnable(GL_ALPHA);
+	    glDisable(GL_LIGHTING);
 	}
 	
 	public void keyboardUpdate()
@@ -132,8 +133,9 @@ public class MainWindow
 		MOUSE_BTN_DOWN_2 = checkMouseButton(mX, mY, 2, MOUSE_BTN_DOWN_2, scene);
 		MOUSE_BTN_DOWN_3 = checkMouseButton(mX, mY, 3, MOUSE_BTN_DOWN_3, scene);
 		MOUSE_BTN_DOWN_4 = checkMouseButton(mX, mY, 4, MOUSE_BTN_DOWN_4, scene);
-		
-		if(Mouse.getDWheel() != 0) scene.onMouseWheelMoved(Mouse.getDWheel());
+
+		int DWheel = Mouse.getDWheel();
+		if(DWheel != 0) scene.onMouseWheelMoved(DWheel>0?-1:1);
 	}
 	
 	private boolean checkMouseButton(int mX, int mY, int btn, boolean wasPressed, GlobalScene scene)
@@ -202,17 +204,20 @@ public class MainWindow
 	
 	public void drawString(String str, int x, int y)
 	{
-		int xx = 0;
+		if(str.equals("")) return;
 		
+		int xx = 0;
+		int cc = colorObj.getRGB();
+
 		for(int i = 0; i < str.length(); i++)
 		{
-			Texture text = TextureLoader.getTextureByName("!004" + str.substring(i, i+1) + "&" + colorObj.getRGB());
+			Texture text = TextureLoader.getTextureByName("!004" + str.substring(i, i+1) + "&" + cc);
 			this.drawTexture(text, x+xx, y - text.height);
-			x+=text.width;
+			xx+=text.width;
 		}
 	}
 	
-	public void drawText(String str, int x, int y, int width, int height)
+	public void drawText(String str, int x, int y, int width)
 	{
 		if(str.length() == 0) return;
 		int xx = 0;
@@ -229,11 +234,16 @@ public class MainWindow
 	public void drawLine(int x1, int y1, int x2, int y2)
 	{
 		acceptColor();
+		glDisable(GL_TEXTURE_2D);
 		
         glBegin(GL_LINES);
+			acceptColor();
 			glVertex2i(x1, y1);
+			acceptColor();
 			glVertex2i(x2, y2);
 		glEnd();
+		
+		glEnable(GL_TEXTURE_2D);
 	}
 	
 	public void drawRect(int x, int y, int w, int h)

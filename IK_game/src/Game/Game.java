@@ -222,6 +222,7 @@ public class Game
 	
 	private void drawObjectsIn(DrawbleObject obj)
 	{
+		obj.checkFortALWAYSONTOPObjects();
 		obj.draw(theMainWindow);
 		for(int i = 0; i < obj.childs.length; i++)
 		{

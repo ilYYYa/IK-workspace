@@ -111,12 +111,7 @@ public class Block
 	
 	public void setBlockMetaForThisBlock(World world, BlockPos pos)
 	{
-		int buff = 0;
-		if(world.getBlock(pos.north())!=null && world.getBlock(pos.north()).isBlockSummaring() && world.getBlock(pos.north()) != this) buff += 1;
-		if(world.getBlock(pos.south())!=null && world.getBlock(pos.south()).isBlockSummaring() && world.getBlock(pos.south()) != this) buff += 2;
-		if(world.getBlock(pos.west())!=null && world.getBlock(pos.west()).isBlockSummaring() && world.getBlock(pos.west()) != this) buff += 4;
-		if(world.getBlock(pos.east())!=null && world.getBlock(pos.east()).isBlockSummaring() && world.getBlock(pos.east()) != this) buff += 8;
-		world.setBlockMeta(pos, buff);
+		
 	}
 
 	/** 0.0 - Passable block, 1.0 - not*/
@@ -159,7 +154,7 @@ public class Block
 	
 	public String toString()
 	{
-		return this.BlockUnlocalizedName + ":Block";
+		return this.BlockUnlocalizedName + ":Block@" + this.BlockId;
 	}
 }
 
