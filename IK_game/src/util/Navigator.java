@@ -23,6 +23,16 @@ public class Navigator
 		entity = e;
 	}
 	
+	public void setDeviation(double dev)
+	{
+		deviation = dev;
+	}
+	
+	public double getDeviation()
+	{
+		return deviation;
+	}
+	
 	public boolean noPath()
 	{
 		Update();

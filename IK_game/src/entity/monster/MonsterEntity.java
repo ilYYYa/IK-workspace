@@ -1,6 +1,8 @@
 package entity.monster;
 
+import entity.Entity;
 import entity.LivingEntity;
+import entity.Entity.damageSource;
 import world.World;
 
 public class MonsterEntity extends LivingEntity
@@ -34,11 +36,9 @@ public class MonsterEntity extends LivingEntity
 			movingCD--;
 		}
 		
-		if(this.latestAttacker == null) this.latestAttacker = world.getPlayer();
+		if(this.latestAttacker == null) this.latestAttacker = getTriggeredEntityForMonster();
 		
-		if(latestAttacker != null && this.getDistanceToEntity(latestAttacker) <= 32 &&
-				((world.getGamemode() == 0 && world.getController().getControllableEntity() == latestAttacker) || (world.getGamemode() != 0 && world.getController().getControllableEntity() != latestAttacker)) &&
-				latestAttacker.isEntityAlive())
+		if(latestAttacker != null && this.getDistanceToEntity(latestAttacker) <= 32 && latestAttacker.isEntityAlive())
 		{
 			if(!navigator.noPath() && !navigator.movingToEntity())
 			{
@@ -46,18 +46,44 @@ public class MonsterEntity extends LivingEntity
 			}
 			if(navigator.noPath())
 			{
-				this.navigator.tryMoveToEntity(world.getPlayer());
+				this.navigator.tryMoveToEntity(latestAttacker);
 			}
-			
+
 			if(this.collisionWithEntityByHitbox(latestAttacker))
 			{
-				latestAttacker.attackFromLivingEntity(this, damageSource.PHYSICAL, 1D);
-				this.currentMotionX = -this.currentMotionX;
-				this.currentMotionY = -this.currentMotionY;
+				this.attack(latestAttacker, damageSource.PHYSICAL, this.getEntityDamage());
 			}
+		}
+		else
+		{
+			latestAttacker = null;
 		}
 		
 		super.onEntityUpdate();
+	}
+	
+	@Override
+	public boolean attack(Entity entity, damageSource damageType, double value)
+	{
+		if(super.attack(entity, damageType, value))
+		{
+			this.currentMotionX = -(this.currentMotionX*2);
+			this.currentMotionY = -(this.currentMotionY*2);
+			return true;
+		}
+		else return false;
+	}
+	
+	public LivingEntity getTriggeredEntityForMonster()
+	{
+		LivingEntity player = world.getPlayer();
+		
+		if(world.getController().getControllableEntity() != player) return null;
+		if(world.getGamemode() == 1) return null;
+		if(!player.isEntityAlive()) return null;
+		if(this.getDistanceToEntity(player) > 16D) return null;
+		
+		return player;
 	}
 	
 	@Override

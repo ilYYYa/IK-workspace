@@ -12,7 +12,7 @@ public class TECH_BLOCK_MOVESTOPPER extends Block
 	@Override
 	public String getTextureName()
 	{
-		if(Game.Game.theGame.currentOpenedWorld.getGamemode() == 0) return "air";
+		if(Game.Game.theGame.currentOpenedWorld.getGamemode() == 0) return Blocks.AIR.getTextureName();
 		else return "tech_movestopper";
 	}
 }

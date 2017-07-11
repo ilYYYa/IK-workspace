@@ -2,6 +2,7 @@ package entity;
 
 import Game.Game;
 import Resources.Saver;
+import entity.Entity.damageSource;
 import util.Navigator;
 import world.World;
 
@@ -23,6 +24,8 @@ public class LivingEntity extends Entity
 	
 	public int Level = 1;
 	public int Experience = 1;
+	
+	public double damage = 1.0;
 	
 	public Navigator navigator = new Navigator(this);
 	
@@ -52,6 +55,16 @@ public class LivingEntity extends Entity
 	public double getMaxMP()
 	{
 		return this.maxMP;
+	}
+	
+	public void setEntityDamage(double dmg)
+	{
+		damage = dmg;
+	}
+	
+	public double getEntityDamage()
+	{
+		return damage;
 	}
 	
 	@Override
@@ -112,8 +125,17 @@ public class LivingEntity extends Entity
 	}
 	
 	@Override
-	public void attackFrom(damageSource damageType, double value)
+	public boolean attack(Entity entity, damageSource damageType, double value)
 	{
+		if(entity.getUntouchableCD() == 0) return entity.attackFromLivingEntity(this, damageType, value);
+		return false;
+	}
+	
+	@Override
+	public boolean attackFrom(damageSource damageType, double value)
+	{
+		if(this.getUntouchableCD() != 0) return false;
+		
 		double dl = 0.75D;
 		String dls = Game.theGame.gameSettingSaver.getString("DifficultyLevel");
 		
@@ -132,20 +154,24 @@ public class LivingEntity extends Entity
 		{
 			this.isDead = true;
 		}
-		super.attackFrom(damageType, value);
+		
+		this.setEntityUntouchable();
+		
+		return true;
 	}
 	
 	@Override
-	public void attackFromLivingEntity(LivingEntity e, damageSource damageType, double value)
+	public boolean attackFromLivingEntity(LivingEntity e, damageSource damageType, double value)
 	{
+		if(this.getUntouchableCD() != 0) return false;
+		
 		latestAttacker = e;
 		lastAttackerUID = e.uid;
-		
-		this.attackFrom(damageType, value);
-		super.attackFromLivingEntity(e, damageType, value);
 
 		this.currentMotionX = e.currentMotionX * 2;
 		this.currentMotionY = e.currentMotionY * 2;
+		
+		return this.attackFrom(damageType, value);
 	}
 
 	@Override

@@ -1,11 +1,10 @@
 package entity.player;
 
 import Resources.Saver;
-import entity.Entity.LookingVect;
-import entity.LivingEntity;
+import entity.passive.PassiveEntity;
 import world.World;
 
-public class PlayerEntity extends LivingEntity
+public class PlayerEntity extends PassiveEntity
 {
 	public int spawnX = 0;
 	public int spawnY = 0;
@@ -16,19 +15,15 @@ public class PlayerEntity extends LivingEntity
 		this.setWidth(1.6D);
 		this.setHeight(1.6D);
 		this.setHitboxWidth(0.8);
+		this.setHitboxHeight(0.8D);
 		this.motion = 1.4;
 		this.setMoveSpeed(0.2);
+		this.setMaxHP(20D);
 	}
 	
 	public void setPlayerSpawn(int x, int y)
 	{
 		spawnX = x; spawnY = y;
-	}
-	
-	@Override
-	public void attack()
-	{
-		
 	}
 	
 	@Override

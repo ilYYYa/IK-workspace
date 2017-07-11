@@ -22,7 +22,8 @@ public class Trigger_ButterflySpawner extends Trigger
 	}
 
 	@Override
-	public void onTriggerNotOnScreen(World world) {
+	public void onTriggerNotOnScreen(World world)
+	{
 
 		if(cooldown > 0)
 		{
@@ -36,6 +37,8 @@ public class Trigger_ButterflySpawner extends Trigger
 		Entity_Butterfly btf = new Entity_Butterfly(world, cooldown);
 		btf.setPosition(this.posX, this.posY);
 		world.spawnEntity(btf);
+		
+		cooldown = 120;
 	}
 
 	@Override

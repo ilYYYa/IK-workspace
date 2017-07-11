@@ -30,7 +30,7 @@ public abstract class Trigger
 
 	public abstract void onTriggerUpdate(World world);
 
-	public boolean isCrossingPoint(int x, int y)
+	public boolean isCrossingPoint(double x, double y)
 	{
 		if(x >= posX && x <= posX + width && y >= posY && y <= posY + height) return true;
 		return false;

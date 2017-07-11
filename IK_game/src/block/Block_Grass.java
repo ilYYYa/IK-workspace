@@ -15,6 +15,17 @@ public class Block_Grass extends Block
 
 		this.setTextureName("grass");
 	}
+	
+	@Override
+	public void setBlockMetaForThisBlock(World world, BlockPos pos)
+	{
+		int buff = 0;
+		if(world.getBlock(pos.north())!=null && world.getBlock(pos.north()).isBlockSummaring() && world.getBlock(pos.north()) != this) buff += 1;
+		if(world.getBlock(pos.south())!=null && world.getBlock(pos.south()).isBlockSummaring() && world.getBlock(pos.south()) != this) buff += 2;
+		if(world.getBlock(pos.west())!=null && world.getBlock(pos.west()).isBlockSummaring() && world.getBlock(pos.west()) != this) buff += 4;
+		if(world.getBlock(pos.east())!=null && world.getBlock(pos.east()).isBlockSummaring() && world.getBlock(pos.east()) != this) buff += 8;
+		world.setBlockMeta(pos, buff);
+	}
 
 	@Override
 	public String getTextureNameByMetaData(World world, BlockPos pos)
@@ -30,16 +41,5 @@ public class Block_Grass extends Block
 		if((meta & 1) == 1) buff += "&" + world.getBlock(pos.north()).getTextureName() + "&1";
 		
 		return "!001" + getTextureName() + buff;
-	}
-	
-	@Override
-	public void setBlockMetaForThisBlock(World world, BlockPos pos)
-	{
-		int buff = 0;
-		if(world.getBlock(pos.north())!=null && world.getBlock(pos.north()).isBlockSummaring() && world.getBlock(pos.north()) != this) buff += 1;
-		if(world.getBlock(pos.south())!=null && world.getBlock(pos.south()).isBlockSummaring() && world.getBlock(pos.south()) != this) buff += 2;
-		if(world.getBlock(pos.west())!=null && world.getBlock(pos.west()).isBlockSummaring() && world.getBlock(pos.west()) != this) buff += 4;
-		if(world.getBlock(pos.east())!=null && world.getBlock(pos.east()).isBlockSummaring() && world.getBlock(pos.east()) != this) buff += 8;
-		world.setBlockMeta(pos, buff);
 	}
 }

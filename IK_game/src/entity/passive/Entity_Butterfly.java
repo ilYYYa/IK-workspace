@@ -1,9 +1,8 @@
 package entity.passive;
 
-import entity.LivingEntity;
 import world.World;
 
-public class Entity_Butterfly extends LivingEntity
+public class Entity_Butterfly extends PassiveEntity
 {
 
 	public Entity_Butterfly(World world, int uid)
@@ -20,14 +19,28 @@ public class Entity_Butterfly extends LivingEntity
 		
 		this.setGhostly(true);
 		
-		this.motion = 0.75 + Math.random();
+		this.motion = 0.75;
+		this.setMoveSpeed(0.05);
 	}
 	
 	@Override
 	public void onEntityUpdate()
 	{
-		this.motionX = Math.random()*4 - 2;
-		this.motionY = Math.random()*4 - 2;
+		if(this.navigator.noPath())
+		{
+			double toX = this.getX() + (int)(Math.random()*3) - 1;
+			double toY = this.getY() + (int)(Math.random()*3) - 1;
+			
+			while(!this.canStayAt(toX, toY))
+			{
+				toX = this.getX() + (int)(Math.random()*3) - 1;
+				toY = this.getY() + (int)(Math.random()*3) - 1;
+			}
+			
+			this.navigator.setDeviation(0.1);
+			this.navigator.tryMoveToXY(toX, toY);
+		}
+		
 		super.onEntityUpdate();
 	}
 
@@ -38,4 +51,11 @@ public class Entity_Butterfly extends LivingEntity
 		if(this.lifeTime % 10 < 5) return "butterfly1";
 		return "butterfly2";
 	}
+	
+	@Override
+	public boolean shouldDespawn()
+    {
+		if(world.getController().getControllableEntity() != null && world.getController().getControllableEntity().getDistanceToEntity(this) > 32) return true;
+    	return false;
+    }
 }

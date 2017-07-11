@@ -74,6 +74,11 @@ public class Block
 		return this;
 	}
 	
+	public void setBlockMetaForThisBlock(World world, BlockPos pos)
+	{
+		
+	}
+	
 	public String getTextureName()
 	{
 		return textureName;
@@ -104,14 +109,15 @@ public class Block
 		if(this.isBlockSummaring()) this.setBlockMetaForThisBlock(world, pos);
 	}
 	
-	public void onBlockDestroyed(World world, BlockPos pos)
+	public void destroyBlock(World world, BlockPos pos)
 	{
 		world.setBlock(pos, Blocks.AIR);
+		onBlockDestroyed(world, pos);
 	}
 	
-	public void setBlockMetaForThisBlock(World world, BlockPos pos)
+	public void onBlockDestroyed(World world, BlockPos pos)
 	{
-		
+		if(this.isBlockSummaring()) this.setBlockMetaForThisBlock(world, pos);
 	}
 
 	/** 0.0 - Passable block, 1.0 - not*/

@@ -63,7 +63,7 @@ public class EntityController
 		
 		if(MLBPress)
 		{
-			entity.attack();
+			//entity.attack();
 		}
 		
 		entity.onEntityUpdate();

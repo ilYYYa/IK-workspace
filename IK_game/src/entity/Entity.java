@@ -53,6 +53,11 @@ public class Entity
 
 	/** Время жизни ентити */
 	public long lifeTime = 0;
+	
+	/** Максимальное время неприкосновения ентити */
+	public int UntouchableMaxCD = 30;
+	/** Оставшееся время неприкосновения ентити. 0 - ентити может быть атакован */
+	public int UntouchableCD = 0;
 
 	/**  */
 	public boolean collisedWithBlocks = true;
@@ -87,8 +92,8 @@ public class Entity
 	{
 		if(e.posX + e.width/2 - e.hitboxWidth/2 > this.posX + this.width/2 + this.hitboxWidth/2) return false;
 		if(e.posX + e.width/2 + e.hitboxWidth/2 < this.posX + this.width/2 - this.hitboxWidth/2) return false;
-		if(e.posY + e.height/2 - e.hitboxHeight/2 > this.posY + this.height/2 + this.hitboxHeight/2) return false;
-		if(e.posY + e.height/2 + e.hitboxHeight/2 < this.posY + this.height/2 - this.hitboxHeight/2) return false;
+		if(e.posY + e.height - e.hitboxHeight > this.posY + this.height) return false;
+		if(e.posY + e.height < this.posY + this.height - this.hitboxHeight) return false;
 		
 		return true;
 	}
@@ -164,22 +169,23 @@ public class Entity
 	{
 		return this.hitboxHeight;
 	}
-
-	/** Атаковать этот ентити */
-	public void attackFrom(damageSource damageType, double value)
-	{
-		
-	}
-
-	/** Атаковать этот ентити живущем ентити */
-	public void attackFromLivingEntity(LivingEntity e, damageSource damageType, double value)
-	{
-		
-	}
 	
-	public void attack()
+	/** Атаковать этим ентити указанный ентити. Возращает false если атака не удалась */
+	public boolean attack(Entity entity, damageSource damageType, double value)
 	{
-		
+		return false;
+	}
+
+	/** Атаковать этот ентити. Возращает Ложи если урон не был нанесен */
+	public boolean attackFrom(damageSource damageType, double value)
+	{
+		return false;
+	}
+
+	/** Атаковать этот ентити другим ентити. Возращает Ложи если урон не был нанесен */
+	public boolean attackFromLivingEntity(LivingEntity e, damageSource damageType, double value)
+	{
+		return false;
 	}
 
 	/** Устанавливает позицию ентити. Х - середина ентити, У - нижняя граница ентити */
@@ -240,11 +246,33 @@ public class Entity
     {
     	this.isDead = true;
     }
+	
+    /** Установть максимальное время неприкосаемости ентити*/
+	public void setMaxUntouchableCD(int cd)
+	{
+		UntouchableMaxCD = cd;
+	}
+
+    /** Получить оставшееся время неприкосаемости ентити в данный момент. 0 - можно атаковать */
+	public int getUntouchableCD()
+	{
+		return UntouchableCD;
+	}
+	
+	/** Делает ентити неприкосаемым на UntouchableMaxCD время */
+	public void setEntityUntouchable()
+	{
+		this.UntouchableCD = this.UntouchableMaxCD;
+	}
 
 	/** Логическая функция ентити */
     public void onEntityUpdate()
     {
     	lifeTime++;
+    	
+		if(UntouchableCD > 0) UntouchableCD--;
+		if(UntouchableCD < 0) UntouchableCD = 0;
+		if(UntouchableCD > UntouchableMaxCD) UntouchableCD = UntouchableMaxCD;
     	
     	double motionX = this.motionX;
     	double motionY = this.motionY;
@@ -309,20 +337,27 @@ public class Entity
     
     public boolean canMoveTo(int x, int y)
     {
-    	BlockPos pos1 = new BlockPos(x,y, BlockPos.blockPosLevel.BACK);
-    	BlockPos pos2 = new BlockPos(x,y, BlockPos.blockPosLevel.MIDDLE);
+    	if(this.isGhost()) return true;
+    	
+    	BlockPos pos1 = new BlockPos(x, y, BlockPos.blockPosLevel.BACK);
+    	BlockPos pos2 = new BlockPos(x, y, BlockPos.blockPosLevel.MIDDLE);
+    	BlockPos pos3 = new BlockPos(x, y, BlockPos.blockPosLevel.HIGH);
     	Block block1 = world.getBlock(pos1);
     	Block block2 = world.getBlock(pos2);
+    	Block block3 = world.getBlock(pos3);
     	
-    	if(block1 == null || block2 == null) return false;
+    	if(block1 == null || block2 == null || block3 == null) return false;
     	if(!block1.isPassable()) return false;
     	if(!block2.isPassable()) return false;
+    	if(!block3.isPassable()) return false;
     	
 		return true;
 	}
     
     public boolean canStayAt(double x, double y)
     {
+    	if(this.isGhost()) return true;
+    	
     	double x1 = x - this.getHitboxWidth()/2;
     	double x2 = x + this.getHitboxWidth()/2;
     	

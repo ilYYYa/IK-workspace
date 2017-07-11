@@ -24,6 +24,7 @@ public class World
 	public EntityController controller = new EntityController();
 	
 	public Panel_worldrenderer theWorldRenderer = null;
+	
 	public long worldTicks = 0;
 	
 	public int worldGamemode = 0;
@@ -218,6 +219,7 @@ public class World
 				return entities[i];
 			}
 		}
+		
 		return null;
 	}
 	
@@ -355,6 +357,11 @@ public class World
 			{
 				if(this.getController().getControllableEntity() == entities[i]) this.getController().onEntityUpdate();
 				else entities[i].onEntityUpdate();
+				
+				for(int j = 0; j < triggers.length; j++)
+				{
+					if(triggers[j].isCrossingPoint(entities[i].getX(), entities[i].getY())) triggers[j].onEntityInTrigger(this, entities[i]);
+				}
 			}
 			else
 			{
