@@ -19,6 +19,8 @@ public class Blocks
 	public static final Block REDHOUSE2;
 	public static final Block FENCE;
 	public static final Block FOUNTAIN;
+	public static final Block SAND;
+	
 	
 	static
 	{
@@ -39,5 +41,6 @@ public class Blocks
 		REDHOUSE2 = BlockRegister.registerBlock(new HugeBlock_RedHouse2(14, "redhouse2"));
 		FENCE = BlockRegister.registerBlock(new Block_Fence(15, "fence"));
 		FOUNTAIN = BlockRegister.registerBlock(new HugeBlock_Fountain(16, "fountain"));
+		SAND = BlockRegister.registerBlock(new Block_Sand(17, "sand"));
 	}
 }
