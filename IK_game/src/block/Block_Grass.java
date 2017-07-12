@@ -20,10 +20,10 @@ public class Block_Grass extends Block
 	public void setBlockMetaForThisBlock(World world, BlockPos pos)
 	{
 		int buff = 0;
-		if(world.getBlock(pos.north())!=null && world.getBlock(pos.north()).isBlockSummaring() && world.getBlock(pos.north()) != this) buff += 1;
-		if(world.getBlock(pos.south())!=null && world.getBlock(pos.south()).isBlockSummaring() && world.getBlock(pos.south()) != this) buff += 2;
-		if(world.getBlock(pos.west())!=null && world.getBlock(pos.west()).isBlockSummaring() && world.getBlock(pos.west()) != this) buff += 4;
-		if(world.getBlock(pos.east())!=null && world.getBlock(pos.east()).isBlockSummaring() && world.getBlock(pos.east()) != this) buff += 8;
+		if(world.getBlock(pos.north())!=null && world.getBlock(pos.north()).isBlockSummaring() && world.getBlock(pos.north()) != this) buff += 1; //+0001
+		if(world.getBlock(pos.south())!=null && world.getBlock(pos.south()).isBlockSummaring() && world.getBlock(pos.south()) != this) buff += 2; //+0010
+		if(world.getBlock(pos.west())!=null && world.getBlock(pos.west()).isBlockSummaring() && world.getBlock(pos.west()) != this) buff += 4; //+0100
+		if(world.getBlock(pos.east())!=null && world.getBlock(pos.east()).isBlockSummaring() && world.getBlock(pos.east()) != this) buff += 8; //+1000
 		world.setBlockMeta(pos, buff);
 	}
 
